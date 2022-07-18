@@ -6,23 +6,10 @@ from discord.ext.commands import bot
 from discord.ext.commands import Context
 
 gameList = [
-            'American Truck Simulator',
-            'Battlefield V',
-            'Halo Infinite',
-            'Halo: The Master Chief Collection',
-            'Left 4 Dead 2',
-            'Parkitect',
-            'Payday 2',
-            'PUBG',
-            'Pulsar: Lost Colony',
-            'Raft',
-            'Stardew Valley',
-            'Stick Fight: The Game',
-            "Tom Clancy's Rainbox Six Siege",
-            "Tom Clancy's The Division 2",
-            'Zombie Army Trilogy'
         ]
-        
+gameList2 = [
+        ]
+
 bakiQuotes = [
             "You'd do or say anything to save your skin... probably even lick my ass when nobody was looking. -Sikorsky",
             "Now that you've got no more urine left in you... How are you going to get out of this tetrahedron? -Mouth",
@@ -50,8 +37,15 @@ class Util(commands.Cog):
         
     @commands.command(name='randomgame', help='Randomly picks a game from the server side game list')
     async def randomgame(self, ctx):
-        response = random.choice(gameList)
-        await ctx.send("You should play: " + response)
+        guild = ctx.guild
+        if (guild.name == ""):
+            response = random.choice(gameList)
+            await ctx.send("You should play: " + response)
+        elif (guild.name == ""):
+            response = random.choice(gameList2)
+            await ctx.send("You should play: " + response)
+        else:
+            await ctx.send("No list found for this server")
         
     @commands.command(name='randombaki')
     async def randombaki(self, ctx):
@@ -66,10 +60,17 @@ class Util(commands.Cog):
     @commands.command(name="gamelist", description="Shows the current game list")
     async def on_message(self, ctx):
         newList = '**Current Game list**' + '\n'
-        for game in gameList:
-            newList = newList + '\n' + game
-        
-        await ctx.send(newList)
+        guild = ctx.guild
+        if (guild.name == ""):
+            for game in gameList:
+                newList = newList + '\n' + game
+            await ctx.send(newList)
+        elif (guild.name == ""):
+            for game in gameList2:
+                newList = newList + '\n' + game
+            await ctx.send(newList)
+        else:
+            await ctx.send("No list found for this server")
         
     @commands.command(name="diceroll")
     async def diceroll(self, ctx, arg1):
