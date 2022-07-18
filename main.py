@@ -16,6 +16,15 @@ bot.remove_command('help')
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name="!help"))
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send("That command does not exist. Please check !help for the current commands")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("You are missing something.")
+    else:
+        await ctx.send(error)
+        
 @bot.command()
 async def load(ctx, extension):
     bot.load_extension(f'cogs.{extension}')
