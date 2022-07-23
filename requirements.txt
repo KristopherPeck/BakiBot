@@ -1,2 +1,6 @@
 discord.py==1.7.3
 python-dotenv==0.20.0
+pynacl==1.4.0
+cffi==1.15.0
+six==1.15.0
+pycparser==2.21
