@@ -14,3 +14,4 @@ Current command prefix is set to !
 - Help: Sends a direct message with the command list to the user requesting the help. 
 - Randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in util.py. 
 - Randomgame: Pick a random game from the full game list. 
+- tts: Send a TTS message to all users. 
