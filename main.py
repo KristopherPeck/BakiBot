@@ -15,7 +15,7 @@ bot.remove_command('help')
 @bot.event
 async def on_ready():
     #Set discord presence
-    await bot.change_presence(activity=discord.Game(name="!help"))
+    await bot.change_presence(activity=discord.Game(name="!help or !posthelp"))
 
 @bot.event
 async def on_command_error(ctx, error):
