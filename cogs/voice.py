@@ -58,8 +58,8 @@ class Util(commands.Cog):
             await ctx.send("Psst! Someone wanted me to tell you guys: ") 
             await ctx.send(' '.join(args), tts=True)
             
-    @commands.command()
-    async def join(self, ctx, *, channel: discord.VoiceChannel):
+    @commands.command(name="join")
+    async def joinchannel(self, ctx, *, channel: discord.VoiceChannel):
         if ctx.voice_client is not None:
             return await ctx.voice_client.move_to(channel)
 
