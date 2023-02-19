@@ -17,6 +17,7 @@ Current command prefix is set to !
 - PostHelp: Posts the content of the help command in the current channel. 
 - Randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
 - Randomgame: Pick a random game from the full game list. 
+- Stop: Stop the current Baki audio stream. 
 - Stream: Have Baki stream the audio from a Youtube video. Must use Join first. 
 - tts: Send a TTS message to all users. 
 - Volume: Set Baki's volume for voice chat. 
