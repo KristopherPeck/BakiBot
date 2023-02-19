@@ -32,6 +32,7 @@ class Util(commands.Cog):
             title="Audio Command List",
             color=c)
         embed.add_field(name="**join**", value="Baki will join the voice channel you select. Just like this: !join General", inline=False)
+        embed.add_field(name="**stop**", value="Stop current Baki stream", inline=False)
         embed.add_field(name="**stream**", value="Baki will play you the audio of a youtube video. You have to use !join first. You stream just like this: !stream https://www.youtube.com/watch?v=dQw4w9WgXcQ", inline=False)
         embed.add_field(name="**tts**", value="Have Baki tell everyone what you are really thinking. Just like this: !tts Chicken Butt", inline=False)
         embed.add_field(name="**volume**", value="Set Baki's volume like this: !volume 50", inline=False)
@@ -60,6 +61,7 @@ class Util(commands.Cog):
             title="Audio Command List",
             color=c)
         embed.add_field(name="**join**", value="Baki will join the voice channel you select. Just like this: !join General", inline=False)
+        embed.add_field(name="**stop**", value="Stop current Baki stream", inline=False)
         embed.add_field(name="**stream**", value="Baki will play you the audio of a youtube video. You have to use !join first. You stream just like this: !stream https://www.youtube.com/watch?v=dQw4w9WgXcQ", inline=False)
         embed.add_field(name="**tts**", value="Have Baki tell everyone what you are really thinking. Just like this: !tts Chicken Butt", inline=False)
         embed.add_field(name="**volume**", value="Set Baki's volume like this: !volume 50", inline=False)
