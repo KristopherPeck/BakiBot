@@ -4,3 +4,4 @@ pynacl==1.4.0
 cffi==1.15.0
 six==1.15.0
 pycparser==2.21
+yt-dlp==2023.2.17
