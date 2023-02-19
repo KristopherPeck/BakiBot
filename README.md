@@ -10,8 +10,13 @@ Current command prefix is set to !
 - Choose: Randomly select an option from the provided options. e.g. !choose Lead Salt Diesel
 - Color: Post a random color and display the Hex and RGB values and an example of the color. 
 - Diceroll: Roll a die of the size of your choosing. e.g. !diceroll 20
+- eightball or 8ball: Ask the magic 8 Ball a question. 
 - Gamelist: Posts the current game list. This can be modified in games.py. 
 - Help: Sends a direct message with the command list to the user requesting the help. 
+- Join: Have Baki Join a voice chat channel. 
+- PostHelp: Posts the content of the help command in the current channel. 
 - Randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
 - Randomgame: Pick a random game from the full game list. 
+- Stream: Have Baki stream the audio from a Youtube video. Must use Join first. 
 - tts: Send a TTS message to all users. 
+- Volume: Set Baki's volume for voice chat. 
