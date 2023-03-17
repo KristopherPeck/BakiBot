@@ -5,12 +5,21 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
+#load our environmental variables for later
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+ownerID = os.getenv('DISCORD_OWNERID')
 
-bot = commands.Bot(command_prefix='!')
+#configure the command prefix
+intents = discord.Intents.all()
+intents.members = True
+bot = commands.Bot(command_prefix='!', intents = intents)
 bot.remove_command('help')
+
+#We have a environment variable for the Bot Administrator so only they can run certain commands.
+def ownercheck(ctx):
+        return ctx.message.author.id == int(ownerID)
 
 @bot.event
 async def on_ready():
@@ -28,18 +37,21 @@ async def on_command_error(ctx, error):
         await ctx.send(error)
         
 @bot.command()
+@commands.check(ownercheck)
 async def load(ctx, extension):
     #Load an unloaded cog
     bot.load_extension(f'cogs.{extension}')
     await ctx.send("Loaded Cog")
 
 @bot.command()
+@commands.check(ownercheck)
 async def unload(ctx, extension):
     #unload loaded cog
     bot.unload_extension(f'cogs.{extension}')
     await ctx.send("Unloaded Cog")
 
 @bot.command()
+@commands.check(ownercheck)
 async def reload(ctx, extension):
     #reload loaded cog
     bot.unload_extension(f'cogs.{extension}')
@@ -47,6 +59,7 @@ async def reload(ctx, extension):
     await ctx.send("Reloaded Cog")
 
 @bot.command()
+@commands.check(ownercheck)
 async def checkcogs(ctx):
     #Check current status of all cogs and attempt to reload any unloaded cogs
     for filename in os.listdir('./cogs'):
