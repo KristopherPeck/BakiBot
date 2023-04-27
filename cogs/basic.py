@@ -25,6 +25,7 @@ class Util(commands.Cog):
         embed.add_field(name="**posthelp**", value="Baki will post the current commands in the current channel", inline=False)
         embed.add_field(name="**randombaki**", value="Posts a random quote from Baki", inline=False)
         embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
+        embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
         embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
         await ctx.author.send(embed=embed)
         
@@ -55,6 +56,7 @@ class Util(commands.Cog):
         embed.add_field(name="**posthelp**", value="Baki will post the current commands in the current channel", inline=False)
         embed.add_field(name="**randombaki**", value="Posts a random quote from Baki", inline=False)
         embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
+        embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
         embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
         await ctx.send(embed=embed)
         
