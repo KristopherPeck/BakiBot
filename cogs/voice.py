@@ -2,6 +2,7 @@ import discord
 import sys
 import random
 import yt_dlp
+import asyncio
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
