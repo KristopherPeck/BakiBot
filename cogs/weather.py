@@ -14,7 +14,7 @@ WeatherAPI = os.getenv('WEATHERAPI')
 WeatherCurrentForcastURL= "https://api.openweathermap.org/data/2.5/weather?"
 WeatherIconURL = "https://openweathermap.org/img/wn/"
 
-class Util(commands.Cog):
+class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
@@ -61,5 +61,5 @@ class Util(commands.Cog):
         else:
             await channel.send("City not found.")
 
-def setup(bot):
-    bot.add_cog(Util(bot))
+async def setup(bot):
+    await bot.add_cog(Weather(bot))

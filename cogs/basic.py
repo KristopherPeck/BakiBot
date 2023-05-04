@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
-class Util(commands.Cog):
+class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
@@ -71,5 +71,5 @@ class Util(commands.Cog):
         embed.add_field(name="**volume**", value="Set Baki's volume like this: !volume 50", inline=False)
         await ctx.send(embed=embed)   
         
-def setup(bot):
-    bot.add_cog(Util(bot))
+async def setup(bot):
+    await bot.add_cog(Basic(bot))

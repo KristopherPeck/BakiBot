@@ -11,7 +11,7 @@ gameList = [
 gameList2 = [
         ]
 
-class Util(commands.Cog):
+class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
@@ -45,5 +45,5 @@ class Util(commands.Cog):
         else:
             await ctx.send(embed=discord.Embed(description="No list found for this server", colour=c)) 
         
-def setup(bot):
-    bot.add_cog(Util(bot))
+async def setup(bot):
+    await bot.add_cog(Games(bot))

@@ -19,7 +19,7 @@ PokemonAPIURL = "https://pokeapi.co/api/v2/"
 #Implements a cache for responses
 requests_cache.install_cache('db/pokemon_cache', backend='sqlite', expire_after=180)
 
-class Util(commands.Cog):
+class Pokemon(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
@@ -232,5 +232,5 @@ class Util(commands.Cog):
                 
             await channel.send(embed=embed)
     
-def setup(bot):
-    bot.add_cog(Util(bot))
+async def setup(bot):
+    await bot.add_cog(Pokemon(bot))

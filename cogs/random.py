@@ -14,7 +14,7 @@ bakiQuotes = [
             "What's futile is not realizing the reality of your own futility. One hundred cowards are the same as one. -Yujiro 'The Ogre' Hanma"
         ]
 
-class Util(commands.Cog):
+class Random(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
    
@@ -74,5 +74,5 @@ class Util(commands.Cog):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description=":8ball: " + random.choice(li), colour=c))
 
-def setup(bot):
-    bot.add_cog(Util(bot))
+async def setup(bot):
+    await bot.add_cog(Random(bot))

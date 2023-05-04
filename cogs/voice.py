@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
-yt_dlp.utils.bug_reports_message = lambda: ''
+#yt_dlp.utils.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -49,7 +49,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
-class Util(commands.Cog):
+class Voice(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
@@ -113,5 +113,5 @@ class Util(commands.Cog):
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
     
-def setup(bot):
-    bot.add_cog(Util(bot))
+async def setup(bot):
+    await bot.add_cog(Voice(bot))
