@@ -46,7 +46,7 @@ class Util(commands.Cog):
                 PokemonName = PokemonName.title()
 
             #This is just for troubleshooting purposes to know what pokemon is causing issues. 
-            print(PokemonName)
+            #print(PokemonName)
 
             PokemonSprite = ResponseJSON["sprites"]["other"]["official-artwork"]["front_default"]
             PokemonFirstType = ResponseJSON["types"][0]["type"]["name"]
@@ -185,17 +185,17 @@ class Util(commands.Cog):
                     embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
                 
                 elif PokemonName == "Hitmonchan" or PokemonName == "Hitmonlee":
-                    Print("No Marvel Here")
+                    pass
                 
                 elif PokemonName == "Shedinja" or PokemonName == "Ninjask":
-                    Print("No Evolution")
+                    pass
                 
                 elif PokemonName == "Nincada":
                     PokemonEvolvesTo = "Ninjask and Shedinja with an extra Pokeball"
                     embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
 
                 elif "Urshifu" in PokemonName:
-                    Print("No Evolution")
+                    pass
                 
                 #Because of the way the API has everything setup. The first evolves to you might run into could be themselves. 
                 #So we have to dig deeper for a different one.
@@ -204,16 +204,16 @@ class Util(commands.Cog):
                         PokemonEvolvesTo = ChainResponseJSON["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"]
                         #Even after digging deeper though. Sometimes it is still the same name. 
                         if PokemonEvolvesTo == PokemonName:
-                            print("No Evolution")
+                            pass
                                 
                         else:
                             PokemonEvolvesTo = PokemonEvolvesTo.capitalize()
                             embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
                     except:
-                        print("No Evolution")
+                        pass
                 
                 elif PokemonEvolvesTo == PokemonEvolveFrom:
-                    print("No Evolution")
+                    pass
                 
                 else:
                     embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
