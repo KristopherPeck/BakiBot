@@ -4,6 +4,7 @@ import random
 import os
 import os.path
 import requests
+import requests_cache
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord.ext.commands import bot
@@ -11,9 +12,12 @@ from discord.ext.commands import Context
 
 load_dotenv()
 ownerID = os.getenv('DISCORD_OWNERID')
-#This includes regional variants in it. 
+#This includes everything up through Paradox.
 maxPokemon = 1010
 PokemonAPIURL = "https://pokeapi.co/api/v2/"
+
+#Implements a cache for responses
+requests_cache.install_cache('db/pokemon_cache', backend='sqlite', expire_after=180)
 
 class Util(commands.Cog):
     def __init__(self, bot):
@@ -34,10 +38,16 @@ class Util(commands.Cog):
         
         async with channel.typing():
             #Start pulling some basic information in that will always be simple to parse.
-            PokemonName = ResponseJSON["name"]
+            #We remove the dashes and replace them with spaces so that alternate forms and some specific Paradox pokemon look nicer.
+            #Then we capitalize all the words in the name
+            try:
+                PokemonName = PokemonName.replace('-', ' ').title()
+            except:
+                PokemonName = PokemonName.title()
+
             #This is just for troubleshooting purposes to know what pokemon is causing issues. 
             print(PokemonName)
-            PokemonName = PokemonName.capitalize()
+
             PokemonSprite = ResponseJSON["sprites"]["other"]["official-artwork"]["front_default"]
             PokemonFirstType = ResponseJSON["types"][0]["type"]["name"]
             PokemonFirstType = PokemonFirstType.capitalize()
@@ -100,7 +110,7 @@ class Util(commands.Cog):
             PokemonChain = SpeciesResponseJSON["evolution_chain"]["url"]
             ChainResponse = requests.get(PokemonChain)
             ChainResponseJSON = ChainResponse.json()
-            
+
             try:
                 PokemonEvolveFrom = SpeciesResponseJSON["evolves_from_species"]["name"]
             except:
@@ -128,6 +138,20 @@ class Util(commands.Cog):
             embed.add_field(name="Pokedex Number:", value=f"{RandomPokemonID}", inline=False)
             embed.add_field(name="Original Generation:", value=f"{PokemonGeneration}", inline=False)
             
+            #This set of responses checks if our chosen pokemon is legendary, mythical, or a baby form. 
+            LegendaryCheck = SpeciesResponseJSON["is_legendary"]
+            MythicalCheck = SpeciesResponseJSON["is_mythical"]
+            BabyCheck = SpeciesResponseJSON["is_baby"]
+
+            if LegendaryCheck == True:
+                embed.add_field(name="Classification:", value=f"Legendary", inline=False)
+
+            if MythicalCheck == True:
+                embed.add_field(name="Classification:", value=f"Mythical", inline=False)
+
+            if BabyCheck == True:
+                embed.add_field(name="Classification:", value=f"Baby", inline=False)
+
             #Evolve from is so much easier then To.
             if PokemonEvolveFrom != 0:
                 PokemonEvolveFrom = PokemonEvolveFrom.capitalize()
