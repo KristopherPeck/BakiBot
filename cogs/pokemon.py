@@ -231,6 +231,201 @@ class Pokemon(commands.Cog):
             
                 
             await channel.send(embed=embed)
-    
+
+    #This command is built the same as the random one but it allows you to put in either a name or pokemon id. 
+    @commands.command(name='pickapokemon')
+    async def pickapokemon(self, ctx, *args):
+        #Here we give the possibility for multiple entries. This is to allow for pokemon with spaces in their names like Iron Leaves or Urshifu Single Strike. 
+        #We also set the pokemonid to lowercase because the api doesn't accept it with capital letters in it.
+        PokemonID = '-'.join(args)
+        PokemonID = str(PokemonID).lower()
+        
+        #We check if there is actually a response from the API since we are relying on user input. 
+        try:
+            CompleteURL = PokemonAPIURL + "pokemon/" + str(PokemonID)
+            Response = requests.get(CompleteURL)
+            ResponseJSON = Response.json()
+        except:
+            await ctx.send("I don't know what Pokemon that is. Please try something else.")
+            return
+        
+        RandomColor = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        channel = ctx.message.channel
+        
+        async with channel.typing():
+            PokemonName = ResponseJSON["name"]
+
+            try:
+                PokemonName = PokemonName.replace('-', ' ').title()
+            except:
+                PokemonName = PokemonName.title()
+
+            PokemonSprite = ResponseJSON["sprites"]["other"]["official-artwork"]["front_default"]
+
+            #We actually load the ID separately now unlike the randompokemon command. 
+            #This is because of allowing string entries for the pokemon name. Otherwise it would show the name as the entry number.
+            PokemonIDNumber = ResponseJSON["id"]
+            PokemonFirstType = ResponseJSON["types"][0]["type"]["name"]
+            PokemonFirstType = PokemonFirstType.capitalize()
+            PokemonHeight = ResponseJSON["height"]
+            PokemonHeight = PokemonHeight * 3.937
+            PokemonHeight = round(PokemonHeight, 2)
+            PokemonWeight = ResponseJSON["weight"]
+            PokemonWeight = PokemonWeight / 4.536
+            PokemonWeight = round(PokemonWeight, 2)
+            PokemonSpecies = ResponseJSON["species"]["url"]
+            
+            SpeciesResponse = requests.get(PokemonSpecies)
+            SpeciesResponseJSON = SpeciesResponse.json()
+            
+            PokemonGenusLanguage = "0"
+            GenusArraySelector = -1
+            while PokemonGenusLanguage != "en":
+                GenusArraySelector = GenusArraySelector + 1
+                try:
+                    PokemonGenusLanguage = SpeciesResponseJSON["genera"][GenusArraySelector]["language"]["name"]
+                except:
+                    GenusArraySelector = 101
+                
+                if GenusArraySelector > 100:
+                    PokemonGenus = "No English Pokemon Genus Available"
+                    break
+            
+            PokemonFlavorTextLanguage = "0"
+            FlavorArraySelector = -1
+            while PokemonFlavorTextLanguage != "en":
+                FlavorArraySelector = FlavorArraySelector + 1
+                try:
+                    PokemonFlavorTextLanguage = SpeciesResponseJSON["flavor_text_entries"][FlavorArraySelector]["language"]["name"]
+                except:
+                    FlavorArraySelector = 101
+
+                if FlavorArraySelector > 100:
+                    PokemonFlavorText = "No English Pokedex Entry Available"
+                    break
+            
+            if FlavorArraySelector < 100:
+                PokemonFlavorText = SpeciesResponseJSON["flavor_text_entries"][FlavorArraySelector]["flavor_text"]
+                
+            if GenusArraySelector < 100:
+                PokemonGenus = SpeciesResponseJSON["genera"][GenusArraySelector]["genus"]
+            
+            PokemonGeneration = SpeciesResponseJSON["generation"]["name"]
+            PokemonGeneration = PokemonGeneration[11:].upper()
+            
+            PokemonChain = SpeciesResponseJSON["evolution_chain"]["url"]
+            ChainResponse = requests.get(PokemonChain)
+            ChainResponseJSON = ChainResponse.json()
+            
+            try:
+                PokemonEvolveFrom = SpeciesResponseJSON["evolves_from_species"]["name"]
+            except:
+                PokemonEvolveFrom = 0
+            
+            try:
+                PokemonSecondType = ResponseJSON["types"][1]["type"]["name"]
+            except:
+                PokemonSecondType = 0
+            
+            try:
+                PokemonEvolvesTo = ChainResponseJSON["chain"]["evolves_to"][0]["species"]["name"]
+            except:
+                PokemonEvolvesTo = 0
+
+            if PokemonGenus == "No English Pokemon Genus Available":
+                embed = discord.Embed(title=f"{PokemonName}",
+                color=RandomColor)
+            else:
+                embed = discord.Embed(title=f"{PokemonName}: The {PokemonGenus}",
+                color=RandomColor)
+                
+            embed.set_thumbnail(url=PokemonSprite)
+            embed.add_field(name="Pokedex Entry:", value=f"{PokemonFlavorText}", inline=False)
+            embed.add_field(name="Pokedex Number:", value=f"{PokemonIDNumber}", inline=False)
+            embed.add_field(name="Original Generation:", value=f"{PokemonGeneration}", inline=False)
+
+            LegendaryCheck = SpeciesResponseJSON["is_legendary"]
+            MythicalCheck = SpeciesResponseJSON["is_mythical"]
+            BabyCheck = SpeciesResponseJSON["is_baby"]
+
+            if LegendaryCheck == True:
+                embed.add_field(name="Classification:", value=f"Legendary", inline=False)
+
+            if MythicalCheck == True:
+                embed.add_field(name="Classification:", value=f"Mythical", inline=False)
+
+            if BabyCheck == True:
+                embed.add_field(name="Classification:", value=f"Baby", inline=False)
+            
+            if PokemonEvolveFrom != 0:
+                PokemonEvolveFrom = PokemonEvolveFrom.capitalize()
+                embed.add_field(name="Evolves From:", value=f"{PokemonEvolveFrom}", inline=False)
+                
+            if PokemonEvolvesTo != 0:
+                PokemonEvolvesTo = PokemonEvolvesTo.capitalize()
+                if PokemonName == "Silcoon":
+                    PokemonEvolvesTo = "Beautifly"
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                
+                elif PokemonName == "Cascoon":
+                    PokemonEvolvesTo = "Dustox"
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                    
+                elif PokemonName == "Burmy":
+                    PokemonEvolvesTo = "♀ Wormadam or ♂ Mothrim"
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                    
+                elif PokemonName == "Eevee":
+                    PokemonEvolvesTo = "Flareon, Jolteon, Vaporean, Umbreon, Espeon, Glaceon, Leafeon, or Sylveon"
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                    
+                elif PokemonName == "Wurmple":
+                    PokemonEvolvesTo = "Silcoon or Cascoon"
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                
+                elif PokemonName == "Hitmonchan" or PokemonName == "Hitmonlee":
+                    pass
+                
+                elif PokemonName == "Shedinja" or PokemonName == "Ninjask":
+                    pass
+                
+                elif PokemonName == "Nincada":
+                    PokemonEvolvesTo = "Ninjask and Shedinja with an extra Pokeball"
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                    
+                elif "Urshifu" in PokemonName:
+                    pass
+                   
+                elif PokemonEvolvesTo == PokemonName:
+                    try:
+                        PokemonEvolvesTo = ChainResponseJSON["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"]
+                        if PokemonEvolvesTo == PokemonName:
+                            pass
+                                
+                        else:
+                            PokemonEvolvesTo = PokemonEvolvesTo.capitalize()
+                            embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+                    except:
+                        pass
+                
+                elif PokemonEvolvesTo == PokemonEvolveFrom:
+                    pass
+                
+                else:
+                    embed.add_field(name="Evolves Into:", value=f"{PokemonEvolvesTo}", inline=False)
+
+            if PokemonSecondType != 0:
+                PokemonSecondType = PokemonSecondType.capitalize()
+                embed.add_field(name="Type:", value=f"{PokemonFirstType} / {PokemonSecondType}", inline=False)
+                
+            else:
+                embed.add_field(name="Type", value=f"{PokemonFirstType}", inline=False) 
+                
+            embed.add_field(name="Height (in):", value=f"{PokemonHeight}", inline=False)
+            embed.add_field(name="Weight (lbs):", value=f"{PokemonWeight}", inline=False)
+            
+                
+            await channel.send(embed=embed)
+  
 async def setup(bot):
     await bot.add_cog(Pokemon(bot))
