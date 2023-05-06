@@ -25,6 +25,7 @@ class Weather(commands.Cog):
     async def weather(self, ctx, *args):
         listToStr = ' '.join([str(elem) for elem in args])
         city_name = listToStr
+        city_name = city_name.title()
         complete_url = WeatherCurrentForcastURL + "appid=" + WeatherAPI + "&q=" + city_name
         response = requests.get(complete_url)
         api_response = response.json()
@@ -44,6 +45,7 @@ class Weather(commands.Cog):
                 wind_speed = wind_info["speed"]
                 wind_speed = str(round(wind_speed * 2.2369))
                 weather_description = api_selector_weather[0]["description"]
+                weather_description = weather_description.title()
                 weather_icon = api_selector_weather[0]["icon"]
                 weather_icon = WeatherIconURL + weather_icon + "@2x.png"
                 c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
