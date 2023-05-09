@@ -4,7 +4,6 @@ import random
 import os
 import os.path
 import requests
-import requests_cache
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord.ext.commands import bot
@@ -15,9 +14,6 @@ ownerID = os.getenv('DISCORD_OWNERID')
 #This includes everything up through Paradox.
 maxPokemon = 1010
 PokemonAPIURL = "https://pokeapi.co/api/v2/"
-
-#Implements a cache for responses
-requests_cache.install_cache('db/pokemon_cache', backend='sqlite', expire_after=180)
 
 class Pokemon(commands.Cog):
     def __init__(self, bot):
@@ -40,6 +36,7 @@ class Pokemon(commands.Cog):
             #Start pulling some basic information in that will always be simple to parse.
             #We remove the dashes and replace them with spaces so that alternate forms and some specific Paradox pokemon look nicer.
             #Then we capitalize all the words in the name
+            PokemonName = ResponseJSON["name"]
             try:
                 PokemonName = PokemonName.replace('-', ' ').title()
             except:
