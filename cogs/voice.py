@@ -9,10 +9,7 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
-#yt_dlp.utils.bug_reports_message = lambda: ''
-
-find_opus = ctypes.util.find_library('opus')
-discord.opus.load_opus(find_opus)
+yt_dlp.utils.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
