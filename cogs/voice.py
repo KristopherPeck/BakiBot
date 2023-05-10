@@ -2,14 +2,17 @@ import discord
 import sys
 import random
 import yt_dlp
+import os
+import os.path
 import asyncio
-import ctypes
-import ctypes.util
+from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
-yt_dlp.utils.bug_reports_message = lambda: ''
+heroku_check = os.getenv('HEROKU_CHECK')
+
+#yt_dlp.Voices.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -26,7 +29,7 @@ ytdl_format_options = {
 }
 
 ffmpeg_options = {
-    'options': '-vn',
+    'options': '-vn -reconnect 1   -reconnect_streamed 1 -reconnect_delay_max 5',  
 }
 
 ytdl = yt_dlp.YoutubeDL(ytdl_format_options)
@@ -63,45 +66,79 @@ class Voice(commands.Cog):
             
     @commands.command(name="join")
     async def joinchannel(self, ctx, *, channel: discord.VoiceChannel):
-        if ctx.voice_client is not None:
-            return await ctx.voice_client.move_to(channel)
+        """Joins a voice channel"""
+        if heroku_check == 'False':
+            if ctx.voice_client is not None:
+                return await ctx.voice_client.move_to(channel)
 
-        await channel.connect()
+            await channel.connect()
+        else:
+            await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
     async def play(self, ctx, *, query):
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+        """Plays a file from the local filesystem"""
 
-        #await ctx.send(f'Now playing: {query}')
+        if heroku_check == 'False':
+            source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+            ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+
+            await ctx.send(f'Now playing: {query}')
+
+        else:
+            await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
     async def yt(self, ctx, *, url):
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+        """Plays from a url (almost anything yt_dlp supports)"""
 
-        #await ctx.send(f'Now playing: {player.title}')
+        if heroku_check == 'False':
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url, loop=self.bot.loop)
+                ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+
+            await ctx.send(f'Now playing: {player.title}')
+
+        else:
+            await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
     async def stream(self, ctx, *, url):
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+        """Streams from a url (same as yt, but doesn't predownload)"""
 
-        await ctx.send(f'Now playing: {player.title}')
+        if heroku_check == 'False':
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
 
+            await ctx.send(f'Now playing: {player.title}')
+
+        else:
+            await ctx.send("This command is not available on Heroku deployments.")
+    
     @commands.command()
     async def volume(self, ctx, volume: int):
-        if ctx.voice_client is None:
-            return await ctx.send("Not connected to a voice channel.")
+        """Changes the player's volume"""
 
-        ctx.voice_client.source.volume = volume / 100
-        await ctx.send(f"Changed volume to {volume}%")
+        if heroku_check == 'False':
+            if ctx.voice_client is None:
+                return await ctx.send("Not connected to a voice channel.")
+
+            ctx.voice_client.source.volume = volume / 100
+            await ctx.send(f"Changed volume to {volume}%")
+
+        else:
+            await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
     async def stop(self, ctx):
-        await ctx.voice_client.disconnect()
+        """Stops and disconnects the bot from voice"""
+
+        if heroku_check == 'False':
+            await ctx.voice_client.disconnect()
+
+        else:
+            await ctx.send("This command is not available on Heroku deployments.")
 
     @play.before_invoke
     @yt.before_invoke

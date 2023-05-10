@@ -6,9 +6,47 @@ from discord.ext.commands import bot
 from discord.ext.commands import Context
 
 gameList = [
+            'American Truck Simulator',
+            'Battlefield V',
+            'Command and Conquer: Red Alert 2',
+            'Command and Conquer: Generals - Zero Hour',
+            'Halo Infinite',
+            'Halo: The Master Chief Collection',
+            'Left 4 Dead 2',
+            'Parkitect',
+            'Payday 2',
+            'PUBG',
+            'Pulsar: Lost Colony',
+            'Pummel Party',
+            'Raft',
+            'Stardew Valley',
+            'Stick Fight: The Game',
+            'Thunder Tier One',
+            "Tom Clancy's Rainbox Six Siege",
+            "Tom Clancy's The Division 2",
+            'Zombie Army Trilogy'
         ]
         
 gameList2 = [
+            'Age of Empires II: HD Edition',
+            'Borderlands: The Pre-Sequel',
+            'Borderlands 2',
+            'Borderlands 3',
+            "Don't Starve Together",
+            'Halo Wars: Enhanced Edition',
+            'Halo Wars 2',
+            'Left 4 Dead 2',
+            'Rocket League',
+            "Sid Meier's Civilization VI",
+            'Sins of a Solar Empire: Rebellion',
+            'Sonic & All-Stars Racing Transformed',
+            'Star Wars Battlefront II (Classic)',
+            'Starbound',
+            'Stardew Valley',
+            'Supreme Commander 2',
+            'Terraria',
+            'Victor Vran',
+            'Wargame: Red Dragon',
         ]
 
 class Games(commands.Cog):
@@ -19,10 +57,10 @@ class Games(commands.Cog):
     async def randomgame(self, ctx):
         guild = ctx.guild
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        if (guild.name == ""):
+        if (guild.name == "Island Boys"):
             response = random.choice(gameList)
             await ctx.send(embed=discord.Embed(description="You should play: " + response, colour=c))
-        elif (guild.name == ""):
+        elif (guild.name == "The Zoo Animals....and Ryan"):
             response = random.choice(gameList2)
             await ctx.send(embed=discord.Embed(description="You should play: " + response, colour=c))
         else:
@@ -34,11 +72,11 @@ class Games(commands.Cog):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         guild = ctx.guild
 
-        if (guild.name == ""):
+        if (guild.name == "Island Boys"):
             for game in gameList:
                 newList = newList + '\n' + game
             await ctx.send(embed=discord.Embed(description=newList, colour=c))
-        elif (guild.name == ""):
+        elif (guild.name == "The Zoo Animals....and Ryan"):
             for game in gameList2:
                 newList = newList + '\n' + game
             await ctx.send(embed=discord.Embed(description=newList, colour=c))
