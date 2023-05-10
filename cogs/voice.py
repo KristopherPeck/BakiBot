@@ -3,11 +3,16 @@ import sys
 import random
 import yt_dlp
 import asyncio
+import ctypes
+import ctypes.util
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
 #yt_dlp.utils.bug_reports_message = lambda: ''
+
+find_opus = ctypes.util.find_library('opus')
+discord.opus.load_opus(find_opus)
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
