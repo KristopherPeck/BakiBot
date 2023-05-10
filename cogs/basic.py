@@ -76,7 +76,6 @@ class Basic(commands.Cog):
                 title="Audio Command List",
                 color=c)
             embed.add_field(name="**tts**", value="Have Baki tell everyone what you are really thinking. Just like this: !tts Chicken Butt", inline=False)
-            await ctx.send(heroku_check)
             await ctx.author.send(embed=embed)
         
     @commands.command(name="posthelp")
