@@ -1,9 +1,16 @@
 import discord
 import sys
 import random
+import os
+import os.path
+from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
+
+load_dotenv()
+game_list_id = os.getenv('DISCORD_IB_ID')
+game_list_id_2 = os.getenv('DISCORD_ZA_ID')
 
 gameList = [
             'American Truck Simulator',
@@ -57,10 +64,10 @@ class Games(commands.Cog):
     async def randomgame(self, ctx):
         guild = ctx.guild
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        if (guild.name == "Island Boys"):
+        if (guild.id == int(game_list_id)):
             response = random.choice(gameList)
             await ctx.send(embed=discord.Embed(description="You should play: " + response, colour=c))
-        elif (guild.name == "The Zoo Animals....and Ryan"):
+        elif (guild.id == int(game_list_id_2)):
             response = random.choice(gameList2)
             await ctx.send(embed=discord.Embed(description="You should play: " + response, colour=c))
         else:
@@ -72,11 +79,11 @@ class Games(commands.Cog):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         guild = ctx.guild
 
-        if (guild.name == "Island Boys"):
+        if (guild.id == int(game_list_id)):
             for game in gameList:
                 newList = newList + '\n' + game
             await ctx.send(embed=discord.Embed(description=newList, colour=c))
-        elif (guild.name == "The Zoo Animals....and Ryan"):
+        elif (guild.id == int(game_list_id_2)):
             for game in gameList2:
                 newList = newList + '\n' + game
             await ctx.send(embed=discord.Embed(description=newList, colour=c))
