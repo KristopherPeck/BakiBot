@@ -9,24 +9,24 @@ from discord.ext.commands import bot
 from discord.ext.commands import Context
 
 load_dotenv()
-ownerID = os.getenv('DISCORD_OWNERID')
-WeatherAPI = os.getenv('WEATHERAPI')
-WeatherCurrentForcastURL= "https://api.openweathermap.org/data/2.5/weather?"
-WeatherIconURL = "https://openweathermap.org/img/wn/"
+owner_id = os.getenv('DISCORD_OWNERID')
+weather_api = os.getenv('WEATHERAPI')
+weather_current_forcast_url= "https://api.openweathermap.org/data/2.5/weather?"
+weather_icon_url = "https://openweathermap.org/img/wn/"
 
 class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
     def ownercheck(ctx):
-        return ctx.message.author.id == int(ownerID)
+        return ctx.message.author.id == int(owner_id)
     
     @commands.command(name='weather')
     async def weather(self, ctx, *args):
-        listToStr = ' '.join([str(elem) for elem in args])
-        city_name = listToStr
+        list_to_str = ' '.join([str(elem) for elem in args])
+        city_name = list_to_str
         city_name = city_name.title()
-        complete_url = WeatherCurrentForcastURL + "appid=" + WeatherAPI + "&q=" + city_name
+        complete_url = weather_current_forcast_url + "appid=" + weather_api + "&q=" + city_name
         response = requests.get(complete_url)
         api_response = response.json()
         channel = ctx.message.channel
@@ -47,7 +47,7 @@ class Weather(commands.Cog):
                 weather_description = api_selector_weather[0]["description"]
                 weather_description = weather_description.title()
                 weather_icon = api_selector_weather[0]["icon"]
-                weather_icon = WeatherIconURL + weather_icon + "@2x.png"
+                weather_icon = weather_icon_url + weather_icon + "@2x.png"
                 c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 embed = discord.Embed(title=f"Weather in {city_name}",
                               color=c,
