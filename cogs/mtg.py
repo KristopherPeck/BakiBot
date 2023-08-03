@@ -57,7 +57,9 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         except:
             card_flavor_text = ""
 
-        embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}")
+        #Currently I pick a random color for the embed like I do for other instances.
+        #Eventually I would like to update it to take the color identity of the card into account. 
+        embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=random_color)
         
         #Some cards don't have a Mana Cost so we have to accomodate for that.
         if "Land" in card_type:
