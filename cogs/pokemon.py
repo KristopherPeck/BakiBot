@@ -233,8 +233,8 @@ class Pokemon(commands.Cog):
         await channel.send(embed=embed)
 
     #This command is built the same as the random one but it allows you to put in either a name or pokemon id. 
-    @commands.command(name='pickapokemon')
-    async def pickapokemon(self, ctx, *args):
+    @commands.command(name='pokemon')
+    async def pokemon(self, ctx, *args):
         #Here we give the possibility for multiple entries. This is to allow for pokemon with spaces in their names like Iron Leaves or Urshifu Single Strike. 
         #We also set the pokemonid to lowercase because the api doesn't accept it with capital letters in it.
         PokemonID = '-'.join(args)
