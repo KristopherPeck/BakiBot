@@ -60,11 +60,13 @@ class Voice(commands.Cog):
         self.bot = bot
         
     @commands.command(name="tts")
+    @commands.cooldown(1.0,3.0)
     async def join(self, ctx, *args):
             await ctx.send("Psst! Someone wanted me to tell you guys: ") 
             await ctx.send(' '.join(args), tts=True)
             
     @commands.command(name="join")
+    @commands.cooldown(1.0,3.0)
     async def joinchannel(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel"""
         if heroku_check == 'False':
@@ -76,6 +78,7 @@ class Voice(commands.Cog):
             await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
+    @commands.cooldown(1.0,3.0)
     async def play(self, ctx, *, query):
         """Plays a file from the local filesystem"""
 
@@ -89,6 +92,7 @@ class Voice(commands.Cog):
             await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
+    @commands.cooldown(1.0,3.0)
     async def yt(self, ctx, *, url):
         """Plays from a url (almost anything yt_dlp supports)"""
 
@@ -103,6 +107,7 @@ class Voice(commands.Cog):
             await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
+    @commands.cooldown(1.0,3.0)
     async def stream(self, ctx, *, url):
         """Streams from a url (same as yt, but doesn't predownload)"""
 
@@ -117,6 +122,7 @@ class Voice(commands.Cog):
             await ctx.send("This command is not available on Heroku deployments.")
     
     @commands.command()
+    @commands.cooldown(1.0,3.0)
     async def volume(self, ctx, volume: int):
         """Changes the player's volume"""
 
@@ -131,6 +137,7 @@ class Voice(commands.Cog):
             await ctx.send("This command is not available on Heroku deployments.")
 
     @commands.command()
+    @commands.cooldown(1.0,3.0)
     async def stop(self, ctx):
         """Stops and disconnects the bot from voice"""
 

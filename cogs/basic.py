@@ -15,6 +15,7 @@ class Basic(commands.Cog):
         self.bot = bot
     
     @commands.command(name="help")
+    @commands.cooldown(1.0,3.0)
     async def DM(self, ctx):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
@@ -83,6 +84,7 @@ class Basic(commands.Cog):
             await ctx.author.send(embed=embed)
         
     @commands.command(name="posthelp")
+    @commands.cooldown(1.0,3.0)
     async def post(self, ctx):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         if heroku_check == 'False':

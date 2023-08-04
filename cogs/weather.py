@@ -22,6 +22,7 @@ class Weather(commands.Cog):
         return ctx.message.author.id == int(owner_id)
     
     @commands.command(name='weather')
+    @commands.cooldown(1.0,3.0)
     async def weather(self, ctx, *args):
         list_to_str = ' '.join([str(elem) for elem in args])
         city_name = list_to_str

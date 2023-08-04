@@ -61,6 +61,7 @@ class Games(commands.Cog):
         self.bot = bot
         
     @commands.command(name='randomgame', help='Randomly picks a game from the server side game list')
+    @commands.cooldown(1.0,3.0)
     async def randomgame(self, ctx):
         guild = ctx.guild
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -74,6 +75,7 @@ class Games(commands.Cog):
             await ctx.send(embed=discord.Embed(description="No list found for this server", colour=c))
         
     @commands.command(name="gamelist")
+    @commands.cooldown(1.0,3.0)
     async def on_message(self, ctx):
         newList = '**Current Game list**' + '\n'
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))

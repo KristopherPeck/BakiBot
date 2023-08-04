@@ -19,18 +19,21 @@ class Random(commands.Cog):
         self.bot = bot
    
     @commands.command(name='randombaki')
+    @commands.cooldown(1.0,3.0)
     async def randombaki(self, ctx):
         response = random.choice(baki_quotes)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description=response, colour=random_color))
         
     @commands.command(name="choose", description="Choose from a list", usage="choose <item1 item2 item3 ... >")
+    @commands.cooldown(1.0,3.0)
     async def choose(self, ctx, *args):
         response = random.choice(args)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
         
     @commands.command(name="diceroll")
+    @commands.cooldown(1.0,3.0)
     async def diceroll(self, ctx, arg1):
         arg1 = int(arg1)
         result = random.randint(1, arg1)
@@ -39,6 +42,7 @@ class Random(commands.Cog):
         await ctx.send(embed=discord.Embed(description="Show me the money!: " + result, colour=random_color))
         
     @commands.command(name="color")
+    @commands.cooldown(1.0,3.0)
     async def colour(self, ctx):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(
@@ -50,6 +54,7 @@ class Random(commands.Cog):
         )
         
     @commands.command(name="8ball", description="classic 8ball", aliases=["eightball"])
+    @commands.cooldown(1.0,3.0)
     async def eightball(self, ctx, question: str):
         eightball_responses = [
             "It is certain.",

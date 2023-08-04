@@ -4,6 +4,9 @@ The code for a personal discord bot built in Python. Mainly used for picking ran
 ## Requirements
 Tested with [Python 3.8.3](https://www.python.org/downloads/release/python-383/). It should work with any recent version. 
 
+## Cooldown
+There is a short cooldown implemented on commands. This can be removed from the commands by removing the @commands.cooldown() from the commands code.
+
 ## Commands
 Current command prefix is set to !
 

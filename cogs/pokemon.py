@@ -219,6 +219,7 @@ class Pokemon(commands.Cog):
         return ctx.message.author.id == int(owner_id)
 
     @commands.command(name='randompokemon')
+    @commands.cooldown(1.0,3.0)
     async def randompokemon(self, ctx):
         #Start pulling in the initial API information
         random_pokemon_id = random.randint(1, max_pokemon_count)
@@ -234,6 +235,7 @@ class Pokemon(commands.Cog):
 
     #This command is built the same as the random one but it allows you to put in either a name or pokemon id. 
     @commands.command(name='pokemon')
+    @commands.cooldown(1.0,3.0)
     async def pokemon(self, ctx, *args):
         #Here we give the possibility for multiple entries. This is to allow for pokemon with spaces in their names like Iron Leaves or Urshifu Single Strike. 
         #We also set the pokemonid to lowercase because the api doesn't accept it with capital letters in it.

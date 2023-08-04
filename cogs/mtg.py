@@ -52,10 +52,21 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         card_set_name = random_card_json["set_name"]
         card_set_code = random_card_json["set"].upper()
 
+        #Flavor text as well as back oracle text aren't always on the cards.
         try:
             card_flavor_text = random_card_json["flavor_text"]
         except:
             card_flavor_text = ""
+
+        try:
+            card_back_flavor_text = random_card_json["card_faces"][1]["flavor_text"]
+        except:
+            card_back_flavor_text = ""
+
+        try:
+            card_back_oracle_text = random_card_json["card_faces"][1]["oracle_text"]
+        except:
+            card_back_oracle_text = ""
 
         #Currently I pick a random color for the embed like I do for other instances.
         #Eventually I would like to update it to take the color identity of the card into account. 
@@ -77,6 +88,12 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         else:
             embed.add_field(name="Oracle Text:", value=f"{card_oracle_text}", inline=False)
 
+        if card_back_oracle_text == "":
+            pass
+        else:
+            embed.add_field(name="Back Oracle Text:", value=f"{card_back_oracle_text}", inline=False)
+
+
         #While Vanguard may not exist anymore I still accomodate for them. 
         #Vanguard cards have some additional text on them regarding hand and life modifiers I want to display. 
         if "Vanguard" in card_type:
@@ -89,6 +106,11 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             pass
         else:
             embed.add_field(name="Flavor Text:", value=f"{card_flavor_text}", inline=False)
+
+        if card_back_flavor_text == "":
+            pass
+        else:
+            embed.add_field(name="Back Flavor Text:", value=f"{card_back_flavor_text}", inline=False)
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
@@ -105,6 +127,12 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
                 card_toughness = random_card_json["toughness"]
             except:
                 card_toughness = random_card_json["card_faces"][0]["toughness"]
+
+            if card_power == "*":
+                card_power = "* "
+
+            if card_toughness == "*":
+                card_toughness = " *"
 
             embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
 
@@ -157,6 +185,7 @@ class mtg(commands.Cog):
         return ctx.message.author.id == int(owner_id)
     
     @commands.command(name='randommtg')
+    @commands.cooldown(1.0,3.0)
     async def randommtg(self, ctx):
         random_card_url = scryfall_url + "cards/random"
         random_card_response = requests.get(random_card_url)
@@ -172,6 +201,7 @@ class mtg(commands.Cog):
         await channel.send(embed=embed)
 
     @commands.command(name='randomcommander')
+    @commands.cooldown(1.0,3.0)
     async def randomcommander(self, ctx):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
