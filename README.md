@@ -13,12 +13,12 @@ Current command prefix is set to !
 - Choose: Randomly select an option from the provided options. e.g. !choose Lead Salt Diesel
 - Color: Post a random color and display the Hex and RGB values and an example of the color. 
 - Diceroll: Roll a die of the size of your choosing. e.g. !diceroll 20
+- dmhelp: Sends you a message of the current commands available
 - eightball or 8ball: Ask the magic 8 Ball a question. 
 - Gamelist: Posts the current game list. This can be modified in games.py. Currently set to be configured per server.
-- Help: Sends a direct message with the command list to the user requesting the help. 
+- Help: Posts the content of the help command in the current channel. 
 - Join: Have Baki Join a voice chat channel. 
 - Pokemon: Highlight a pokemon by using either it's Pokedex number or it's name.
-- PostHelp: Posts the content of the help command in the current channel. 
 - Randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
 - Randomcommander: Pick a random EDH legal Legendary Creature.
 - Randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
