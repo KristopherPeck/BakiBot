@@ -45,6 +45,33 @@ class Weather(commands.Cog):
                 wind_info = api_response["wind"]
                 wind_speed = wind_info["speed"]
                 wind_speed = str(round(wind_speed * 2.2369))
+
+                cloud_info = api_response["clouds"]
+                cloud_cover = cloud_info["all"]
+
+                try:
+                    rain_info = api_response["rain"]
+                    rain_volume = rain_info["1h"]
+                    rain_volume = str(round(rain_volume / 25.4))
+                except: 
+                    rain_info = 0
+
+                try:
+                    snow_info = api_response["snow"]
+                    snow_volume = snow_info["1h"]
+                    snow_volume = str(round(snow_volume / 25.4))
+                except: 
+                    snow_info = 0
+
+                visibility = api_response["visibility"]
+                visibility = round(visibility * 3.280839895)
+                
+                if visibility > 5280:
+                    visibility = str(round(visibility * 0.0001893939))
+                    visibility_mile_indicator = 1
+                else:
+                    visibility = str(visibility)
+
                 weather_description = api_selector_weather[0]["description"]
                 weather_description = weather_description.title()
                 weather_icon = api_selector_weather[0]["icon"]
@@ -54,10 +81,28 @@ class Weather(commands.Cog):
                               color=c,
                               timestamp=ctx.message.created_at,)
                 embed.add_field(name="Description", value=f"**{weather_description}**", inline=False)
+                embed.add_field(name="Cloud Cover", value=f"**{cloud_cover}%**", inline=False)
+                                
+                if visibility_mile_indicator == 1:
+                    embed.add_field(name="Visibility (mi)", value=f"**{visibility}mi**", inline=False)
+                else:
+                    embed.add_field(name="Visibility (ft)", value=f"**{visibility}ft**", inline=False)
+
                 embed.add_field(name="Temperature (F)", value=f"**{current_temperature_fahrenheit}°F**", inline=False)
                 embed.add_field(name="Feels Like (F)", value=f"**{feels_like_temperature_fahrenheit}°F**", inline=False)
                 embed.add_field(name="Wind Speed (mph)", value=f"**{wind_speed}mph**", inline=False)
                 embed.add_field(name="Humidity (%)", value=f"**{current_humidity}%**", inline=False)
+                
+                if rain_info == 0:
+                    pass
+                else:
+                    embed.add_field(name="Rain Volume (Past Hour - in)", value=f"**{rain_volume}in**", inline=False)
+
+                if snow_info == 0:
+                    pass
+                else:
+                    embed.add_field(name="Snow Volume (Past Hour - in)", value=f"**{snow_volume}in**", inline=False)
+
                 embed.set_thumbnail(url=weather_icon)
                 embed.set_footer(text=f"Requested by {ctx.author.name}")
                 await channel.send(embed=embed)
