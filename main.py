@@ -17,7 +17,7 @@ intents = discord.Intents.all()
 intents.members = True
 client = commands.Bot(command_prefix='!', intents = intents)
 client.remove_command('help')
-DiscordGame = discord.Game("!help or !posthelp")
+DiscordGame = discord.Game("!help or !dmhelp")
 
 #We have a environment variable for the Bot Administrator so only they can run certain commands.
 def ownercheck(ctx):
@@ -26,7 +26,7 @@ def ownercheck(ctx):
 @client.event
 async def on_ready():
     #Set discord presence
-    await client.change_presence(activity=discord.Game(name="!help or !posthelp"))
+    await client.change_presence(activity=discord.Game(name="!help or !dmhelp"))
 
 @client.event
 async def on_command_error(ctx, error):
@@ -45,6 +45,13 @@ async def load(ctx, extension):
     commands.is_owner()
     await client.load_extension(f'cogs.{extension}')
     await ctx.send("Loaded Cog")
+
+@client.command()
+@commands.check(ownercheck)
+async def shutdown(ctx):
+    commands.is_owner()
+    await ctx.send ("Shutting Down Now")
+    await client.close()
 
 @client.command()
 @commands.check(ownercheck)
