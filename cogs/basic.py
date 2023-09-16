@@ -14,7 +14,7 @@ class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(name="help")
+    @commands.command(name="dmhelp")
     @commands.cooldown(1.0,3.0)
     async def DM(self, ctx):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -83,7 +83,7 @@ class Basic(commands.Cog):
             embed.add_field(name="**tts**", value="Have Baki tell everyone what you are really thinking. Just like this: !tts Chicken Butt", inline=False)
             await ctx.author.send(embed=embed)
         
-    @commands.command(name="posthelp")
+    @commands.command(name="help")
     @commands.cooldown(1.0,3.0)
     async def post(self, ctx):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
