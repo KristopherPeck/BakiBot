@@ -227,21 +227,23 @@ class mtg(commands.Cog):
         
         await channel.send(embed=embed)
 
-        @commands.command(name='momir')
-        @commands.cooldown(1.0,3.0)
-        async def momir(self, ctx arg1):
+@commands.command(name='momir')
+@commands.cooldown(1.0,3.0)
+async def momir(self, ctx arg1):
 
-                arg1 = str(arg1)
-                momir_card_url = scryfall_url + "cards/random?q=t%3Acreature&mv%3A" + arg1
-                momir_card_response = requests.get(momir_card_url)
-                momir_card_json = momir_card_response.json()
-                card_type = momir_card_json["type_line"]
+        arg1 = str(arg1)
+        momir_card_url = scryfall_url + "cards/random?q=t%3Acreature&mv%3A" + arg1
+        momir_card_response = requests.get(momir_card_url)
+        momir_card_json = momir_card_response.json()
+        card_type = momir_card_json["type_line"]
 
-                random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-                channel = ctx.message.channel
-                        async with channel.typing():
+        channel = ctx.message.channel
+                async with channel.typing():
                         embed = GenerateCardDetails(card_type, momir_card_json, random_color)
+
+        await channel.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(mtg(bot))
