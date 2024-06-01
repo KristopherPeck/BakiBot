@@ -240,9 +240,9 @@ class mtg(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
         channel = ctx.message.channel
-                async with channel.typing():
-                        embed = GenerateCardDetails(card_type, momir_card_json, random_color)
-
+        async with channel.typing():
+            embed = GenerateCardDetails(card_type, momir_card_json, random_color)
+                
         await channel.send(embed=embed)
 
 async def setup(bot):
