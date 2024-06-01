@@ -17,8 +17,11 @@ gameList = [
             'Battlefield V',
             'Command and Conquer: Red Alert 2',
             'Command and Conquer: Generals - Zero Hour',
+            'Farming Simulator 19',
+            'Green Hell',
             'Halo Infinite',
             'Halo: The Master Chief Collection',
+            'Helldivers 2',
             'Left 4 Dead 2',
             'Parkitect',
             'Payday 2',
@@ -26,11 +29,14 @@ gameList = [
             'Pulsar: Lost Colony',
             'Pummel Party',
             'Raft',
+            'Sniper Elite 5',
             'Stardew Valley',
             'Stick Fight: The Game',
+            'theHunter: Call of the Wild',
             'Thunder Tier One',
             "Tom Clancy's Rainbox Six Siege",
             "Tom Clancy's The Division 2",
+            'Zombie Army 4: Dead War',
             'Zombie Army Trilogy'
         ]
         
@@ -53,7 +59,7 @@ gameList2 = [
             'Supreme Commander 2',
             'Terraria',
             'Victor Vran',
-            'Wargame: Red Dragon',
+            'Wargame: Red Dragon'
         ]
 
 class Games(commands.Cog):
