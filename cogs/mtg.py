@@ -232,7 +232,9 @@ class mtg(commands.Cog):
     async def momir(self, ctx, arg1):
 
         arg1 = str(arg1)
-        momir_card_url = scryfall_url + "cards/random?q=t%3Acreature&mv%3A" + arg1
+        print (arg1)
+        momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1
+        print (momir_card_url)
         momir_card_response = requests.get(momir_card_url)
         momir_card_json = momir_card_response.json()
         card_type = momir_card_json["type_line"]
