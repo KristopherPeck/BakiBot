@@ -227,9 +227,9 @@ class mtg(commands.Cog):
         
         await channel.send(embed=embed)
 
-@commands.command(name='momir')
-@commands.cooldown(1.0,3.0)
-async def momir(self, ctx arg1):
+    @commands.command(name='momir')
+    @commands.cooldown(1.0,3.0)
+    async def momir(self, ctx arg1):
 
         arg1 = str(arg1)
         momir_card_url = scryfall_url + "cards/random?q=t%3Acreature&mv%3A" + arg1
