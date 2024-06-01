@@ -73,7 +73,6 @@ class Basic(commands.Cog):
             embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
             embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
             embed.add_field(name="**whoisabitch**", value="Determine who is a bitch from a list of names", inline=False)
-            embed.add_field(name="**xkcd**", value="Posts a random xkcd comic", inline=False)
             await ctx.author.send(embed=embed)
             
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -141,7 +140,6 @@ class Basic(commands.Cog):
             embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
             embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
             embed.add_field(name="**whoisabitch**", value="Determine who is a bitch from a list of names", inline=False)
-            embed.add_field(name="**xkcd**", value="Posts a random xkcd comic", inline=False)
             await ctx.send(embed=embed)
             
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
