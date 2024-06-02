@@ -12,7 +12,7 @@ from discord.ext.commands import Context
 load_dotenv()
 owner_id = os.getenv('DISCORD_OWNERID')
 #This includes everything up through Paradox.
-max_pokemon_count = 1010
+#max_pokemon_count = 1301
 pokemon_api_url = "https://pokeapi.co/api/v2/"
 
 def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
@@ -222,8 +222,15 @@ class Pokemon(commands.Cog):
     @commands.cooldown(1.0,3.0)
     async def randompokemon(self, ctx):
         #Start pulling in the initial API information
-        random_pokemon_id = random.randint(1, max_pokemon_count)
-        complete_api_url = pokemon_api_url + "pokemon/" + str(random_pokemon_id)
+        max_pokemon_count_url = pokemon_api_url + "pokemon?limit=100000&offset=0"
+        max_pokemon_response = requests.get(max_pokemon_count_url)
+        max_pokemon_json = max_pokemon_response.json()
+        max_pokemon_count = int(max_pokemon_json["count"]) - 1
+        random_pokemon_id = random.randint(0, max_pokemon_count)
+        #complete_api_url = pokemon_api_url + "pokemon/" + str(random_pokemon_id)
+        complete_api_url = max_pokemon_json[random_pokemon_id]["url"]
+        print ("Random Pokemon: " + random_pokemon_id)
+        print (complete_api_url)
         Response = requests.get(complete_api_url)
         ResponseJSON = Response.json()
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
