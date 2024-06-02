@@ -235,13 +235,17 @@ class mtg(commands.Cog):
     @commands.cooldown(1.0,3.0)
     async def momir(self, ctx, arg1):
 
-        arg1 = str(arg1)
-        momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1
-        print ("Random Momir prompt for:" + arg1)
-        momir_card_response = requests.get(momir_card_url)
-        momir_card_json = momir_card_response.json()
-        print (momir_card_json["name"])
-        card_type = momir_card_json["type_line"]
+        try:  
+                arg1 = str(arg1)
+                momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1
+                print ("Random Momir prompt for:" + arg1)
+                momir_card_response = requests.get(momir_card_url)
+                momir_card_json = momir_card_response.json()
+                print (momir_card_json["name"])
+                card_type = momir_card_json["type_line"]
+        except:
+                await ctx.send("It looks like there wasn't any card with that mana value. Please try another one.")
+                return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
