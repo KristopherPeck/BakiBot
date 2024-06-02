@@ -228,7 +228,7 @@ class Pokemon(commands.Cog):
         max_pokemon_count = int(max_pokemon_json["count"]) - 1
         random_pokemon_id = random.randint(0, max_pokemon_count)
         #complete_api_url = pokemon_api_url + "pokemon/" + str(random_pokemon_id)
-        complete_api_url = max_pokemon_json[random_pokemon_id]["url"]
+        complete_api_url = max_pokemon_json[str(random_pokemon_id)]["url"]
         print ("Random Pokemon: " + random_pokemon_id)
         print (complete_api_url)
         Response = requests.get(complete_api_url)
