@@ -229,8 +229,8 @@ class Pokemon(commands.Cog):
         random_pokemon_id = random.randint(0, max_pokemon_count)
         #complete_api_url = pokemon_api_url + "pokemon/" + str(random_pokemon_id)
         complete_api_url = max_pokemon_json["results"][random_pokemon_id]["url"]
-        print ("Random Pokemon: " + random_pokemon_id)
-        print (complete_api_url)
+        print ("Random Pokemon: " + str(random_pokemon_id))
+        print (str(complete_api_url))
         Response = requests.get(complete_api_url)
         ResponseJSON = Response.json()
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
