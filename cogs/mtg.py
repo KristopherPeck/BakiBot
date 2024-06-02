@@ -188,6 +188,8 @@ class mtg(commands.Cog):
     @commands.cooldown(1.0,3.0)
     async def randommtg(self, ctx):
         random_card_url = scryfall_url + "cards/random"
+        print ("Random MTG Card")
+        print (random_card_url)
         random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
         card_type = random_card_json["type_line"]
@@ -205,6 +207,8 @@ class mtg(commands.Cog):
     async def randomcommander(self, ctx):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
+        print ("Random Commander")
+        print (random_card_url)
         random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
         card_type = random_card_json["type_line"]
@@ -232,8 +236,8 @@ class mtg(commands.Cog):
     async def momir(self, ctx, arg1):
 
         arg1 = str(arg1)
-        print (arg1)
         momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1
+        print ("Random Momir prompt for:" + arg1)
         print (momir_card_url)
         momir_card_response = requests.get(momir_card_url)
         momir_card_json = momir_card_response.json()
