@@ -53,7 +53,6 @@ class Basic(commands.Cog):
             embed=discord.Embed(
                 title="Magic the Gathering Command List",
                 color=c)
-            embed.add_field(name="**diceroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
             embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: !jhoira instant or !jhoira sorcery", inline=False)
             embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
             embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic. Just like this: !momir 1 or !momir 13", inline=False)
@@ -100,7 +99,6 @@ class Basic(commands.Cog):
             embed=discord.Embed(
                 title="Magic the Gathering Command List",
                 color=c)
-            embed.add_field(name="**diceroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
             embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: !jhoira instant or !jhoira sorcery", inline=False)
             embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
             embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic. Just like this: !momir 1 or !momir 13", inline=False)
@@ -157,7 +155,6 @@ class Basic(commands.Cog):
             embed=discord.Embed(
                 title="Magic the Gathering Command List",
                 color=c)
-            embed.add_field(name="**diceroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
             embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: !jhoira instant or !jhoira sorcery", inline=False)
             embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
             embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic. Just like this: !momir 1 or !momir 13", inline=False)
@@ -204,7 +201,6 @@ class Basic(commands.Cog):
             embed=discord.Embed(
                 title="Magic the Gathering Command List",
                 color=c)
-            embed.add_field(name="**diceroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
             embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: !jhoira instant or !jhoira sorcery", inline=False)
             embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
             embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic. Just like this: !momir 1 or !momir 13", inline=False)
