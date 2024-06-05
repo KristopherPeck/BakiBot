@@ -262,8 +262,8 @@ class mtg(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         arg1 = str(arg1)
 
-        if arg1 not in ("Instant", "instant", "sorcery", "Sorcery", "instants", "sorceries", "sorcerys", "Sorceries", "Sorcerys", "Instants"):
-            await ctx.send("Jhoira of the Ghitu only works with Instant or Sorcery.")
+        if arg1 not in ("Instant", "instant", "sorcery", "Sorcery"):
+            await ctx.send("Jhoira of the Ghitu only works with instant or sorcery.")
 
         try:  
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1
