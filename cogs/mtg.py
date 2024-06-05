@@ -255,5 +255,51 @@ class mtg(commands.Cog):
                 
         await channel.send(embed=embed)
 
+    @commands.command(name='jhoira')
+    @commands.cooldown(1.0,3.0)
+    async def jhoira(self, ctx, arg1):
+
+        try:  
+                arg1 = str(arg1)
+                jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1
+                jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1
+                jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1
+                print ("Random Jhoira prompt for:" + arg1)
+                jhoira_card_response_1 = requests.get(jhoira_card_url_1)
+                jhoira_card_response_2 = requests.get(jhoira_card_url_2)
+                jhoira_card_response_3 = requests.get(jhoira_card_url_3)
+                jhoira_card_json_1 = jhoira_card_response_1.json()
+                jhoira_card_json_2 = jhoira_card_response_2.json()
+                jhoira_card_json_3 = jhoira_card_response_3.json()
+                print (jhoira_card_json_1["name"])
+                print (jhoira_card_json_2["name"])
+                print (jhoira_card_json_3["name"])
+                card_type_1 = jhoira_card_json_1["type_line"]
+                card_type_2 = jhoira_card_json_2["type_line"]
+                card_type_3 = jhoira_card_json_3["type_line"]
+        except:
+                await ctx.send("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
+                return
+        
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        channel = ctx.message.channel
+        async with channel.typing():
+            embed = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)
+                
+        await channel.send(embed=embed)
+
+        channel = ctx.message.channel
+        async with channel.typing():
+            embed = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color)
+                
+        await channel.send(embed=embed)
+
+        channel = ctx.message.channel
+        async with channel.typing():
+            embed = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)
+                
+        await channel.send(embed=embed)
+
 async def setup(bot):
     await bot.add_cog(mtg(bot))
