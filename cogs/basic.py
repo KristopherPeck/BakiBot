@@ -133,7 +133,7 @@ class Basic(commands.Cog):
             embed.add_field(name="**stream**", value="UNSTABLE: Baki will play you the audio of a youtube video. You have to use !join first. You stream just like this: !stream https://www.youtube.com/watch?v=dQw4w9WgXcQ", inline=False)
             embed.add_field(name="**tts**", value="Have Baki tell everyone what you are really thinking. Just like this: !tts Chicken Butt", inline=False)
             embed.add_field(name="**volume**", value="Set Baki's volume like this: !volume 50", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             embed=discord.Embed(
@@ -151,7 +151,7 @@ class Basic(commands.Cog):
             embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
             embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
             embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             embed=discord.Embed(
@@ -164,7 +164,7 @@ class Basic(commands.Cog):
             embed.add_field(name="**randomcommander**", value="Pick a random EDH legal Legendary Creature", inline=False)
             embed.add_field(name="**randommtg**", value="Pick a random Magic the Gathering card", inline=False)
             embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remeber that Stonehewer is less than not equal to. Just like this: !stonehewer 3", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             embed=discord.Embed(
@@ -172,7 +172,7 @@ class Basic(commands.Cog):
                 color=c)
             embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: !pokemon Mewtwo or !pokemon 150", inline=False)
             embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
-            await ctx.author.send(embed=embed)   
+            await ctx.send(embed=embed)   
 
         else:
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -180,7 +180,7 @@ class Basic(commands.Cog):
                 title="Audio Command List",
                 color=c)
             embed.add_field(name="**tts**", value="Have Baki tell everyone what you are really thinking. Just like this: !tts Chicken Butt", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             embed=discord.Embed(
@@ -198,7 +198,7 @@ class Basic(commands.Cog):
             embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
             embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
             embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             embed=discord.Embed(
@@ -211,7 +211,7 @@ class Basic(commands.Cog):
             embed.add_field(name="**randomcommander**", value="Pick a random EDH legal Legendary Creature", inline=False)
             embed.add_field(name="**randommtg**", value="Pick a random Magic the Gathering card", inline=False)
             embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remeber that Stonehewer is less than not equal to. Just like this: !stonehewer 3", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             embed=discord.Embed(
@@ -219,7 +219,7 @@ class Basic(commands.Cog):
                 color=c)
             embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: !pokemon Mewtwo or !pokemon 150", inline=False)
             embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
-            await ctx.author.send(embed=embed)
+            await ctx.send(embed=embed)
         
 async def setup(bot):
     await bot.add_cog(Basic(bot))

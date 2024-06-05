@@ -262,7 +262,7 @@ class mtg(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         arg1 = str(arg1)
 
-        if arg1 != "Instant" or "instant" or "sorcery" or "Sorcery":
+        if arg1 not in ("Instant", "instant", "sorcery", "Sorcery", "instants", "sorceries", "sorcerys", "Sorceries", "Sorcerys", "Instants"):
             await ctx.send("Jhoira of the Ghitu only works with Instant or Sorcery.")
 
         try:  
