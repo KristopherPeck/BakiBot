@@ -259,8 +259,13 @@ class mtg(commands.Cog):
     @commands.cooldown(1.0,3.0)
     async def jhoira(self, ctx, arg1):
 
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        arg1 = str(arg1)
+
+        if arg1 != "Instant" or "instant" or "sorcery" or "Sorcery":
+            await ctx.send("Jhoira of the Ghitu only works with Instant or Sorcery.")
+
         try:  
-                arg1 = str(arg1)
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1
                 jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1
                 jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1
@@ -280,8 +285,6 @@ class mtg(commands.Cog):
         except:
                 await ctx.send("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
                 return
-        
-        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
         channel = ctx.message.channel
         async with channel.typing():
@@ -298,6 +301,41 @@ class mtg(commands.Cog):
         channel = ctx.message.channel
         async with channel.typing():
             embed = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)
+                
+        await channel.send(embed=embed)
+
+
+    @commands.command(name='mojhosto')
+    @commands.cooldown(1.0,3.0)
+    async def mojhosto(self, ctx):
+
+        await ctx.send("MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards.")
+        await ctx.send("There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.")
+        await ctx.send("https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277")
+        await ctx.send("https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg?1562943398")
+        await ctx.send("https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg?1562945952")
+
+    @commands.command(name='stonehewer')
+    @commands.cooldown(1.0,3.0)
+    async def stonehewer(self, ctx, arg1):
+
+        try:  
+                arg1 = str(arg1)
+                stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1
+                print ("Random Stonehewer prompt for:" + arg1)
+                stonehewer_card_response = requests.get(stonehewer_card_url)
+                stonehewer_card_json = stonehewer_card_response.json()
+                print (stonehewer_card_json["name"])
+                card_type = stonehewer_card_json["type_line"]
+        except:
+                await ctx.send("It looks like there wasn't any card available for that mana value. Please try another one.")
+                return
+
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        channel = ctx.message.channel
+        async with channel.typing():
+            embed = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
                 
         await channel.send(embed=embed)
 
