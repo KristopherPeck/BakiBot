@@ -237,7 +237,7 @@ class mtg(commands.Cog):
 
         try:  
                 arg1 = str(arg1)
-                momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1
+                momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
                 print ("Random Momir prompt for:" + arg1)
                 momir_card_response = requests.get(momir_card_url)
                 momir_card_json = momir_card_response.json()
@@ -266,9 +266,9 @@ class mtg(commands.Cog):
             await ctx.send("Jhoira of the Ghitu only works with instant or sorcery.")
 
         try:  
-                jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1
-                jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1
-                jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1
+                jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
+                jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
+                jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 print ("Random Jhoira prompt for:" + arg1)
                 jhoira_card_response_1 = requests.get(jhoira_card_url_1)
                 jhoira_card_response_2 = requests.get(jhoira_card_url_2)
@@ -321,7 +321,7 @@ class mtg(commands.Cog):
 
         try:  
                 arg1 = str(arg1)
-                stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1
+                stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
                 print ("Random Stonehewer prompt for:" + arg1)
                 stonehewer_card_response = requests.get(stonehewer_card_url)
                 stonehewer_card_json = stonehewer_card_response.json()
