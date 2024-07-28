@@ -104,7 +104,7 @@ class Weather(commands.Cog):
                     embed.add_field(name="Snow Volume (Past Hour - in)", value=f"**{snow_volume}in**", inline=False)
 
                 embed.set_thumbnail(url=weather_icon)
-                embed.set_footer(text=f"Requested by {ctx.author.name}")
+                embed.set_footer(text="Data provided by openweathermap.org.", icon_url="https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
                 await channel.send(embed=embed)
         else:
             await channel.send("City not found.")
