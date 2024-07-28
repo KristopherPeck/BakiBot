@@ -174,6 +174,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             embed.add_field(name="Price:", value="Nonfoil: $ " + f"{card_price_usd}" + " | Foil: $ " + f"{card_price_foil}" +  " | Etched: $ " + f"{card_price_etched}" + " | Tickets: " + f"{card_price_tix}")
 
         embed.set_thumbnail(url=card_image_url)
+        embed.set_footer(text="Data provided by scryfall.com", icon_url="https://avatars.githubusercontent.com/u/22605579?s=200&v=4")
 
         return embed
 
