@@ -208,7 +208,7 @@ def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
                 
             embed.add_field(name="Height (in):", value=f"{pokemon_height}", inline=False)
             embed.add_field(name="Weight (lbs):", value=f"{pokemon_weight}", inline=False)
-            embed.set_footer(text= "Data provided by pokeapi.co")
+            embed.set_footer(text= "Data provided by pokeapi.co", icon_url="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png")
 
             return embed
 
