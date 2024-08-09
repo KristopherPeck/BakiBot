@@ -345,14 +345,15 @@ class mtg(commands.Cog):
     async def mtg(selfe, ctx, *args):
         card_name_string = ' '.join([str(elem) for elem in args])
         mtg_card_url = scryfall_url + "cards/named?fuzzy=" + card_name_string
-        print ("Named MTG Card")
+        print ("Named MTG Card Submitted String")
         print (card_name_string)
         card_response = requests.get(mtg_card_url)
 
         if card_response.status_code == 404:
+            card_json = card_response.json()
             print ("API Response")
-            print (card_response)
-            await ctx.send("Sorry, I don't recognize that card.")
+            print (card_json)
+            await ctx.send("Sorry, I don't recognize that card or I am finding multiple cards with that name. Please try something else.")
             return
         else:
             card_json = card_response.json()
