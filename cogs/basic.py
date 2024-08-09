@@ -80,73 +80,73 @@ class Basic(commands.Cog):
     @commands.cooldown(1.0,3.0)
     async def DM(self, ctx):
         if heroku_check == 'False':
-            embed = AudioHelp_Other
+            embed = AudioHelp_Other()
             await ctx.author.send(embed=embed)
 
         else:
-            embed = AudioHelp_Heroku
+            embed = AudioHelp_Heroku()
             await ctx.author.send(embed=embed)
 
-        embed = GenHelp
+        embed = GenHelp()
         await ctx.author.send(embed=embed)
 
-        embed = MTGHelp
+        embed = MTGHelp()
         await ctx.author.send(embed=embed)
 
-        embed = PokemonHelp
+        embed = PokemonHelp()
         await ctx.author.send(embed=embed)    
         
     @commands.command(name="help")
     @commands.cooldown(1.0,3.0)
-    async def post(self, ctx):
+    async def help(self, ctx):
         if heroku_check == 'False':
-            embed = AudioHelp_Other
+            embed = AudioHelp_Other()
             await ctx.send(embed=embed)
 
         else:
-            embed = AudioHelp_Heroku
+            embed = AudioHelp_Heroku()
             await ctx.send(embed=embed)
 
-        embed = GenHelp
+        embed = GenHelp()
         await ctx.send(embed=embed)
 
-        embed = MTGHelp
+        embed = MTGHelp()
         await ctx.send(embed=embed)
 
-        embed = PokemonHelp
+        embed = PokemonHelp()
         await ctx.send(embed=embed)  
     
     @commands.command(name="mtghelp")
     @commands.cooldown(1.0,3.0)
-    async def post(self, ctx):
-        embed = MTGHelp
+    async def mtghelp(self, ctx):
+        embed = MTGHelp()
         await ctx.send(embed=embed)
 
     @commands.command(name="pokemonhelp")
     @commands.cooldown(1.0,3.0)
-    async def post(self, ctx):
-        embed = PokemonHelp
+    async def pokemonhelp(self, ctx):
+        embed = PokemonHelp()
         await ctx.send(embed=embed) 
 
     @commands.command(name="audiohelp")
     @commands.cooldown(1.0,3.0)
-    async def post(self, ctx):
+    async def audiohelp(self, ctx):
         if heroku_check == 'False':
-            embed = AudioHelp_Other
+            embed = AudioHelp_Other()
             await ctx.send(embed=embed)
         else:
-            embed = AudioHelp_Heroku
+            embed = AudioHelp_Heroku()
             await ctx.send(embed=embed)
 
     @commands.command(name="genhelp")
     @commands.cooldown(1.0,3.0)
-    async def post(self, ctx):
-        embed = GenHelp
+    async def genhelp(self, ctx):
+        embed = GenHelp()
         await ctx.send(embed=embed)
 
     @commands.command(name="source")
     @commands.cooldown(1.0,3.0)
-    async def post (self, ctx):
+    async def source(self, ctx):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed=discord.Embed(
         title="Source Code",
