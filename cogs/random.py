@@ -50,10 +50,20 @@ class Random(commands.Cog):
             await ctx.send('Please use the proper format of NdT!')
             return
         
-        result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        sum_of_rolls = sum(map(int, result))
-        await ctx.send(embed=discord.Embed(description="You managed to roll " + result + " ! The total is " + sum_of_rolls + " !", colour=random_color))
+        roll_results = []
+        for roll in range(rolls): 
+            roll = random.randint(1, limit)
+            roll_results.append(roll)
+
+        roll_total = sum(roll_results)
+
+        all_rolls = ""
+        for item in roll_results:
+            all_rolls = all_rolls + str(item) + ", "
+        all_rolls = all_rolls[:-2]
+
+        await ctx.send(embed=discord.Embed(description="You managed to roll " + all_rolls + " ! The total is " + roll_total + " !", colour=random_color))
 
     @commands.command(name="flip")
     @commands.cooldown(1.0,3.0)
