@@ -68,10 +68,10 @@ class Random(commands.Cog):
     @commands.command(name="flip")
     @commands.cooldown(1.0,3.0)
     async def flip(self, ctx):
-        choices = ["Heads!", "Tails!"]
+        choices = ["Heads", "Tails"]
         result = random.choice(choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.embed(description="You got " + result, colour=random_color))
+        await ctx.send(embed=discord.Embed(description="You got  " + result + "!", colour=random_color))
         
     @commands.command(name="color")
     @commands.cooldown(1.0,3.0)
