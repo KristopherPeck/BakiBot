@@ -63,7 +63,7 @@ class Random(commands.Cog):
             all_rolls = all_rolls + str(item) + ", "
         all_rolls = all_rolls[:-2]
 
-        await ctx.send(embed=discord.Embed(description="You managed to roll " + ' '.join(all_rolls) + " ! The total is " + ' '.join(roll_total) + " !", colour=random_color))
+        await ctx.send(embed=discord.Embed(description="You managed to roll " + all_rolls + " ! The total is " + str(roll_total) + " !", colour=random_color))
 
     @commands.command(name="flip")
     @commands.cooldown(1.0,3.0)
