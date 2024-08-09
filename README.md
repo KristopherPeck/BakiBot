@@ -21,14 +21,16 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 ### General Commands
 - choose: Randomly select an option from the provided options. e.g. !choose Lead Salt Diesel
 - color: Post a random color and display the Hex and RGB values and an example of the color. 
-- diceroll: Roll a die of the size of your choosing. e.g. !diceroll 20
+- dieroll: Roll a die of the size of your choosing. e.g. !diceroll 20
 - dmhelp: Sends you a message of the current commands available
 - eightball or 8ball: Ask the magic 8 Ball a question. 
 - findthem: Baki will call someone in the server mean names.
+- flip: Flip a coin
 - gamelist: Posts the current game list. This can be modified in games.py. Currently set to be configured per server.
 - help: Posts the content of the help command in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon
 - randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
 - randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
+- roll: Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4
 - source: Links BakiBots source code
 - weather: Pulls the current weather for a specified city using OpenWeatherMap.org
 - whoisit: Baki will choose from a list you provide and call someone mean names.

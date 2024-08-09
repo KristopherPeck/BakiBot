@@ -32,14 +32,35 @@ class Random(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
         
-    @commands.command(name="diceroll")
+    @commands.command(name="dieroll")
     @commands.cooldown(1.0,3.0)
-    async def diceroll(self, ctx, arg1):
+    async def dieroll(self, ctx, arg1):
         arg1 = int(arg1)
         result = random.randint(1, arg1)
         result = str(result)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Show me the money!: " + result, colour=random_color))
+
+    @commands.command(name="roll")
+    @commands.cooldown(1.0,3.0)
+    async def roll(self, ctx, dice:str):
+        try:
+            rolls, limit = map(int, dice.split('d'))
+        except Exception:
+            await ctx.send('Please use the proper format of NdT!')
+            return
+        
+        result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        await ctx.send(embed=discord.Embed(description="You managed to roll " + result + " !", colour=random_color))
+
+    @commands.command(name="flip")
+    @commands.cooldown(1.0,3.0)
+    async def flip(self, ctx):
+        choices = ["Heads!", "Tails!"]
+        result = random.choice(choices)
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        await ctx.send(embed=discord.embed(description="You got " + result, colour=random_color))
         
     @commands.command(name="color")
     @commands.cooldown(1.0,3.0)

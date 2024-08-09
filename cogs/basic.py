@@ -40,14 +40,16 @@ def GenHelp():
         color=c)
     embed.add_field(name="**choose**", value="Pick a random option from the items given. Put a space between each item like this: !choose Lead Salt Diesel", inline=False)
     embed.add_field(name="**color**", value="Pick a random color", inline=False)
-    embed.add_field(name="**diceroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
+    embed.add_field(name="**dieroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
     embed.add_field(name="**dmhelp**", value="Baki will message you the current help commands", inline=False)
     embed.add_field(name="**eightball or 8ball**", value="Ask the magic 8 Ball a question. Just like this: !eightball Am I going to die tomorrow?", inline=False)
     embed.add_field(name="**findthem**", value="Bakibot will pick someone call mean names", inline=False)
+    embed.add_field(name="**flip**", value="Flip a coin", inline=False)
     embed.add_field(name="**gamelist**", value="Shows the current game list for this server. Contact the administrator about updating it.", inline=False)
     embed.add_field(name="**help**", value="Baki will post the current commands in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon", inline=False)
     embed.add_field(name="**randombaki**", value="Posts a random quote from Baki", inline=False)
     embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
+    embed.add_field(name="**roll**", value="Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4", inline=False)
     embed.add_field(name="**source**", value="Links BakiBots source doe.", inline=False)
     embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
     embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)  
@@ -155,6 +157,7 @@ class Basic(commands.Cog):
         embed.description("My source code is hosted over on Github!")
         embed.url("https://github.com/KristopherPeck/BakiBot")
         embed.set_thumbnail(url="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png")
+        await ctx.send(embed=embed)
 
 
 async def setup(bot):
