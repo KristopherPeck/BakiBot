@@ -52,7 +52,7 @@ class Random(commands.Cog):
         
         result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        sum_of_rolls = sum(result)
+        sum_of_rolls = sum(map(int, result))
         await ctx.send(embed=discord.Embed(description="You managed to roll " + result + " ! The total is " + sum_of_rolls + " !", colour=random_color))
 
     @commands.command(name="flip")

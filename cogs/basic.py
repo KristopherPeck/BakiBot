@@ -151,7 +151,7 @@ class Basic(commands.Cog):
     @commands.cooldown(1.0,3.0)
     async def source(self, ctx):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.embed(description="My source code is hosted over on Github! Here's the link " + "https://github.com/KristopherPeck/BakiBot", colour=random_color))
+        await ctx.send(embed=discord.embed(description="My source code is hosted over on Github! [Here's the link](https://github.com/KristopherPeck/BakiBot)!", colour=random_color))
 
 async def setup(bot):
     await bot.add_cog(Basic(bot))
