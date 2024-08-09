@@ -19,28 +19,29 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 - Volume: Set Baki's volume for voice chat. 
 
 ### General Commands
-- Choose: Randomly select an option from the provided options. e.g. !choose Lead Salt Diesel
-- Color: Post a random color and display the Hex and RGB values and an example of the color. 
-- Diceroll: Roll a die of the size of your choosing. e.g. !diceroll 20
+- choose: Randomly select an option from the provided options. e.g. !choose Lead Salt Diesel
+- color: Post a random color and display the Hex and RGB values and an example of the color. 
+- diceroll: Roll a die of the size of your choosing. e.g. !diceroll 20
 - dmhelp: Sends you a message of the current commands available
 - eightball or 8ball: Ask the magic 8 Ball a question. 
 - findthem: Baki will call someone in the server mean names.
-- Gamelist: Posts the current game list. This can be modified in games.py. Currently set to be configured per server.
-- Help: Posts the content of the help command in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon
-- Randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
-- Randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
-- Source: Links BakiBots source code
-- Weather: Pulls the current weather for a specified city using OpenWeatherMap.org
+- gamelist: Posts the current game list. This can be modified in games.py. Currently set to be configured per server.
+- help: Posts the content of the help command in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon
+- randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
+- randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
+- source: Links BakiBots source code
+- weather: Pulls the current weather for a specified city using OpenWeatherMap.org
 - whoisit: Baki will choose from a list you provide and call someone mean names.
 
 ### Magic the Gathering Commands
-- Jhoira: Generate three random instants or sorceries for use in MoJhoSto.
-- MoJhoSto: A short explanation of the MoJhoSto format.
-- Momir: Generate a random creature for use in Momir Basic.
-- Randomcommander: Pick a random EDH legal Legendary Creature.
-- Randommtg: Pick a random Magic the Gathering card.
-- Stonehewer: Generate a random equipment for use in MoJhoSto.
+- jhoira: Generate three random instants or sorceries for use in MoJhoSto.
+- mojhosto: A short explanation of the MoJhoSto format.
+- momir: Generate a random creature for use in Momir Basic.
+- mtg: Search a specific Magic the Gathering card. Just like this: !mtg Jace Beleren
+- randomcommander: Pick a random EDH legal Legendary Creature.
+- randommtg: Pick a random Magic the Gathering card.
+- stonehewer: Generate a random equipment for use in MoJhoSto.
 
 ### Pokemon Commands
-- Pokemon: Highlight a pokemon by using either it's Pokedex number or it's name.
-- Randompokemon: Picks a random pokemon from the list of all released ones. 
+- pokemon: Highlight a pokemon by using either it's Pokedex number or it's name.
+- randompokemon: Picks a random pokemon from the list of all released ones. 

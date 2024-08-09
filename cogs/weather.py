@@ -34,6 +34,8 @@ class Weather(commands.Cog):
         
         if api_response["cod"] != "404":
             async with channel.typing():
+                print ("Weather")
+                print (city_name)
                 api_selector_main = api_response["main"]
                 current_temperature = api_selector_main["temp"]
                 current_temperature_fahrenheit = str(round(current_temperature * 1.8 - 459.67))
