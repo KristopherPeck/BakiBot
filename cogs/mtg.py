@@ -129,10 +129,10 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
                 card_toughness = random_card_json["card_faces"][0]["toughness"]
 
             if card_power == "*":
-                card_power = "* "
+                card_power = "[*]"
 
             if card_toughness == "*":
-                card_toughness = " *"
+                card_toughness = "[*]"
 
             embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
 

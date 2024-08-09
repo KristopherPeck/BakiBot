@@ -26,9 +26,10 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 - eightball or 8ball: Ask the magic 8 Ball a question. 
 - findthem: Baki will call someone in the server mean names.
 - Gamelist: Posts the current game list. This can be modified in games.py. Currently set to be configured per server.
-- Help: Posts the content of the help command in the current channel. 
+- Help: Posts the content of the help command in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon
 - Randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
 - Randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
+- Source: Links BakiBots source code
 - Weather: Pulls the current weather for a specified city using OpenWeatherMap.org
 - whoisit: Baki will choose from a list you provide and call someone mean names.
 
@@ -39,7 +40,6 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 - Randomcommander: Pick a random EDH legal Legendary Creature.
 - Randommtg: Pick a random Magic the Gathering card.
 - Stonehewer: Generate a random equipment for use in MoJhoSto.
-
 
 ### Pokemon Commands
 - Pokemon: Highlight a pokemon by using either it's Pokedex number or it's name.
