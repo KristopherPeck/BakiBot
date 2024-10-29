@@ -17,7 +17,7 @@ gameList = [
             'Battlefield V',
             'Command and Conquer: Red Alert 2',
             'Command and Conquer: Generals - Zero Hour',
-            'Farming Simulator 19',
+            'Gauntlet'
             'Green Hell',
             'Halo Infinite',
             'Halo: The Master Chief Collection',
@@ -29,7 +29,6 @@ gameList = [
             'Pulsar: Lost Colony',
             'Pummel Party',
             'Raft',
-            'Sniper Elite 5',
             'Stardew Valley',
             'Stick Fight: The Game',
             'theHunter: Call of the Wild',
