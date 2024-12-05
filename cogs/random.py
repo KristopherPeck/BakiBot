@@ -140,11 +140,11 @@ class Random(commands.Cog):
         print (trivia_question)
         trivia_answer = trivia_db_json["results"][0]["correct_answer"]
         print (trivia_answer)
-        trivia_incorrect_question_one = ["results"][0]["incorrect_answers"][0]
+        trivia_incorrect_question_one = ["results"][0]["incorrect_answers"][int(0)]
         print (trivia_incorrect_question_one)
-        trivia_incorrect_question_two = ["results"][0]["incorrect_answers"][1]
+        trivia_incorrect_question_two = ["results"][0]["incorrect_answers"][int(1)]
         print (trivia_incorrect_question_two)
-        trivia_incorrect_question_three = ["results"][0]["incorrect_answers"][2]
+        trivia_incorrect_question_three = ["results"][0]["incorrect_answers"][int(2)]
         print (trivia_incorrect_question_three)
 
         random_increment = random.randint(0, 3)
