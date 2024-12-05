@@ -57,11 +57,11 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
         trivia_incorrect_question_one = trivia_db_json["results"][0]["incorrect_answers"][0]
         print (trivia_incorrect_question_one)
 
-    embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+    embed.add_field(name="Correct Answer:", value=f"{trivia_answer}", inline=False)
     print ("Add answer Worked")
     embed.set_footer(text= "Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
     print ("set Footer worked")
-    
+
     return embed
 
 class Random(commands.Cog):
