@@ -47,6 +47,7 @@ def GenHelp():
     embed.add_field(name="**flip**", value="Flip a coin", inline=False)
     embed.add_field(name="**gamelist**", value="Shows the current game list for this server. Contact the administrator about updating it.", inline=False)
     embed.add_field(name="**help**", value="Baki will post the current commands in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon", inline=False)
+    embed.add_field(name="**lunchtime**", value="Picks a random restaurant from a list for lunchtime.", inline=False)
     embed.add_field(name="**randombaki**", value="Posts a random quote from Baki", inline=False)
     embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
     embed.add_field(name="**roll**", value="Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4", inline=False)
