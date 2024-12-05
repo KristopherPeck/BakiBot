@@ -52,6 +52,7 @@ def GenHelp():
     embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
     embed.add_field(name="**roll**", value="Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4", inline=False)
     embed.add_field(name="**source**", value="Links BakiBots source code.", inline=False)
+    embed.add_field(name="**trivia**", value="Posts a random trivia question", inline=False)
     embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
     embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)  
     return embed

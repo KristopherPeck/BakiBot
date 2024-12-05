@@ -33,6 +33,7 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 - randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
 - roll: Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4
 - source: Links BakiBots source code
+- trivia: Posts a random trivia question
 - weather: Pulls the current weather for a specified city using OpenWeatherMap.org
 - whoisit: Baki will choose from a list you provide and call someone mean names.
 
