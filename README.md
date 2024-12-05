@@ -39,7 +39,7 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 ### Magic the Gathering Commands
 - jhoira: Generate three random instants or sorceries for use in MoJhoSto.
 - mojhosto: A short explanation of the MoJhoSto format.
-- momir: Generate a random creature for use in Momir Basic.
+- momir: Generate a random creature for use in Momir Basic or MoJhoSto.
 - mtg: Search a specific Magic the Gathering card. Just like this: !mtg Jace Beleren
 - randomcommander: Pick a random EDH legal Legendary Creature.
 - randommtg: Pick a random Magic the Gathering card.

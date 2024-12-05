@@ -26,11 +26,11 @@ def MTGHelp():
         color=c)
     embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: !jhoira instant or !jhoira sorcery", inline=False)
     embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
-    embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic. Just like this: !momir 1 or !momir 13", inline=False)
+    embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic or MoJhoSto. Just like this: !momir 1 or !momir 13", inline=False)
     embed.add_field(name="**mtg**", value="Search a specific Magic the Gathering card. Just like this: !mtg Jace Beleren", inline=False)
     embed.add_field(name="**randomcommander**", value="Pick a random EDH legal Legendary Creature", inline=False)
     embed.add_field(name="**randommtg**", value="Pick a random Magic the Gathering card", inline=False)
-    embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remeber that Stonehewer is less than not equal to. Just like this: !stonehewer 3", inline=False)
+    embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remember that Stonehewer is less than not equal to. Just like this: !stonehewer 3", inline=False)
     return embed      
 
 def GenHelp():

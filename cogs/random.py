@@ -1,6 +1,8 @@
 import discord
 import sys
 import random
+import requests
+import requests_cache
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
@@ -18,7 +20,8 @@ class Random(commands.Cog):
             "It seems that in this fight... I won't be able to win this without pissing on myself just a little bit. -Baki Hanma",
             "I started to wish I didn't have any fingers.. because then I could punch all out. My dream just came true. -Doppo 'Tiger Slayer' Orochi",
             "His tuxedo is still there...!! Just like a lesson in shedding your skin!! -bystander from the fight between Biscuit Oliva and Jun Guevara",
-            "What's futile is not realizing the reality of your own futility. One hundred cowards are the same as one. -Yujiro 'The Ogre' Hanma"
+            "What's futile is not realizing the reality of your own futility. One hundred cowards are the same as one. -Yujiro 'The Ogre' Hanma",
+            "You’re challenging me? Surely stupidity of this magnitude can’t possibly exist. -Yujiro 'The Ogre' Hanma"
         ]
         response = random.choice(baki_quotes)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -121,6 +124,53 @@ class Random(commands.Cog):
         response = random.choice(restaurant_choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="It's time for " + response + "!", colour=random_color))
+
+    @commands.command(name="trivia")
+    @commands.cooldown(1.0,3.0)
+    async def trivia(self, ctx):
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        trivia_db_url = "https://opentdb.com/api.php?amount=1&type=multiple"
+        trivia_db_response = requests.get(trivia_db_url)
+        trivia_db_json = trivia_db_response.json()
+        trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
+        trivia_category = trivia_db_json["results"][0]["category"]
+        trivia_question = trivia_db_json["results"][0]["question"]
+        trivia_answer = trivia_db_json["results"][0]["correct_answer"]
+        trivia_incorrect_question_one = ["results"][0]["incorrect_answers"][0]
+        trivia_incorrect_question_two = ["results"][0]["incorrect_answers"][1]
+        trivia_incorrect_question_three = ["results"][0]["incorrect_answers"][2]
+
+        random_increment = random.randint(0, 3)
+        embed = discord.Embed(title=f"Trivia Time!", color=random_color)
+        embed.add_field(name="Trivia Category:", value=f"{trivia_category}", inline=False)
+        embed.add_field(name="Trivia Difficulty:", value=f"{trivia_difficulty}", inline=False)
+        embed.add_field(name="Question!", value=f"{trivia_question}", inline=False)
+
+        if random_increment == 0:
+            embed.add_field(name="A:", value=f"{trivia_answer}", inline=False)
+            embed.add_field(name="B:", value=f"{trivia_incorrect_question_one}", inline=False)
+            embed.add_field(name="C:", value=f"{trivia_incorrect_question_two}", inline=False)
+            embed.add_field(name="D:", value=f"{trivia_incorrect_question_three}", inline=False)
+        elif random_increment == 1:
+            embed.add_field(name="A:", value=f"{trivia_incorrect_question_one}", inline=False)
+            embed.add_field(name="B:", value=f"{trivia_answer}", inline=False)
+            embed.add_field(name="C:", value=f"{trivia_incorrect_question_two}", inline=False)
+            embed.add_field(name="D:", value=f"{trivia_incorrect_question_three}", inline=False)
+        elif random_increment == 2:
+            embed.add_field(name="A:", value=f"{trivia_incorrect_question_one}", inline=False)
+            embed.add_field(name="B:", value=f"{trivia_incorrect_question_two}", inline=False)
+            embed.add_field(name="C:", value=f"{trivia_answer}", inline=False)
+            embed.add_field(name="D:", value=f"{trivia_incorrect_question_three}", inline=False)
+        elif random_increment == 3:
+            embed.add_field(name="A:", value=f"{trivia_incorrect_question_one}", inline=False)
+            embed.add_field(name="B:", value=f"{trivia_incorrect_question_two}", inline=False)
+            embed.add_field(name="C:", value=f"{trivia_incorrect_question_three}", inline=False)
+            embed.add_field(name="D:", value=f"{trivia_answer}", inline=False)
+
+        embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+        embed.set_footer(text= "Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
+
+        await ctx.send(embed)
 
 async def setup(bot):
     await bot.add_cog(Random(bot))
