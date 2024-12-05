@@ -14,20 +14,21 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
     trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
     trivia_difficulty = trivia_difficulty.upper()
-    print ("Trivia Difficulty" + trivia_difficulty)
+    print ("Trivia Difficulty " + trivia_difficulty)
     trivia_category = html.unescape(trivia_db_json["results"][0]["category"])
-    print ("Trivia Category" + trivia_category)
+    print ("Trivia Category " + trivia_category)
     trivia_question = html.unescape(trivia_db_json["results"][0]["question"])
-    print ("Trivia Question" + trivia_question)
+    print ("Trivia Question " + trivia_question)
     trivia_answer = html.unescape(trivia_db_json["results"][0]["correct_answer"])
-    print ("Correct Answer" + trivia_answer)
+    print ("Correct Answer " + trivia_answer)
 
     embed = discord.Embed(title=f"Trivia Time!", color=random_color)
-    embed.add_field(name="Trivia Category:", value=f"{trivia_category}", inline=False)
-    embed.add_field(name="Trivia Difficulty:", value=f"{trivia_difficulty}", inline=False)
-    embed.add_field(name="Question!", value=f"{trivia_question}", inline=False)
+    embed.add_field(name="Trivia Category: ", value=f"{trivia_category}", inline=False)
+    embed.add_field(name="Trivia Difficulty: ", value=f"{trivia_difficulty}", inline=False)
+    embed.add_field(name="Question! ", value=f"{trivia_question}", inline=False)
 
     results_length = len(trivia_db_json["results"][0]["incorrect_answers"])
+    print (results_length)
 
     if results_length == 2:
         mode_selection = 1
@@ -37,11 +38,11 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     if mode_selection == 0:
         random_increment = random.randint(0, 3)
         trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
-        print ("Incorrect Answer" + trivia_incorrect_question_one)
+        print ("Incorrect Answer " + trivia_incorrect_question_one)
         trivia_incorrect_question_two = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][1])
-        print ("Incorrect Answer" + trivia_incorrect_question_two)
+        print ("Incorrect Answer " + trivia_incorrect_question_two)
         trivia_incorrect_question_three = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][2])
-        print ("Incorrect Answer" + trivia_incorrect_question_three)
+        print ("Incorrect Answer " + trivia_incorrect_question_three)
     
         if random_increment == 0:
             embed.add_field(name="A:", value=f"{trivia_answer}", inline=False)
@@ -64,23 +65,23 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
             embed.add_field(name="C:", value=f"{trivia_incorrect_question_three}", inline=False)
             embed.add_field(name="D:", value=f"{trivia_answer}", inline=False)
 
-        embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+        embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
 
     elif mode_selection == 1:
         trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
-        print ("Incorrect Answer" + trivia_incorrect_question_one)
+        print ("Incorrect Answer " + trivia_incorrect_question_one)
 
         if trivia_answer == "False" or trivia_answer == "True":
-            embed.add_field(name="Answer:", value="True or False", inline=False)
+            embed.add_field(name="Answer: ", value="True or False", inline=False)
             if trivia_answer == "False":
-                embed.add_field(name="Correct Answer:", value="||False||", inline=False)
+                embed.add_field(name="Correct Answer: ", value="||False||", inline=False)
             elif trivia_answer == "True":
-                embed.add_field(name="Correct Answer:", value="||True||", inline=False)
+                embed.add_field(name="Correct Answer: ", value="||True||", inline=False)
         else:
-            embed.add_field(name="Answer:", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
-            embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+            embed.add_field(name="Answer: ", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
+            embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
 
-    embed.set_footer(text= "Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
+    embed.set_footer(text="Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
 
     return embed
 
