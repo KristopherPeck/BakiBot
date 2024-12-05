@@ -55,11 +55,21 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
             embed.add_field(name="C:", value=f"{trivia_incorrect_question_three}", inline=False)
             embed.add_field(name="D:", value=f"{trivia_answer}", inline=False)
 
+        embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+
     elif mode_selection == 1:
         trivia_incorrect_question_one = trivia_db_json["results"][0]["incorrect_answers"][0]
         print (trivia_incorrect_question_one)
 
-    embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+        if trivia_answer == "False" or trivia_answer == "True":
+            embed.add_field(name="Answer:", value="True or False", inline=False)
+            if trivia_answer == "False":
+                embed.add_field(name="Correct Answer:", value="||False||", inline=False)
+            elif trivia_answer == "True":
+                embed.add_field(name="Correct Answer:", value="||True||", inline=False)
+        else:
+            embed.add_field(name="Answer:", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
+
     print ("Add answer Worked")
     embed.set_footer(text= "Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
     print ("set Footer worked")
