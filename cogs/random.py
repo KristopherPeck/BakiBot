@@ -71,11 +71,11 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
         trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
         print ("Incorrect Answer " + trivia_incorrect_question_one)
 
-        if trivia_answer == "False" or trivia_answer == "True":
+        if trivia_answer == False or trivia_answer == True:
             embed.add_field(name="Answer: ", value="True or False", inline=False)
-            if trivia_answer == "False":
+            if trivia_answer == False:
                 embed.add_field(name="Correct Answer: ", value="||False||", inline=False)
-            elif trivia_answer == "True":
+            elif trivia_answer == True:
                 embed.add_field(name="Correct Answer: ", value="||True||", inline=False)
         else:
             embed.add_field(name="Answer: ", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
