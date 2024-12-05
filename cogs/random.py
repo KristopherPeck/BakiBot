@@ -71,16 +71,23 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
         trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
         print ("Incorrect Answer " + trivia_incorrect_question_one)
 
-        if trivia_answer == False or trivia_answer == True:
+        if trivia_answer == False or trivia_answer == True or trivia_answer == "True" or trivia_answer == "False":
             embed.add_field(name="Answer: ", value="True or False", inline=False)
             if trivia_answer == False:
                 embed.add_field(name="Correct Answer: ", value="||False||", inline=False)
             elif trivia_answer == True:
                 embed.add_field(name="Correct Answer: ", value="||True||", inline=False)
         else:
-            embed.add_field(name="Answer: ", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
-            embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
+            random_increment = random.randint(0, 1)
+            if random_increment == 0:
+                embed.add_field(name="Answer: ", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
+                embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
 
+            elif random_increment == 1:
+                embed.add_field(name="Answer: ", value=f"{trivia_incorrect_question_one} or {trivia_answer}", inline=False)
+                embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
+
+            
     embed.set_footer(text="Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
 
     return embed
@@ -214,8 +221,13 @@ class Random(commands.Cog):
         if mode_selection == 1:
             trivia_db_url = "https://opentdb.com/api.php?amount=1&type=multiple"
         
-        trivia_db_response = requests.get(trivia_db_url)
-        trivia_db_json = trivia_db_response.json()
+        try:
+            trivia_db_response = requests.get(trivia_db_url)
+            trivia_db_json = trivia_db_response.json()
+            trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
+        except:
+            await ctx.send("Looks like I couldn't get any trivia for you. Go ahead and try again shortly.")
+            return
 
         channel = ctx.message.channel
         async with channel.typing():
