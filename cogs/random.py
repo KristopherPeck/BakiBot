@@ -133,12 +133,19 @@ class Random(commands.Cog):
         trivia_db_response = requests.get(trivia_db_url)
         trivia_db_json = trivia_db_response.json()
         trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
+        print (trivia_difficulty)
         trivia_category = trivia_db_json["results"][0]["category"]
+        print (trivia_category)
         trivia_question = trivia_db_json["results"][0]["question"]
+        print (trivia_question)
         trivia_answer = trivia_db_json["results"][0]["correct_answer"]
+        print (trivia_answer)
         trivia_incorrect_question_one = ["results"][0]["incorrect_answers"][0]
+        print (trivia_incorrect_question_one)
         trivia_incorrect_question_two = ["results"][0]["incorrect_answers"][1]
+        print (trivia_incorrect_question_two)
         trivia_incorrect_question_three = ["results"][0]["incorrect_answers"][2]
+        print (trivia_incorrect_question_three)
 
         random_increment = random.randint(0, 3)
         embed = discord.Embed(title=f"Trivia Time!", color=random_color)
