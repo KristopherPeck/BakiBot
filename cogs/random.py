@@ -72,19 +72,19 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
         print ("Incorrect Answer " + trivia_incorrect_question_one)
 
         if trivia_answer == False or trivia_answer == True or trivia_answer == "True" or trivia_answer == "False":
-            embed.add_field(name="Answer: ", value="True or False", inline=False)
-            if trivia_answer == False:
+            embed.add_field(name="Possible Answers: ", value="True or False?", inline=False)
+            if trivia_answer == False or trivia_answer == "False":
                 embed.add_field(name="Correct Answer: ", value="||False||", inline=False)
-            elif trivia_answer == True:
+            elif trivia_answer == True or trivia_answer == "True":
                 embed.add_field(name="Correct Answer: ", value="||True||", inline=False)
         else:
             random_increment = random.randint(0, 1)
             if random_increment == 0:
-                embed.add_field(name="Answer: ", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
+                embed.add_field(name="Possible Answers: ", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
                 embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
 
             elif random_increment == 1:
-                embed.add_field(name="Answer: ", value=f"{trivia_incorrect_question_one} or {trivia_answer}", inline=False)
+                embed.add_field(name="Possible Answers: ", value=f"{trivia_incorrect_question_one} or {trivia_answer}", inline=False)
                 embed.add_field(name="Correct Answer: ", value=f"||{trivia_answer}||", inline=False)
 
             
