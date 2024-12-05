@@ -30,7 +30,7 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     results_length = len(trivia_db_json["results"][0]["incorrect_answers"])
     print (results_length)
 
-    if results_length == 2:
+    if results_length == 1:
         mode_selection = 1
     else:
         mode_selection = 0
