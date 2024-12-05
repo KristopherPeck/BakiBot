@@ -58,8 +58,10 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
         print (trivia_incorrect_question_one)
 
     embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
+    print ("Add answer Worked")
     embed.set_footer(text= "Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
-
+    print ("set Footer worked")
+    
     return embed
 
 class Random(commands.Cog):
@@ -197,6 +199,7 @@ class Random(commands.Cog):
         channel = ctx.message.channel
         async with channel.typing():
             embed = GenerateTriviaDetails(mode_selection, random_color, trivia_db_json)
+
         await channel.send(embed=embed)
 
 async def setup(bot):
