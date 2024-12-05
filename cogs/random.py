@@ -1,6 +1,7 @@
 import discord
 import sys
 import random
+import html
 import requests
 import requests_cache
 from discord.ext import commands
@@ -12,27 +13,35 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     print (mode_selection)
 
     trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
-    print (trivia_difficulty)
-    trivia_category = trivia_db_json["results"][0]["category"]
-    print (trivia_category)
-    trivia_question = trivia_db_json["results"][0]["question"]
-    print (trivia_question)
-    trivia_answer = trivia_db_json["results"][0]["correct_answer"]
-    print (trivia_answer)
+    trivia_difficulty = trivia_difficulty.upper()
+    print ("Trivia Difficulty" + trivia_difficulty)
+    trivia_category = html.unescape(trivia_db_json["results"][0]["category"])
+    print ("Trivia Category" + trivia_category)
+    trivia_question = html.unescape(trivia_db_json["results"][0]["question"])
+    print ("Trivia Question" + trivia_question)
+    trivia_answer = html.unescape(trivia_db_json["results"][0]["correct_answer"])
+    print ("Correct Answer" + trivia_answer)
 
     embed = discord.Embed(title=f"Trivia Time!", color=random_color)
     embed.add_field(name="Trivia Category:", value=f"{trivia_category}", inline=False)
     embed.add_field(name="Trivia Difficulty:", value=f"{trivia_difficulty}", inline=False)
     embed.add_field(name="Question!", value=f"{trivia_question}", inline=False)
 
+    results_length = len(trivia_db_json["results"][0]["incorrect_answers"])
+
+    if results_length == 2:
+        mode_selection = 1
+    else:
+        mode_selection = 0
+
     if mode_selection == 0:
         random_increment = random.randint(0, 3)
-        trivia_incorrect_question_one = trivia_db_json["results"][0]["incorrect_answers"][0]
-        print (trivia_incorrect_question_one)
-        trivia_incorrect_question_two = trivia_db_json["results"][0]["incorrect_answers"][1]
-        print (trivia_incorrect_question_two)
-        trivia_incorrect_question_three = trivia_db_json["results"][0]["incorrect_answers"][2]
-        print (trivia_incorrect_question_three)
+        trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
+        print ("Incorrect Answer" + trivia_incorrect_question_one)
+        trivia_incorrect_question_two = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][1])
+        print ("Incorrect Answer" + trivia_incorrect_question_two)
+        trivia_incorrect_question_three = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][2])
+        print ("Incorrect Answer" + trivia_incorrect_question_three)
     
         if random_increment == 0:
             embed.add_field(name="A:", value=f"{trivia_answer}", inline=False)
@@ -58,8 +67,8 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
         embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
 
     elif mode_selection == 1:
-        trivia_incorrect_question_one = trivia_db_json["results"][0]["incorrect_answers"][0]
-        print (trivia_incorrect_question_one)
+        trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
+        print ("Incorrect Answer" + trivia_incorrect_question_one)
 
         if trivia_answer == "False" or trivia_answer == "True":
             embed.add_field(name="Answer:", value="True or False", inline=False)
@@ -69,10 +78,9 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
                 embed.add_field(name="Correct Answer:", value="||True||", inline=False)
         else:
             embed.add_field(name="Answer:", value=f"{trivia_answer} or {trivia_incorrect_question_one}", inline=False)
+            embed.add_field(name="Correct Answer:", value=f"||{trivia_answer}||", inline=False)
 
-    print ("Add answer Worked")
     embed.set_footer(text= "Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
-    print ("set Footer worked")
 
     return embed
 
