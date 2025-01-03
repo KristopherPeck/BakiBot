@@ -259,10 +259,10 @@ class Pokemon(commands.Cog):
             await ctx.send("I don't know what Pokemon that is. Please try something else.")
             return
         
-        print ("Specified Pokemon")
-        print (pokemon_id_number)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         pokemon_id_number = ResponseJSON["id"]
+        print ("Specified Pokemon")
+        print (pokemon_id_number)
         channel = ctx.message.channel
         
         async with channel.typing():
