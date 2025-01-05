@@ -28,7 +28,7 @@ Note: The commands tied to playing music in a voice channel is currently broken.
 - flip: Flip a coin
 - gamelist: Posts the current game list. This can be modified in games.py. Currently set to be configured per server.
 - help: Posts the content of the help command in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon
-- lunchtime: Picks a random restaurant from a list for lunchtime. 
+- lunchtime: Picks a random restaurant from a list for lunchtime. You could also add x2 or x3 to the end to get multiple options at once."
 - randombaki: Posts a random quote from the Manga/Anime series [Baki the Grappler](https://en.wikipedia.org/wiki/Baki_the_Grappler). These are located in random.py. 
 - randomgame: Pick a random game from the full game list. This can be modified in games.py. Currently set to be configured per server.
 - roll: Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4
