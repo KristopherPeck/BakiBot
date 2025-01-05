@@ -54,4 +54,4 @@ class lunch(commands.Cog):
         await ctx.send(embed=discord.Embed(description="Your choices for lunch are " + response1 + ", " + response2 + " or " + response3 + "!", colour=random_color))
 
 async def setup(bot):
-    await bot.add_cog(Random(bot))
+    await bot.add_cog(lunch(bot))
