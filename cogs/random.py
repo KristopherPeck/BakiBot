@@ -198,19 +198,6 @@ class Random(commands.Cog):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
 
-    @commands.command(name="lunchtime")
-    @commands.cooldown(1.0,3.0)
-    async def lunchtime(self, ctx):
-        restaurant_choices = [
-            "Penn Station", "Sakura", "Kumo Hibachi", "Z&W Chinese Cuisine", "Two Fellas Grill", "Red Robin", "Five Guys", "Buffalo Wild Wings", "Olgas", "Logans", "Applebees",
-            "Kelvin and Co", "City BBQ", "Bob Evans", "Taco Bell", "Berries", "Firehouse Subs", "Long John Silvers", "Red Lobster", "Chilis", "Jersey Mikes", "Chinese Buffet", "Lees",
-            "Mcallisters", "Burger King", "Arbys", "McDonalds", "Wendys", "Angelos", "Chipotle", "Qdoba", "Los Amigos", "Olive Garden", "Culvers", "Main Street Pub", "Monellis", "Steak n Shake",
-            "Lake Tavern", "East Egg", "Mike's Diner", "IHOP"
-        ]
-        response = random.choice(restaurant_choices)
-        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.Embed(description="It's time for " + response + "!", colour=random_color))
-
     @commands.command(name="trivia")
     @commands.cooldown(1.0,3.0)
     async def trivia(self, ctx):
