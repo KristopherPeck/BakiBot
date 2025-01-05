@@ -15,7 +15,7 @@ restaurant_choices = [
             "Lake Tavern", "East Egg", "Mike's Diner", "IHOP"
         ]
 
-class Random(commands.Cog):
+class lunch(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
