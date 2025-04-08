@@ -18,7 +18,6 @@ restaurant_choices = [
             "Five Guys (M-Su)", 
             "Buffalo Wild Wings (M-Su)", 
             "Olgas (M-Su)", 
-            "Logans (M-Su)", 
             "Applebees (M-Su)",
             "Kelvin and Co (Tu-Sa)", 
             "City BBQ (M-Su)", 
