@@ -21,14 +21,14 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         #For the most part these are pretty similar but I still split them out to make things easier. 
         card_layout = random_card_json["layout"]
         if card_layout == "transform":
-            card_name = random_card_json["card_faces"][0]["name"]
+            card_name = random_card_json["name"]
             card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
             card_image_url = random_card_json["card_faces"][0]["image_uris"]["large"]
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
 
         elif card_layout == "modal_dfc":
-            card_name = random_card_json["card_faces"][0]["name"]
+            card_name = random_card_json["name"]
             card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
             card_image_url = random_card_json["card_faces"][0]["image_uris"]["large"]
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
@@ -37,6 +37,20 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         elif card_layout == "split":
             card_name = random_card_json["name"]
             card_mana_cost = random_card_json["mana_cost"]
+            card_image_url = random_card_json["image_uris"]["large"]
+            card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
+            card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
+
+        elif card_layout == "flip":
+            card_name = random_card_json["name"]
+            card_mana_cost = random_card_json["mana_cost"]
+            card_image_url = random_card_json["image_uris"]["large"]
+            card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
+            card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
+
+        elif card_layout == "reversible_card":
+            card_name = random_card_json["name"]
+            card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
             card_image_url = random_card_json["image_uris"]["large"]
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
@@ -68,10 +82,41 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         except:
             card_back_oracle_text = ""
 
-        #Currently I pick a random color for the embed like I do for other instances.
-        #Eventually I would like to update it to take the color identity of the card into account. 
-        embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=random_color)
+        #Determine color of embed box based on the color identity of the card 
         
+        color_identity = random_card_json["color_identity"]
+        color_identity_length = len(color_identity)
+
+        if color_identity_length >= 2:
+            identity_color_rgb = discord.Color.from_rgb(187, 165, 61)
+            embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+
+        elif color_identity_length == 0:
+            identity_color_rgb = discord.Color.from_rgb(93, 93, 93)
+            embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+       
+        else:
+            color_identity_text = color_identity[0]
+            if color_identity_text == "W":
+                identity_color_rgb = discord.Color.from_rgb(255, 255, 255)
+                mbed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+
+            elif color_identity_text == "U":
+                identity_color_rgb = discord.Color.from_rgb(0, 94, 255)
+                embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+
+            elif color_identity_text == "B":
+                identity_color_rgb = discord.Color.from_rgb(0, 0, 0)
+                embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+
+            elif color_identity_text == "R":
+                identity_color_rgb = discord.Color.from_rgb(255, 8, 0)
+                embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+
+            elif color_identity_text == "G":
+                identity_color_rgb = discord.Color.from_rgb(14, 92, 0)
+                embed = discord.Embed(title=f"{card_name}" + f" ({card_set_code})", url=f"{card_url}", color=identity_color_rgb)
+
         #Some cards don't have a Mana Cost so we have to accomodate for that.
         if "Land" in card_type:
             pass
@@ -90,6 +135,8 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         if card_back_oracle_text == "":
             pass
+        elif card_layout == "flip":
+            embed.add_field(name="Flipped Oracle Text:", value=f"{card_back_oracle_text}", inline=False)
         else:
             embed.add_field(name="Back Oracle Text:", value=f"{card_back_oracle_text}", inline=False)
 
