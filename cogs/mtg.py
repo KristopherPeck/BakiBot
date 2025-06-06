@@ -131,10 +131,10 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             pass
         elif "Vanguard" in card_type:
             pass
-        elif card_layout == "double_faced_token":
+        elif card_layout == "Double_Faced_Token":
             pass
         else:
-            if card_layout == "adventure":
+            if card_layout == "Adventure":
                 embed.add_field(name="Mana Costs:", value=f"{card_mana_cost}" + " / " + f"{back_card_mana_cost}", inline=False)
             else:    
                 embed.add_field(name="Mana Cost:", value=f"{card_mana_cost}", inline=False)
@@ -172,7 +172,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
-        if card_layout == "transform" or card_layout == "modal_dfc":
+        if card_layout == "Transform" or card_layout == "Modal_Dfc":
             card_type = random_card_json["card_faces"][0]["type_line"]
 
         if "Creature" in card_type:
