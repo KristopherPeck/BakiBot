@@ -135,12 +135,10 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         if card_back_oracle_text == "":
             pass
-            
-        if card_back_oracle_text != "":
+        elif card_back_oracle_text != "":
             embed.add_field(name="Back Oracle Text:", value=f"{card_back_oracle_text}", inline=False)
-
         else:
-            embed.add_field(name="Flipped Oracle Text:", value=f"{card_back_oracle_text}", inline=False)
+            embed.add_field(name="Flipped Oracle Text:", value=f"{card_back_oracle_text}", inline=False)          
 
         #While Vanguard may not exist anymore I still accomodate for them. 
         #Vanguard cards have some additional text on them regarding hand and life modifiers I want to display. 
