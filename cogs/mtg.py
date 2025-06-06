@@ -60,7 +60,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_name = random_card_json["name"]
             card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
             back_card_mana_cost = random_card_json["card_faces"][1]["mana_cost"]
-            card_image_url = random_card_json["card_faces"][0]["image_uris"]["large"]
+            card_image_url = random_card_json["image_uris"]["large"]
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
 
@@ -173,9 +173,6 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
         if card_layout == "transform" or card_layout == "modal_dfc":
-            card_type = random_card_json["card_faces"][0]["type_line"]
-
-        if card_layout == "battle":
             card_type = random_card_json["card_faces"][0]["type_line"]
 
         if "Creature" in card_type:
