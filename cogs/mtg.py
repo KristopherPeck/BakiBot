@@ -56,6 +56,14 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
 
+        elif card_layout == "adventure":
+            card_name = random_card_json["name"]
+            card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
+            back_card_mana_cost = random_card_json["card_faces"][1]["mana_cost"]
+            card_image_url = random_card_json["card_faces"][0]["image_uris"]["large"]
+            card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
+            card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
+
         else:
             card_name = random_card_json["name"]
             card_mana_cost = random_card_json["mana_cost"]
@@ -123,8 +131,13 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             pass
         elif "Vanguard" in card_type:
             pass
+        elif card_layout == "double_faced_token":
+            pass
         else:
-            embed.add_field(name="Mana Cost:", value=f"{card_mana_cost}", inline=False)
+            if card_layout == "adventure":
+                embed.add_field(name="Mana Costs:", value=f"{card_mana_cost}" + " / " + f"{back_card_mana_cost}", inline=False)
+            else:    
+                embed.add_field(name="Mana Cost:", value=f"{card_mana_cost}", inline=False)
 
         embed.add_field(name="Card Type:", value=f"{card_type}", inline=False)
 
@@ -160,7 +173,10 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
         if card_layout == "transform" or card_layout == "modal_dfc":
-                card_type = random_card_json["card_faces"][0]["type_line"]
+            card_type = random_card_json["card_faces"][0]["type_line"]
+
+        if card_layout == "battle":
+            card_type = random_card_json["card_faces"][0]["type_line"]
 
         if "Creature" in card_type:
             try:
@@ -192,6 +208,14 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
                 card_loyalty = " * "
 
             embed.add_field(name="Loyalty:", value=f"{card_loyalty}", inline=False)
+
+        elif "Battle" in card_type:
+            try:
+                card_defense = random_card_json["defense"]
+            except:
+                card_defense = random_card_json["card_faces"][0]["defense"]
+
+            embed.add_field(name="Defense:", value=f"{card_defense}", inline=False)
 
         embed.add_field(name="Printing:", value=f"{card_set_name}", inline=False)
 
