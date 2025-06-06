@@ -13,7 +13,7 @@ from discord.ext.commands import Context
 heroku_check = os.getenv('HEROKU_CHECK')
 owner_id = os.getenv('DISCORD_OWNERID')
 scryfall_url = "https://api.scryfall.com/"
-mtg_session = requests_cache.CachedSession('mtg_cache')
+mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
 def GenerateCardDetails(card_type, random_card_json, random_color):
         card_name = random_card_json["name"]

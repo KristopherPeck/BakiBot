@@ -4,6 +4,7 @@ import random
 import os
 import os.path
 import requests
+import requests_cache
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord.ext.commands import bot
@@ -14,6 +15,7 @@ owner_id = os.getenv('DISCORD_OWNERID')
 #This includes everything up through Paradox.
 #max_pokemon_count = 1301
 pokemon_api_url = "https://pokeapi.co/api/v2/"
+poke_session = requests_cache.CachedSession('poke_cache', expire_after=1800)
 
 def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
             #Start pulling some basic information in that will always be simple to parse.
@@ -42,7 +44,7 @@ def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
 
             #Now we start querying another API URL for some fun details like pokedex entries
             pokemon_species = ResponseJSON["species"]["url"]
-            species_api_response = requests.get(pokemon_species)
+            species_api_response = poke_session.get(pokemon_species)
             species_response_json = species_api_response.json()
             
             #Genus is the "Title" of the pokemon. We have to run through an array since the english translation isn't always in the same place. 
@@ -88,7 +90,7 @@ def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
             
             #Now we are getting details about the evolution tree for pokemon. This starts to get difficult. 
             pokemon_chain = species_response_json["evolution_chain"]["url"]
-            pokemon_evolution_chain_api_response = requests.get(pokemon_chain)
+            pokemon_evolution_chain_api_response = poke_session.get(pokemon_chain)
             pokemon_evolution_chain_response_json = pokemon_evolution_chain_api_response.json()
 
             try:
@@ -224,7 +226,7 @@ class Pokemon(commands.Cog):
     async def randompokemon(self, ctx):
         #Start pulling in the initial API information
         max_pokemon_count_url = pokemon_api_url + "pokemon?limit=100000&offset=0"
-        max_pokemon_response = requests.get(max_pokemon_count_url)
+        max_pokemon_response = poke_session.get(max_pokemon_count_url)
         max_pokemon_json = max_pokemon_response.json()
         max_pokemon_count = int(max_pokemon_json["count"]) - 1
         random_pokemon_id = random.randint(0, max_pokemon_count)
@@ -232,7 +234,7 @@ class Pokemon(commands.Cog):
         complete_api_url = max_pokemon_json["results"][random_pokemon_id]["url"]
         print ("Random Pokemon: " + str(random_pokemon_id))
         print (str(complete_api_url))
-        Response = requests.get(complete_api_url)
+        Response = poke_session.get(complete_api_url)
         ResponseJSON = Response.json()
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         channel = ctx.message.channel
@@ -253,7 +255,7 @@ class Pokemon(commands.Cog):
         #We check if there is actually a response from the API since we are relying on user input. 
         try:
             complete_api_url = pokemon_api_url + "pokemon/" + str(PokemonID)
-            Response = requests.get(complete_api_url)
+            Response = poke_session.get(complete_api_url)
             ResponseJSON = Response.json()
         except:
             await ctx.send("I don't know what Pokemon that is. Please try something else.")
