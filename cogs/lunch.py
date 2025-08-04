@@ -50,7 +50,8 @@ restaurant_choices = [
             "Mark's Diner (M-Su)", 
             "IHOP (M-Su)", 
             "The Rooster's Call (M-Su)",
-            "Root Beer Stand (M-Su Summer)"
+            "Root Beer Stand (M-Su Summer)",
+            "Dak Good (M-Su)"
         ]
 
 class lunch(commands.Cog):
