@@ -19,7 +19,6 @@ restaurant_choices = [
             "Buffalo Wild Wings (M-Su)", 
             "Olgas (M-Su)", 
             "Applebees (M-Su)",
-            "Kelvin and Co (Tu-Sa)", 
             "City BBQ (M-Su)", 
             "Bob Evans (M-Su)", 
             "Taco Bell (M-Su)", 
