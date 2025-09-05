@@ -233,7 +233,4 @@ class Random(commands.Cog):
 
 async def setup(bot: commands.Bot):
     cog = Random(bot)
-    # Safely add the group to the bot's tree
-    if "random" not in [c.name for c in bot.tree.get_commands()]:
-        bot.tree.add_command(cog.random_group)
     await bot.add_cog(cog)
