@@ -226,7 +226,7 @@ class Pokemon(commands.Cog):
     async def randompokemon(self, ctx):
         #Start pulling in the initial API information
         max_pokemon_count_url = pokemon_api_url + "pokemon?limit=100000&offset=0"
-        max_pokemon_response = poke_session.get(max_pokemon_count_url)
+        max_pokemon_response = requests.get(max_pokemon_count_url)
         max_pokemon_json = max_pokemon_response.json()
         max_pokemon_count = int(max_pokemon_json["count"]) - 1
         random_pokemon_id = random.randint(0, max_pokemon_count)

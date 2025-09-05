@@ -256,7 +256,7 @@ class mtg(commands.Cog):
     async def randommtg(self, ctx):
         random_card_url = scryfall_url + "cards/random"
         print ("Random MTG Card")
-        random_card_response = mtg_session.get(random_card_url)
+        random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
         print (random_card_json["name"])
         card_type = random_card_json["type_line"]
@@ -275,7 +275,7 @@ class mtg(commands.Cog):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
         print ("Random Commander")
-        random_card_response = mtg_session.get(random_card_url)
+        random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
         print (random_card_json["name"])
         card_type = random_card_json["type_line"]
@@ -285,7 +285,7 @@ class mtg(commands.Cog):
         #However, I don't want them to show up in my iteration. So we filter out those as well as any cards that aren't legal in EDH.
         while ("Background" in card_type) and (card_edh_legal == "not_legal"):
             random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
-            random_card_response = mtg_session.get(random_card_url)
+            random_card_response = requests.get(random_card_url)
             random_card_json = random_card_response.json()
             card_type = random_card_json["type_line"]
             card_edh_legal = random_card_json["legalities"]["commander"]
@@ -306,7 +306,7 @@ class mtg(commands.Cog):
                 arg1 = str(arg1)
                 momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
                 print ("Random Momir prompt for:" + arg1)
-                momir_card_response = mtg_session.get(momir_card_url)
+                momir_card_response = requests.get(momir_card_url)
                 momir_card_json = momir_card_response.json()
                 print (momir_card_json["name"])
                 card_type = momir_card_json["type_line"]
@@ -337,9 +337,9 @@ class mtg(commands.Cog):
                 jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 print ("Random Jhoira prompt for:" + arg1)
-                jhoira_card_response_1 = mtg_session.get(jhoira_card_url_1)
-                jhoira_card_response_2 = mtg_session.get(jhoira_card_url_2)
-                jhoira_card_response_3 = mtg_session.get(jhoira_card_url_3)
+                jhoira_card_response_1 = requests.get(jhoira_card_url_1)
+                jhoira_card_response_2 = requests.get(jhoira_card_url_2)
+                jhoira_card_response_3 = requests.get(jhoira_card_url_3)
                 jhoira_card_json_1 = jhoira_card_response_1.json()
                 jhoira_card_json_2 = jhoira_card_response_2.json()
                 jhoira_card_json_3 = jhoira_card_response_3.json()
@@ -390,7 +390,7 @@ class mtg(commands.Cog):
                 arg1 = str(arg1)
                 stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
                 print ("Random Stonehewer prompt for:" + arg1)
-                stonehewer_card_response = mtg_session.get(stonehewer_card_url)
+                stonehewer_card_response = requests.get(stonehewer_card_url)
                 stonehewer_card_json = stonehewer_card_response.json()
                 print (stonehewer_card_json["name"])
                 card_type = stonehewer_card_json["type_line"]
