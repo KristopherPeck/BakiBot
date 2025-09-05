@@ -94,7 +94,7 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     return embed
 
 class Random(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot):
         self.bot = bot
 
     @app_commands.checks.cooldown(1,3.0,key=None)
