@@ -3,6 +3,7 @@ import discord
 import asyncio
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
+from discord import app_commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
@@ -26,7 +27,15 @@ def ownercheck(ctx):
 @client.event
 async def on_ready():
     #Set discord presence
+    try:
+        synced = await client.tree.sync()
+    except Exception as e:
+        print("Failed to Sync")
     await client.change_presence(activity=discord.Game(name="!help or !dmhelp"))
+
+@client.tree.command(name="test2")
+async def test2(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Hey {interaction.user.mention}! This is a slash command!", ephemeral=True)
 
 @client.event
 async def on_command_error(ctx, error):
