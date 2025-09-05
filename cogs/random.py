@@ -93,10 +93,6 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
     return embed
 
-class RandomGroup(app_commands.Group):
-    def __init__(self):
-        super().__init__(name="random", description="Various commands with a random element")
-
 class Random(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
