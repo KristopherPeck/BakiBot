@@ -57,19 +57,19 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     if isinstance(error, app_commands.CommandOnCooldown):
-        await interaction.response.send_message(
+        return await interaction.response.send_message(
             f"⏳ That command is on cooldown! Try again in {error.retry_after:.1f} seconds.",
             ephemeral=True
         )
     else:
         print(f"[SlashCommandError] {interaction.command} | {type(error).__name__}: {error}")
         try:
-            await interaction.response.send_message(
+            return await interaction.response.send_message(
                 "⚠️ An unexpected error occurred.",
                 ephemeral=True
             )
         except discord.InteractionResponded:
-            await interaction.followup.send(
+            return await interaction.followup.send(
                 "⚠️ An unexpected error occurred.",
                 ephemeral=True
             )
