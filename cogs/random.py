@@ -97,6 +97,14 @@ class RandomGroup(app_commands.Group):
     def __init__(self):
         super().__init__(name="random", description="Various commands with a random element")
 
+class Random(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.random_group = app_commands.Group(name="random", description="Random fun commands")
+        self.bot.tree.add_command(self.random_group)
+
+        self.random_group.add_command(self.randombaki)
+
     @app_commands.command(name='randombaki')
     @app_commands.checks.cooldown(1,3.0,key=None)
     async def randombaki(self, interaction: discord.Interaction):
@@ -113,11 +121,6 @@ class RandomGroup(app_commands.Group):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await interaction.response.send_message(embed=discord.Embed(description=response, colour=random_color))
 
-
-class Random(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self.bot.tree.add_command(RandomGroup())
 
     @commands.command(name="choose", description="Choose from a list", usage="choose <item1 item2 item3 ... >")
     @commands.cooldown(1,3.0)
