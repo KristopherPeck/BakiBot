@@ -112,23 +112,6 @@ class Random(commands.Cog):
         response = random.choice(baki_quotes)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description=response, colour=random_color))
-    
-    @commands.tree.command(name='randombakislash')
-    @commands.cooldown(1.0,3.0)
-    async def randombaki(interaction: discord.Interaction):
-        baki_quotes = [
-            "You'd do or say anything to save your skin... probably even lick my ass when nobody was looking. -Sikorsky",
-            "Now that you've got no more urine left in you... How are you going to get out of this tetrahedron? -Mouth",
-            "It seems that in this fight... I won't be able to win this without pissing on myself just a little bit. -Baki Hanma",
-            "I started to wish I didn't have any fingers.. because then I could punch all out. My dream just came true. -Doppo 'Tiger Slayer' Orochi",
-            "His tuxedo is still there...!! Just like a lesson in shedding your skin!! -bystander from the fight between Biscuit Oliva and Jun Guevara",
-            "What's futile is not realizing the reality of your own futility. One hundred cowards are the same as one. -Yujiro 'The Ogre' Hanma",
-            "You’re challenging me? Surely stupidity of this magnitude can’t possibly exist. -Yujiro 'The Ogre' Hanma"
-        ]
-        response = random.choice(baki_quotes)
-        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await interaction.response.send_message(embed=discord.Embed(description=response, colour=random_color))
-        
 
     @commands.command(name="choose", description="Choose from a list", usage="choose <item1 item2 item3 ... >")
     @commands.cooldown(1.0,3.0)
