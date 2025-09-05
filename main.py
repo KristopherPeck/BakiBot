@@ -28,6 +28,11 @@ def ownercheck(ctx):
 async def on_ready():
     #Set discord presence
     await client.change_presence(activity=discord.Game(name="!help or !dmhelp"))
+    
+    try:
+        await client.tree.sync()
+    except Exception as e:
+        print("Failed to Sync")
 
 @client.tree.command(name="test2")
 async def test2(interaction: discord.Interaction):
@@ -102,11 +107,5 @@ async def main():
                 await client.load_extension(f'cogs.{filename[0:-3]}')
 
         await client.start(TOKEN)
-
-        try:
-            await client.tree.sync()
-        except Exception as e:
-            print("Failed to Sync")
-
 
 asyncio.run(main())
