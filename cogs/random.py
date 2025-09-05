@@ -97,8 +97,8 @@ class Random(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
    
-    @commands.tree.command(name='randombaki')
-    @commands.cooldown(1.0,3.0)
+    @app_commands.command(name='randombaki')
+    @app_commands.checks.cooldown(1.0,3.0)
     async def randombaki(interaction: discord.Interaction):
         baki_quotes = [
             "You'd do or say anything to save your skin... probably even lick my ass when nobody was looking. -Sikorsky",
