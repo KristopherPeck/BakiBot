@@ -112,9 +112,9 @@ class Random(commands.Cog):
         if "baki" not in [c.name for c in self.random_group.commands]:
             self.random_group.add_command(self.baki)
 
-    @app_commands.command(name='baki')
+    @app_commands.command(name='baki', description="Get a random Baki quote")
     @app_commands.checks.cooldown(1,3.0,key=None)
-    async def randombaki(self, interaction: discord.Interaction):
+    async def baki(self, interaction: discord.Interaction):
         baki_quotes = [
             "You'd do or say anything to save your skin... probably even lick my ass when nobody was looking. -Sikorsky",
             "Now that you've got no more urine left in you... How are you going to get out of this tetrahedron? -Mouth",
