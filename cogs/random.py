@@ -96,7 +96,7 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 class Random(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.random_group = app_commands.Group(name="random", description="Random fun commands")
+        self.random_group = app_commands.Group(name="randomtest", description="Random fun commands")
         self.bot.tree.add_command(self.random_group)
 
         self.random_group.add_command(self.randombaki)
