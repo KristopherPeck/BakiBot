@@ -94,14 +94,12 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     return embed
 
 class Random(commands.Cog):
-
-    random_group = app_commands.Group(
-        name="random",
-        description="Random fun commands"
-    )
-
     def __init__(self, bot):
         self.bot = bot
+
+    @app_commands.group(name="random", description="Random fun commands")
+    async def random_group(self, interaction: discord.Interaction):
+        pass  # This is just the group container
 
     @random_group.command(name='baki', description="Get a random Baki quote")
     @app_commands.checks.cooldown(1,3.0,key=None)
