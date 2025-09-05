@@ -97,7 +97,7 @@ class Random(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @app_commands.command(name="random_baki", description="Get a random Baki quote")
+    @app_commands.command(name="random baki", description="Get a random Baki quote")
     @app_commands.checks.cooldown(1,3.0,key=None)
     async def baki(self, interaction: discord.Interaction):
         baki_quotes = [
