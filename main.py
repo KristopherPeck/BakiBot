@@ -65,12 +65,12 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
         print(f"[SlashCommandError] {interaction.command} | {type(error).__name__}: {error}")
         try:
             await interaction.response.send_message(
-                "⚠️ An unexpected error occurred. The dev has been notified.",
+                "⚠️ An unexpected error occurred.",
                 ephemeral=True
             )
         except discord.InteractionResponded:
             await interaction.followup.send(
-                "⚠️ An unexpected error occurred. The dev has been notified.",
+                "⚠️ An unexpected error occurred.",
                 ephemeral=True
             )
 

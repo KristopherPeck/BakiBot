@@ -96,12 +96,23 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 class Random(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.random_group = app_commands.Group(name="randomtest", description="Random fun commands")
-        self.bot.tree.add_command(self.random_group)
 
-        self.random_group.add_command(self.randombaki)
+        existing_group = self.bot.tree.get_command("random")
+        if existing_group is None:
+            # Create the group if it doesn't exist
+            self.random_group = app_commands.Group(
+                name="random",
+                description="Random fun commands"
+            )
+            self.bot.tree.add_command(self.random_group)
+        else:
+            self.random_group = existing_group
 
-    @app_commands.command(name='randombaki')
+        # Register subcommands if they are not already present
+        if "baki" not in [c.name for c in self.random_group.commands]:
+            self.random_group.add_command(self.baki)
+
+    @app_commands.command(name='baki')
     @app_commands.checks.cooldown(1,3.0,key=None)
     async def randombaki(self, interaction: discord.Interaction):
         baki_quotes = [
