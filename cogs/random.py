@@ -93,12 +93,12 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
     return embed
 
-class Random(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-   
+class RandomGroup(app_commands.Group):
+    def __init__(self):
+        super().__init__(name="random", description="Various commands with a random element")
+
     @app_commands.command(name='randombaki')
-    @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.checks.cooldown(1,3.0,key=None)
     async def randombaki(self, interaction: discord.Interaction):
         baki_quotes = [
             "You'd do or say anything to save your skin... probably even lick my ass when nobody was looking. -Sikorsky",
@@ -112,6 +112,12 @@ class Random(commands.Cog):
         response = random.choice(baki_quotes)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await interaction.response.send_message(embed=discord.Embed(description=response, colour=random_color))
+
+
+class Random(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.bot.tree.add_command(RandomGroup())
 
     @commands.command(name="choose", description="Choose from a list", usage="choose <item1 item2 item3 ... >")
     @commands.cooldown(1,3.0)

@@ -99,6 +99,30 @@ async def checkcogs(ctx):
                 await ctx.send({filename[0:-3]})
                 await ctx.send("is unloaded")
 
+@client.event
+async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    # Handle cooldown errors globally
+    if isinstance(error, app_commands.CommandOnCooldown):
+        await interaction.response.send_message(
+            f"⏳ That command is on cooldown! Try again in {error.retry_after:.1f} seconds.",
+            ephemeral=True
+        )
+    else:
+        # Log to console so you can debug
+        print(f"[SlashCommandError] {interaction.command.name} | {type(error).__name__}: {error}")
+        try:
+            # Send a friendly fallback error message
+            await interaction.response.send_message(
+                "⚠️ An unexpected error occurred. The dev has been notified.",
+                ephemeral=True
+            )
+        except discord.InteractionResponded:
+            # If we've already responded, send a followup instead
+            await interaction.followup.send(
+                "⚠️ An unexpected error occurred. The dev has been notified.",
+                ephemeral=True
+            )
+
 async def main():
     async with client:
         #Load all available cogs at runtime
