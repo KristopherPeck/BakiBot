@@ -28,7 +28,7 @@ def ownercheck(ctx):
 async def on_ready():
     #Set discord presence
     try:
-        synced = await client.tree.sync()
+        await client.tree.sync()
     except Exception as e:
         print("Failed to Sync")
     await client.change_presence(activity=discord.Game(name="!help or !dmhelp"))
