@@ -57,25 +57,16 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     if isinstance(error, app_commands.CommandOnCooldown):
-        return await interaction.response.send_message(
+        await interaction.response.send_message(
             f"⏳ That command is on cooldown! Try again in {error.retry_after:.1f} seconds.",
             ephemeral=True
         )
     else:
-        print(f"[SlashCommandError] {interaction.command} | {type(error).__name__}: {error}")
-        try:
-            return await interaction.response.send_message(
-                "⚠️ An unexpected error occurred.",
-                ephemeral=True
-            )
-        except discord.InteractionResponded:
-            return await interaction.followup.send(
-                "⚠️ An unexpected error occurred.",
-                ephemeral=True
-            )
+        await interaction.response.send_message("⚠️ An unexpected error occurred.",ephemeral=True)
 
 # Example global slash command (for testing)
 @client.tree.command(name="test2")
+@app_commands.checks.cooldown(1, 3.0, key=None)
 async def test2(interaction: discord.Interaction):
     await interaction.response.send_message(f"Hey {interaction.user.mention}! This is a slash command!", ephemeral=True)
 
