@@ -153,13 +153,12 @@ class Random(commands.Cog):
 
         await ctx.send(embed=discord.Embed(description="Your individual rolls were " + all_rolls + "! The total is " + str(roll_total) + "!", colour=random_color))
 
-    @commands.command(name="flip")
-    @commands.cooldown(1.0,3.0)
-    async def flip(self, ctx):
+    @app_commands.command(name="flip", description="Flip a Coin")
+    async def flip(self, interaction: discord.Interaction):
         choices = ["Heads", "Tails"]
         result = random.choice(choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.Embed(description="You got  " + result + "!", colour=random_color))
+        await interaction.response.send_message(embed=discord.Embed(description="You got  " + result + "!", colour=random_color))
         
     @commands.command(name="color")
     @commands.cooldown(1.0,3.0)
@@ -199,9 +198,8 @@ class Random(commands.Cog):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
 
-    @commands.command(name="trivia")
-    @commands.cooldown(1.0,3.0)
-    async def trivia(self, ctx):
+    @app_commands.command(name="random-trivia", description="Get a random trivia question.")
+    async def trivia(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         mode_selection = random.randint(0, 1)
 
@@ -215,14 +213,12 @@ class Random(commands.Cog):
             trivia_db_json = trivia_db_response.json()
             trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
         except:
-            await ctx.send("Looks like I couldn't get any trivia for you. Go ahead and try again shortly.")
+            await interaction.response.send_message("Looks like I couldn't get any trivia for you. Go ahead and try again shortly.")
             return
+        
+        embed = GenerateTriviaDetails(mode_selection, random_color, trivia_db_json)
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateTriviaDetails(mode_selection, random_color, trivia_db_json)
-
-        await channel.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot: commands.Bot):
     cog = Random(bot)
