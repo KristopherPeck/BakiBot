@@ -199,6 +199,7 @@ class Random(commands.Cog):
         await ctx.send(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
 
     @app_commands.command(name="random-trivia", description="Get a random trivia question.")
+    @app_commands.checks.cooldown(1, 5)
     async def trivia(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         mode_selection = random.randint(0, 1)
