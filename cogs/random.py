@@ -98,6 +98,7 @@ class Random(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="random-baki", description="Get a random Baki quote")
+    @app_commands.checks.cooldown(1, 3)
     async def baki(self, interaction: discord.Interaction):
         baki_quotes = [
             "You'd do or say anything to save your skin... probably even lick my ass when nobody was looking. -Sikorsky",
@@ -160,17 +161,15 @@ class Random(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await interaction.response.send_message(embed=discord.Embed(description="You got  " + result + "!", colour=random_color))
         
-    @commands.command(name="color")
-    @commands.cooldown(1.0,3.0)
-    async def colour(self, ctx):
+    @app_commands.command(name="color", description="Pick a Random Color")
+    @app_commands.checks.cooldown(1, 3)
+    async def color(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(
-            embed=discord.Embed(
+        await interaction.response.send_message(embed=discord.Embed(
                 title="Color Codes",
                 description=f"6 digit Hexadecimal: ``{random_color.__str__()}``\n" f"RGB Values: ``{random_color.to_rgb()}``",
                 color=random_color,
-            )
-        )
+            ))
         
     @commands.command(name="8ball", description="classic 8ball", aliases=["eightball"])
     @commands.cooldown(1.0,3.0)
@@ -199,7 +198,7 @@ class Random(commands.Cog):
         await ctx.send(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
 
     @app_commands.command(name="random-trivia", description="Get a random trivia question.")
-    @app_commands.checks.cooldown(1, 5)
+    @app_commands.checks.cooldown(1, 3)
     async def trivia(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         mode_selection = random.randint(0, 1)
