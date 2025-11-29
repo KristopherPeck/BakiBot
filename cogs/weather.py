@@ -5,6 +5,7 @@ import requests
 import os
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
+from discord import app_commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 

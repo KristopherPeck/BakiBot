@@ -7,6 +7,7 @@ import requests
 import requests_cache
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
+from discord import app_commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
@@ -131,6 +132,8 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             pass
         elif "Vanguard" in card_type:
             pass
+        elif "Card" in card_type:
+            pass
         elif card_layout == "Double_Faced_Token":
             pass
         else:
@@ -150,7 +153,10 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         if card_back_oracle_text == "":
             pass
         elif card_back_oracle_text != "":
-            embed.add_field(name="Alternate Side Oracle Text:", value=f"{card_back_oracle_text}", inline=False)      
+            if card_layout == "Adventure":
+                embed.add_field(name="Adventure Text:", value=f"{card_back_oracle_text}", inline=False)      
+            else:    
+                embed.add_field(name="Alternate Side Oracle Text:", value=f"{card_back_oracle_text}", inline=False)      
 
         #While Vanguard may not exist anymore I still accomodate for them. 
         #Vanguard cards have some additional text on them regarding hand and life modifiers I want to display. 
@@ -174,6 +180,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
         if card_layout == "Transform" or card_layout == "Modal_Dfc":
             card_type = random_card_json["card_faces"][0]["type_line"]
+            back_card_type = random_card_json["card_faces"][1]["type_line"]
 
         if "Creature" in card_type:
             try:
@@ -192,7 +199,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             if card_toughness == "*":
                 card_toughness = "[*]"
 
-            embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
+            embed.add_field(name="Front Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
 
         elif "Planeswalker" in card_type:
 
@@ -204,7 +211,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             if card_loyalty == "*":
                 card_loyalty = " * "
 
-            embed.add_field(name="Loyalty:", value=f"{card_loyalty}", inline=False)
+            embed.add_field(name="Front Loyalty:", value=f"{card_loyalty}", inline=False)
 
         elif "Battle" in card_type:
             try:
@@ -213,6 +220,38 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
                 card_defense = random_card_json["card_faces"][0]["defense"]
 
             embed.add_field(name="Defense:", value=f"{card_defense}", inline=False)
+
+        #Here we handle backside creatures/planeswalkers for things like the Battle cards or transform creatures
+        if "Creature" in back_card_type:
+            try:
+                card_power = random_card_json["power"]
+            except:
+                card_power = random_card_json["card_faces"][1]["power"]
+
+            try:    
+                card_toughness = random_card_json["toughness"]
+            except:
+                card_toughness = random_card_json["card_faces"][1]["toughness"]
+
+            if card_power == "*":
+                card_power = "[*]"
+
+            if card_toughness == "*":
+                card_toughness = "[*]"
+
+            embed.add_field(name="Back Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
+
+        elif "Planeswalker" in back_card_type:
+
+            try:
+                card_loyalty = random_card_json["loyalty"]
+            except:
+                card_loyalty = random_card_json["card_faces"][1]["loyalty"]
+
+            if card_loyalty == "*":
+                card_loyalty = " * "
+
+            embed.add_field(name="Back Loyalty:", value=f"{card_loyalty}", inline=False)
 
         embed.add_field(name="Printing:", value=f"{card_set_name}", inline=False)
 
@@ -251,13 +290,35 @@ class mtg(commands.Cog):
     def ownercheck(ctx):
         return ctx.message.author.id == int(owner_id)
     
-    @commands.command(name='randommtg')
-    @commands.cooldown(1.0,3.0)
+    @app_commands.command(name='randommtg', description="Pulls a random Magic the Gathering card from Scryfall.")
+    @app_commands.checks.cooldown(1.0,3.0)
     async def randommtg(self, ctx):
         random_card_url = scryfall_url + "cards/random"
         print ("Random MTG Card")
         random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
+
+        #If we get an art series or reversible fronts, search for the regular card version instead. 
+        card_layout_check = random_card_json["layout"]
+        typeline_check = random_card_json["type_line"]
+
+        if "Card" in typeline_check:
+            while True:
+                random_card_url = scryfall_url + "cards/random"
+                random_card_response = requests.get(check_mtg_card_url)
+                random_card_json = random_card_response.json()
+                typeline_check = random_card_json["type_line"]
+
+                if "Card" not in typeline_check:
+                    break
+                else:
+                    continue
+
+        if card_layout_check == "art_series":
+            check_mtg_card_url = scryfall_url + "cards/named?fuzzy=" + random_card_json["name"]
+            random_card_response = requests.get(check_mtg_card_url)
+            random_card_json = random_card_response.json()
+
         print (random_card_json["name"])
         card_type = random_card_json["type_line"]
 
