@@ -178,6 +178,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
+        back_card_type = "Blank"
         if card_layout == "Transform" or card_layout == "Modal_Dfc":
             card_type = random_card_json["card_faces"][0]["type_line"]
             back_card_type = random_card_json["card_faces"][1]["type_line"]
@@ -199,7 +200,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             if card_toughness == "*":
                 card_toughness = "[*]"
 
-            embed.add_field(name="Front Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
+            embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
 
         elif "Planeswalker" in card_type:
 
@@ -211,7 +212,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             if card_loyalty == "*":
                 card_loyalty = " * "
 
-            embed.add_field(name="Front Loyalty:", value=f"{card_loyalty}", inline=False)
+            embed.add_field(name="Loyalty:", value=f"{card_loyalty}", inline=False)
 
         elif "Battle" in card_type:
             try:
