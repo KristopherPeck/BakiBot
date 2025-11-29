@@ -304,14 +304,15 @@ class mtg(commands.Cog):
         typeline_check = random_card_json["type_line"]
 
         if "Card" in typeline_check:
-            while True:
+            bad_type = True
+            while bad_type == True:
                 random_card_url = scryfall_url + "cards/random"
                 random_card_response = requests.get(check_mtg_card_url)
                 random_card_json = random_card_response.json()
                 typeline_check = random_card_json["type_line"]
 
                 if "Card" not in typeline_check:
-                    break
+                    bad_type == False
                 else:
                     continue
 
