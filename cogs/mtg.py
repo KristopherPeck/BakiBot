@@ -293,7 +293,7 @@ class mtg(commands.Cog):
     
     @app_commands.command(name='randommtg', description="Pulls a random Magic the Gathering card from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
-    async def randommtg(self, ctx):
+    async def randommtg(self, interaction: discord.Interaction):
         random_card_url = scryfall_url + "cards/random"
         print ("Random MTG Card")
         random_card_response = requests.get(random_card_url)
@@ -313,8 +313,6 @@ class mtg(commands.Cog):
 
                 if "Card" not in typeline_check:
                     bad_type == False
-                else:
-                    continue
 
         if card_layout_check == "art_series":
             check_mtg_card_url = scryfall_url + "cards/named?fuzzy=" + random_card_json["name"]
@@ -326,11 +324,11 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        channel = ctx.message.channel
+        channel = interaction.message.channel
         async with channel.typing():
             embed = GenerateCardDetails(card_type, random_card_json, random_color)
         
-        await channel.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
     @commands.command(name='randomcommander')
     @commands.cooldown(1.0,3.0)
