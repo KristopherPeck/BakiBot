@@ -65,6 +65,11 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
 
+        elif card_type == "Card":
+            card_name = random_card_json["name"]
+            card_oracle_text = random_card_json["oracle_text"]
+            card_image_url = random_card_json["image_uris"]["large"]
+
         else:
             card_name = random_card_json["name"]
             card_mana_cost = random_card_json["mana_cost"]
@@ -224,15 +229,8 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Here we handle backside creatures/planeswalkers for things like the Battle cards or transform creatures
         if "Creature" in back_card_type:
-            try:
-                card_power = random_card_json["power"]
-            except:
-                card_power = random_card_json["card_faces"][1]["power"]
-
-            try:    
-                card_toughness = random_card_json["toughness"]
-            except:
-                card_toughness = random_card_json["card_faces"][1]["toughness"]
+            card_power = random_card_json["card_faces"][1]["power"]
+            card_toughness = random_card_json["card_faces"][1]["toughness"]
 
             if card_power == "*":
                 card_power = "[*]"
@@ -324,7 +322,6 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
-        print (embed)
         await interaction.response.send_message(embed=embed)
 
     @commands.command(name='randomcommander')
