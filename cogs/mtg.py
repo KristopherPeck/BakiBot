@@ -323,11 +323,8 @@ class mtg(commands.Cog):
         card_type = random_card_json["type_line"]
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
-        channel = interaction.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type, random_card_json, random_color)
-        
+        embed = GenerateCardDetails(card_type, random_card_json, random_color)
+        print (embed)
         await interaction.response.send_message(embed=embed)
 
     @commands.command(name='randomcommander')
