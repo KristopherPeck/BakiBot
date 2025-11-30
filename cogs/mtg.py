@@ -149,10 +149,10 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             pass
         elif "Card" in card_type:
             pass
-        elif card_layout == "Double_Faced_Token":
+        elif card_layout == "double_faced_token":
             pass
         else:
-            if card_layout == "Adventure":
+            if card_layout == "adventure":
                 embed.add_field(name="Mana Costs:", value=f"{card_mana_cost}" + " / " + f"{back_card_mana_cost}", inline=False)
             else:    
                 embed.add_field(name="Mana Cost:", value=f"{card_mana_cost}", inline=False)
@@ -168,7 +168,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         if card_back_oracle_text == "":
             pass
         elif card_back_oracle_text != "":
-            if card_layout == "Adventure":
+            if card_layout == "adventure":
                 embed.add_field(name="Adventure Text:", value=f"{card_back_oracle_text}", inline=False)      
             else:    
                 embed.add_field(name="Alternate Side Oracle Text:", value=f"{card_back_oracle_text}", inline=False)      
@@ -193,8 +193,6 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
-
-
         
         if "transform" in card_layout or "modal_dfc" in card_layout:
             card_type = random_card_json["card_faces"][0]["type_line"]
