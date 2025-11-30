@@ -3,8 +3,10 @@ import sys
 import random
 import os
 import os.path
+import datetime
 import requests
 import requests_cache
+import psycopg2
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord import app_commands
@@ -14,6 +16,7 @@ from discord.ext.commands import Context
 heroku_check = os.getenv('HEROKU_CHECK')
 owner_id = os.getenv('DISCORD_OWNERID')
 scryfall_url = "https://api.scryfall.com/"
+database_url = os.environ['DATABASE_URL']
 mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
 def GenerateCardDetails(card_type, random_card_json, random_color):
@@ -343,7 +346,7 @@ class mtg(commands.Cog):
     @app_commands.checks.cooldown(1.0,3.0)
     async def randommtg(self, interaction: discord.Interaction):
         random_card_url = scryfall_url + "cards/random"
-        print ("Random MTG Card")
+
         random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
 
@@ -367,7 +370,20 @@ class mtg(commands.Cog):
             random_card_response = requests.get(check_mtg_card_url)
             random_card_json = random_card_response.json()
 
-        print (random_card_json["name"])
+        print("DB Conn")
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        print("DB Cursor")
+        db_cursor = db_conn.cursor()
+        print("Datetime")
+        now = datetime.datetime.now()
+        print("Insert")
+        db_cursor.execute("INSERT INTO log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("mtgrandom", random_card_json["name"], now))
+        print("Commit")
+        db_conn.commit()
+        print("Close Cursor")
+        db_cursor.close()
+        print("Close Conn")
+        db_conn.close()
         card_type = random_card_json["type_line"]
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
