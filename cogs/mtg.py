@@ -65,7 +65,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
 
-        elif card_type == "Card":
+        elif "Card" in card_type:
             card_name = random_card_json["name"]
             card_oracle_text = random_card_json["oracle_text"]
             card_image_url = random_card_json["image_uris"]["large"]
