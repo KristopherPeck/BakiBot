@@ -184,6 +184,8 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
+
+        print(card_layout)
         
         if card_layout == "Transform" or card_layout == "Modal_Dfc":
             card_type = random_card_json["card_faces"][0]["type_line"]
