@@ -75,6 +75,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_mana_cost = random_card_json["mana_cost"]
             card_oracle_text = random_card_json["oracle_text"]
             card_image_url = random_card_json["image_uris"]["large"]
+            back_card_type = "Blank"
         
         card_layout = card_layout.upper()
         card_url = random_card_json["scryfall_uri"]
@@ -183,49 +184,89 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
-        back_card_type = "Blank"
+        
         if card_layout == "Transform" or card_layout == "Modal_Dfc":
             card_type = random_card_json["card_faces"][0]["type_line"]
             back_card_type = random_card_json["card_faces"][1]["type_line"]
 
-        if "Creature" in card_type:
-            try:
-                card_power = random_card_json["power"]
-            except:
-                card_power = random_card_json["card_faces"][0]["power"]
+            if "Creature" in card_type:
+                try:
+                    card_power = random_card_json["power"]
+                except:
+                    card_power = random_card_json["card_faces"][0]["power"]
 
-            try:    
-                card_toughness = random_card_json["toughness"]
-            except:
-                card_toughness = random_card_json["card_faces"][0]["toughness"]
+                try:    
+                    card_toughness = random_card_json["toughness"]
+                except:
+                    card_toughness = random_card_json["card_faces"][0]["toughness"]
 
-            if card_power == "*":
-                card_power = "[*]"
+                if card_power == "*":
+                    card_power = "[*]"
 
-            if card_toughness == "*":
-                card_toughness = "[*]"
+                if card_toughness == "*":
+                    card_toughness = "[*]"
 
-            embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
+                embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
 
-        elif "Planeswalker" in card_type:
+            elif "Planeswalker" in card_type:
 
-            try:
-                card_loyalty = random_card_json["loyalty"]
-            except:
-                card_loyalty = random_card_json["card_faces"][0]["loyalty"]
+                try:
+                    card_loyalty = random_card_json["loyalty"]
+                except:
+                    card_loyalty = random_card_json["card_faces"][0]["loyalty"]
 
-            if card_loyalty == "*":
-                card_loyalty = " * "
+                if card_loyalty == "*":
+                    card_loyalty = " * "
 
-            embed.add_field(name="Loyalty:", value=f"{card_loyalty}", inline=False)
+                embed.add_field(name="Loyalty:", value=f"{card_loyalty}", inline=False)
 
-        elif "Battle" in card_type:
-            try:
-                card_defense = random_card_json["defense"]
-            except:
-                card_defense = random_card_json["card_faces"][0]["defense"]
+            elif "Battle" in card_type:
+                try:
+                    card_defense = random_card_json["defense"]
+                except:
+                    card_defense = random_card_json["card_faces"][0]["defense"]
 
-            embed.add_field(name="Defense:", value=f"{card_defense}", inline=False)
+                embed.add_field(name="Defense:", value=f"{card_defense}", inline=False)
+
+        else:
+            if "Creature" in card_type:
+                try:
+                    card_power = random_card_json["power"]
+                except:
+                    card_power = random_card_json["card_faces"][0]["power"]
+
+                try:    
+                    card_toughness = random_card_json["toughness"]
+                except:
+                    card_toughness = random_card_json["card_faces"][0]["toughness"]
+
+                if card_power == "*":
+                    card_power = "[*]"
+
+                if card_toughness == "*":
+                    card_toughness = "[*]"
+
+                embed.add_field(name="Power/Toughness:", value=f"{card_power}/" + f"{card_toughness}", inline=False)
+
+            elif "Planeswalker" in card_type:
+
+                try:
+                    card_loyalty = random_card_json["loyalty"]
+                except:
+                    card_loyalty = random_card_json["card_faces"][0]["loyalty"]
+
+                if card_loyalty == "*":
+                    card_loyalty = " * "
+
+                embed.add_field(name="Loyalty:", value=f"{card_loyalty}", inline=False)
+
+            elif "Battle" in card_type:
+                try:
+                    card_defense = random_card_json["defense"]
+                except:
+                    card_defense = random_card_json["card_faces"][0]["defense"]
+
+                embed.add_field(name="Defense:", value=f"{card_defense}", inline=False)   
 
         #Here we handle backside creatures/planeswalkers for things like the Battle cards or transform creatures
         if "Creature" in back_card_type:
