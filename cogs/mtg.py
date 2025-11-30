@@ -70,11 +70,13 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_image_url = random_card_json["card_faces"][0]["image_uris"]["large"]
             card_oracle_text = random_card_json["card_faces"][0]["oracle_text"]
             card_back_oracle_text =random_card_json["card_faces"][1]["oracle_text"]
+            card_layout = "Card"
 
         elif "Card" in card_type:
             card_name = random_card_json["name"]
             card_oracle_text = random_card_json["oracle_text"]
             card_image_url = random_card_json["image_uris"]["large"]
+            card_layout = "Card"
 
         else:
             card_name = random_card_json["name"]
@@ -87,6 +89,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         card_url = random_card_json["scryfall_uri"]
         card_set_name = random_card_json["set_name"]
         card_set_code = random_card_json["set"].upper()
+        back_card_type = "Blank"
 
         #Flavor text as well as back oracle text aren't always on the cards.
         try:
@@ -196,9 +199,6 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         if "transform" in card_layout or "modal_dfc" in card_layout:
             card_type = random_card_json["card_faces"][0]["type_line"]
             back_card_type = random_card_json["card_faces"][1]["type_line"]
-
-            print(card_type)
-            print(back_card_type)
 
             if "Creature" in card_type:
                 try:
