@@ -377,7 +377,7 @@ class mtg(commands.Cog):
         print("Datetime")
         now = datetime.datetime.now()
         print("Insert")
-        db_cursor.execute("INSERT INTO log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("mtgrandom", random_card_json["name"], now))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("mtgrandom", random_card_json["name"], now))
         print("Commit")
         db_conn.commit()
         print("Close Cursor")
