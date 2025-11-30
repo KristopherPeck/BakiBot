@@ -370,19 +370,12 @@ class mtg(commands.Cog):
             random_card_response = requests.get(check_mtg_card_url)
             random_card_json = random_card_response.json()
 
-        print("DB Conn")
         db_conn = psycopg2.connect(database_url, sslmode='require')
-        print("DB Cursor")
         db_cursor = db_conn.cursor()
-        print("Datetime")
         now = datetime.datetime.now()
-        print("Insert")
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("mtgrandom", random_card_json["name"], now))
-        print("Commit")
         db_conn.commit()
-        print("Close Cursor")
         db_cursor.close()
-        print("Close Conn")
         db_conn.close()
         card_type = random_card_json["type_line"]
 
