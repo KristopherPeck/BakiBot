@@ -77,7 +77,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_image_url = random_card_json["image_uris"]["large"]
             back_card_type = "Blank"
         
-        card_layout = card_layout.upper()
+        card_layout = card_layout.lower()
         card_url = random_card_json["scryfall_uri"]
         card_set_name = random_card_json["set_name"]
         card_set_code = random_card_json["set"].upper()
@@ -184,10 +184,15 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
 
         #Transform and Modal DFC store the details about power/toughness/loyalty in a separate array
         #Currently we don't track what they have for those on the back side. I only care about the front face. 
+
+
         
-        if "Transform" in card_layout or "Modal_Dfc" in card_layout:
+        if "transform" in card_layout or "modal_dfc" in card_layout:
             card_type = random_card_json["card_faces"][0]["type_line"]
             back_card_type = random_card_json["card_faces"][1]["type_line"]
+
+            print(card_type)
+            print(back_card_type)
 
             if "Creature" in card_type:
                 try:
