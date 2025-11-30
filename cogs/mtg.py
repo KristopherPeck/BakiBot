@@ -189,6 +189,9 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             card_type = random_card_json["card_faces"][0]["type_line"]
             back_card_type = random_card_json["card_faces"][1]["type_line"]
 
+            print(card_type)
+            print(back_card_type)
+
             if "Creature" in card_type:
                 try:
                     card_power = random_card_json["power"]
