@@ -1,6 +1,7 @@
 import os
 import discord
 import asyncio
+import psycopg2
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
