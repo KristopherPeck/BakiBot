@@ -114,10 +114,10 @@ class lunch(commands.Cog):
                         limit 3
                         """
         query_data = {
-            'date': '%{}%'.format(['date'])
+            'date': '%{}%'.format([date_check])
         }
         db_cursor.execute(select_query, query_data)
-        sql_results = db_cursor.fetchone()
+        sql_results = db_cursor.fetchall()
         print (sql_results)
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
         db_conn.commit()
