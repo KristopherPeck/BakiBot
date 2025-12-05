@@ -119,15 +119,17 @@ class lunch(commands.Cog):
         }
 
         db_cursor.execute(select_query, query_data)
-        sql_results = db_cursor.fetchall()
+        temp_sql_results = db_cursor.fetchall()
+        sql_results = map(list, list(temp_sql_results))
+        sql_results = sum(sql_results, [])
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
 
-        response1 = sql_results[0]
-        response2 = sql_results[1]
-        response3 = sql_results[2]
+        response1 = str(sql_results[0])
+        response2 = str(sql_results[1])
+        response3 = str(sql_results[2])
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Your choices for lunch are " + response1 + ", " + response2 + " or " + response3 + "!", colour=random_color))
