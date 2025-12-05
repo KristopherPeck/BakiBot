@@ -93,7 +93,7 @@ class lunch(commands.Cog):
         print(now)
         day_of_week = datetime.strftime(now, "%A")
         print(day_of_week)
-        db_cursor.execute("select * from bakibot.lunch_options where %s != 0 order by RANDOM() limit 3;", (day_of_week))
+        db_cursor.execute("select * from bakibot.lunch_options where (%s) != 0 order by RANDOM() limit 3", (day_of_week))
         sql_results = db_cursor.fetchall()
         print (sql_results)
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
