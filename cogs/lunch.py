@@ -113,28 +113,22 @@ class lunch(commands.Cog):
                         order by RANDOM()
                         limit 3
                         """
+        
         query_data = {
             'date': '%{}%'.format(date_check)
         }
+
         db_cursor.execute(select_query, query_data)
         sql_results = db_cursor.fetchall()
-        print(date_check)
-        print(query_data)
-        print (sql_results)
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
 
-        temporary_restaurant_choices = restaurant_choices
+        response1 = sql_results[0]
+        response2 = sql_results[1]
+        response3 = sql_results[2]
 
-        response1 = random.choice(restaurant_choices)
-        temporary_restaurant_choices.remove(response1)
-
-        response2 = random.choice(restaurant_choices)
-        temporary_restaurant_choices.remove(response2)
-        
-        response3 = random.choice(restaurant_choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Your choices for lunch are " + response1 + ", " + response2 + " or " + response3 + "!", colour=random_color))
 
