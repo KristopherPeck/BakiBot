@@ -114,7 +114,7 @@ class lunch(commands.Cog):
                         limit 3
                         """
         query_data = {
-            'date': '%{}%'.format([date_check])
+            'date': '%{}%'.format(date_check)
         }
         db_cursor.execute(select_query, query_data)
         sql_results = db_cursor.fetchall()
