@@ -90,7 +90,7 @@ class lunch(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
+        day_of_week = str(datetime.strftime(now, "%A"))
         db_cursor.execute("select * from bakibot.lunch_options where %s != 0 order by RANDOM() limit 3", (day_of_week, ))
         sql_results = db_cursor.fetchall()
         print (sql_results)
