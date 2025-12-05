@@ -91,7 +91,32 @@ class lunch(commands.Cog):
         db_cursor = db_conn.cursor()
         now = datetime.now()
         day_of_week = datetime.strftime(now, "%A")
-        db_cursor.execute("select * from bakibot.lunch_options where %s != 0 order by RANDOM() limit 3", (str(day_of_week.lower()), ))
+
+        if "Monday" in day_of_week:
+            date_check = "M"
+        elif "Tuesday" in day_of_week:
+            date_check = "T"
+        elif "Wednesday" in day_of_week:
+            date_check = "W"
+        elif "Thursday" in day_of_week:
+            date_check = "H"
+        elif "Friday" in day_of_week:
+            date_check = "F"
+        elif "Saturday" in day_of_week:
+            date_check = "S"
+        elif "Sunday" in day_of_week:
+            date_check = "U"
+
+        select_query = """
+                        select restaurant_name from bakibot.lunch_options
+                        where days_open like %(date)s
+                        order by RANDOM()
+                        limit 3
+                        """
+        query_data = {
+            'date': '%{}%'.format(['date'])
+        }
+        db_cursor.execute(select_query, query_data)
         sql_results = db_cursor.fetchall()
         print (sql_results)
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
