@@ -1,13 +1,19 @@
 import discord
 import sys
 import random
+import os
+import os.path
 import html
 import requests
 import requests_cache
+import datetime
+import psycopg2
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
+
+database_url = os.environ['DATABASE_URL']
 
 restaurant_choices = [
             "Penn Station (M-Su)", 
@@ -80,6 +86,20 @@ class lunch(commands.Cog):
     @commands.command(name="lunchtimex3")
     @commands.cooldown(1.0,3.0)
     async def lunchtimex3(self, ctx):
+
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        dt = datetime.strptime(now, "%d %m %Y")  
+        wd = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        day_of_week = wd[dt.weekday()]
+        db_cursor.execute("select * from bakibot.lunch_optionswhere friday != 0 order by RANDOM() limit 3;")
+        sql_results = db_cursor.fetchall()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
+
         temporary_restaurant_choices = restaurant_choices
 
         response1 = random.choice(restaurant_choices)
