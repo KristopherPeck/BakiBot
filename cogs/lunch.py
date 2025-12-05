@@ -6,8 +6,8 @@ import os.path
 import html
 import requests
 import requests_cache
-import datetime
 import psycopg2
+from datetime import datetime
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
@@ -89,11 +89,9 @@ class lunch(commands.Cog):
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        dt = datetime.strftime(now, "%d %m %Y")  
-        wd = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        day_of_week = wd[dt.weekday()]
-        db_cursor.execute("select * from bakibot.lunch_optionswhere friday != 0 order by RANDOM() limit 3;")
+        now = datetime.now()
+        day_of_week = datetime.strftime(now, "%A")
+        db_cursor.execute("select * from bakibot.lunch_options where %s != 0 order by RANDOM() limit 3;", day_of_week)
         sql_results = db_cursor.fetchall()
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
         db_conn.commit()
