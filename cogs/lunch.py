@@ -118,6 +118,8 @@ class lunch(commands.Cog):
         }
         db_cursor.execute(select_query, query_data)
         sql_results = db_cursor.fetchall()
+        print(date_check)
+        print(query_data)
         print (sql_results)
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
         db_conn.commit()
