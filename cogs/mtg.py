@@ -384,7 +384,7 @@ class mtg(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name='randomcommander', description="Pulls a random legal Commander from Scryfall.")
-    @app_commands.cooldown(1.0,3.0)
+    @app_commands.checks.cooldown(1.0,3.0)
     async def randomcommander(self, interaction: discord.Interaction):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
@@ -492,7 +492,7 @@ class mtg(commands.Cog):
 
 
     @app_commands.command(name='mojhosto', description="Posts a description of the MoJhoSto format.")
-    @app_commands.cooldown(1.0,3.0)
+    @app_commands.checks.cooldown(1.0,3.0)
     async def mojhosto(self, interaction: discord.Interaction):
 
         db_conn = psycopg2.connect(database_url, sslmode='require')

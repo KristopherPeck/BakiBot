@@ -20,7 +20,7 @@ class lunch(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="lunchtime", description="Picks a set of three random restuarants for lunch.")
-    @app_commands.cooldown(1.0,3.0)
+    @app_commands.checks.cooldown(1.0,3.0)
     async def lunchtime(self, interaction: discord.Interaction):
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
