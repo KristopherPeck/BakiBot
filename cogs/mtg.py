@@ -373,7 +373,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("mtgrandom", random_card_json["name"], now))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("randommtg", random_card_json["name"], now))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -383,9 +383,9 @@ class mtg(commands.Cog):
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
         await interaction.response.send_message(embed=embed)
 
-    @commands.command(name='randomcommander')
-    @commands.cooldown(1.0,3.0)
-    async def randomcommander(self, ctx):
+    @app_commands.command(name='randomcommander', description="Pulls a random legal Commander from Scryfall.")
+    @app_commands.cooldown(1.0,3.0)
+    async def randomcommander(self, interaction: discord.Interaction):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
         print ("Random Commander")
@@ -406,11 +406,16 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type, random_card_json, random_color)
-        
-        await channel.send(embed=embed)
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("randomcommander", random_card_json["name"], now))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
+
+        embed = GenerateCardDetails(card_type, random_card_json, random_color)
+        await interaction.response.send_message(embed=embed)
 
     @commands.command(name='momir')
     @commands.cooldown(1.0,3.0)
@@ -486,15 +491,23 @@ class mtg(commands.Cog):
         await channel.send(embed=embed)
 
 
-    @commands.command(name='mojhosto')
-    @commands.cooldown(1.0,3.0)
-    async def mojhosto(self, ctx):
+    @app_commands.command(name='mojhosto', description="Posts a description of the MoJhoSto format.")
+    @app_commands.cooldown(1.0,3.0)
+    async def mojhosto(self, interaction: discord.Interaction):
 
-        await ctx.send("MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards.")
-        await ctx.send("There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.")
-        await ctx.send("https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277")
-        await ctx.send("https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg?1562943398")
-        await ctx.send("https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg?1562945952")
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("mojhosto", interaction.user.name, now))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
+
+        await interaction.response.send_message("MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards.", ephemeral=True)
+        await interaction.response.send_message("There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", ephemeral=True)
+        await interaction.response.send_message("https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277", ephemeral=True)
+        await interaction.response.send_message("https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg?1562943398", ephemeral=True)
+        await interaction.response.send_message("https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg?1562945952", ephemeral=True)
 
     @commands.command(name='stonehewer')
     @commands.cooldown(1.0,3.0)
