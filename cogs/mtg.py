@@ -373,7 +373,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s)", ("randommtg", random_card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("randommtg", random_card_json["name"], now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -388,10 +388,8 @@ class mtg(commands.Cog):
     async def randomcommander(self, interaction: discord.Interaction):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
-        print ("Random Commander")
         random_card_response = requests.get(random_card_url)
         random_card_json = random_card_response.json()
-        print (random_card_json["name"])
         card_type = random_card_json["type_line"]
         card_edh_legal = random_card_json["legalities"]["commander"]
 
@@ -409,7 +407,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s)", ("randomcommander", random_card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("randomcommander", random_card_json["name"], now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -498,7 +496,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s)", ("mojhosto", "posted mojhosto", now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("mojhosto", "posted mojhosto", now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
