@@ -58,7 +58,7 @@ class lunch(commands.Cog):
         temp_sql_results = db_cursor.fetchall()
         sql_results = map(list, list(temp_sql_results))
         sql_results = sum(sql_results, [])
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp) VALUES (%s, %s, %s)", ("lunchtimex3", sql_results, now))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s)", ("lunchtime", sql_results, now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
