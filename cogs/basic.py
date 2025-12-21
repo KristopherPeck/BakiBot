@@ -3,6 +3,8 @@ import sys
 import random
 import os
 import os.path
+import psycopg2
+from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord import app_commands
@@ -10,6 +12,7 @@ from discord.ext.commands import bot
 from discord.ext.commands import Context
 
 heroku_check = os.getenv('HEROKU_CHECK')
+database_url = os.environ['DATABASE_URL']
 
 def PokemonHelp():
     c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -150,13 +153,25 @@ class Basic(commands.Cog):
         embed = GenHelp()
         await ctx.send(embed=embed)
 
-    @commands.command(name="source")
-    @commands.cooldown(1.0,3.0)
-    async def source(self, ctx):
+    @app_commands.command(name="source", description="Get a link to BakiBot's Github page.")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def source(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed = discord.Embed(title="Source Code", description="My source code is over at GitHub! Click the link above to look at it!", url=f"https://github.com/KristopherPeck/BakiBot", color=random_color)
-        channel = ctx.message.channel
-        await channel.send(embed=embed)
+
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.now()
+        day_of_week = datetime.strftime(now, "%A")
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("source", "posted source", now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
+
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Basic(bot))

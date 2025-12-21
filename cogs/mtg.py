@@ -342,7 +342,7 @@ class mtg(commands.Cog):
     def ownercheck(ctx):
         return ctx.message.author.id == int(owner_id)
     
-    @app_commands.command(name='randommtg', description="Pulls a random Magic the Gathering card from Scryfall.")
+    @app_commands.command(name='random-mtg', description="Pulls a random Magic the Gathering card from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def randommtg(self, interaction: discord.Interaction):
         random_card_url = scryfall_url + "cards/random"
@@ -373,7 +373,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("randommtg", random_card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-mtg", random_card_json["name"], now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -383,7 +383,7 @@ class mtg(commands.Cog):
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='randomcommander', description="Pulls a random legal Commander from Scryfall.")
+    @app_commands.command(name='random-commander', description="Pulls a random legal Commander from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def randomcommander(self, interaction: discord.Interaction):
 
@@ -407,7 +407,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("randomcommander", random_card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-commander", random_card_json["name"], now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -489,23 +489,23 @@ class mtg(commands.Cog):
         await channel.send(embed=embed)
 
 
-    @app_commands.command(name='mojhosto', description="Posts a description of the MoJhoSto format.")
+    @app_commands.command(name='post-mojhosto', description="Posts a description of the MoJhoSto format.")
     @app_commands.checks.cooldown(1.0,3.0)
-    async def mojhosto(self, interaction: discord.Interaction):
+    async def postmojhosto(self, interaction: discord.Interaction):
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("mojhosto", "posted mojhosto", now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("post-mojhosto", "posted mojhosto", now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
 
-        await interaction.response.send_message("MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards.", ephemeral=True)
-        await interaction.response.send_message("There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", ephemeral=True)
-        await interaction.response.send_message("https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg", ephemeral=True)
-        await interaction.response.send_message("https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg", ephemeral=True)
-        await interaction.response.send_message("https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg", ephemeral=True)
+        await interaction.response.send_message("MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards.")
+        await interaction.response.send_message("There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.")
+        await interaction.response.send_message("https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg")
+        await interaction.response.send_message("https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg")
+        await interaction.response.send_message("https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg")
 
     @commands.command(name='stonehewer')
     @commands.cooldown(1.0,3.0)

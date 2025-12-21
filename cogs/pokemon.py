@@ -5,6 +5,8 @@ import os
 import os.path
 import requests
 import requests_cache
+import psycopg2
+from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord import app_commands
@@ -16,6 +18,7 @@ owner_id = os.getenv('DISCORD_OWNERID')
 #This includes everything up through Paradox.
 #max_pokemon_count = 1301
 pokemon_api_url = "https://pokeapi.co/api/v2/"
+database_url = os.environ['DATABASE_URL']
 poke_session = requests_cache.CachedSession('poke_cache', expire_after=1800)
 
 def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
@@ -222,9 +225,15 @@ class Pokemon(commands.Cog):
     def ownercheck(ctx):
         return ctx.message.author.id == int(owner_id)
 
-    @commands.command(name='randompokemon')
-    @commands.cooldown(1.0,3.0)
-    async def randompokemon(self, ctx):
+    @app_commands.command(name='random-pokemon', description="Pick a random Pokemon.")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def randompokemon(self, interaction: discord.Interaction):
+
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.now()
+        day_of_week = datetime.strftime(now, "%A")
+    
         #Start pulling in the initial API information
         max_pokemon_count_url = pokemon_api_url + "pokemon?limit=100000&offset=0"
         max_pokemon_response = requests.get(max_pokemon_count_url)
@@ -233,16 +242,21 @@ class Pokemon(commands.Cog):
         random_pokemon_id = random.randint(0, max_pokemon_count)
         #complete_api_url = pokemon_api_url + "pokemon/" + str(random_pokemon_id)
         complete_api_url = max_pokemon_json["results"][random_pokemon_id]["url"]
-        print ("Random Pokemon: " + str(random_pokemon_id))
-        print (str(complete_api_url))
         Response = poke_session.get(complete_api_url)
         ResponseJSON = Response.json()
+
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-pokemon", ResponseJSON["name"], now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
+
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GeneratePokemonDetails(random_color,ResponseJSON, pokemon_id=random_pokemon_id)
+        embed = GeneratePokemonDetails(random_color,ResponseJSON, pokemon_id=random_pokemon_id)
         
-        await channel.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
     #This command is built the same as the random one but it allows you to put in either a name or pokemon id. 
     @commands.command(name='pokemon')
