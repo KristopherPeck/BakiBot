@@ -4,7 +4,7 @@ import random
 import os
 import os.path
 import psycopg2
-from datetime import datetime
+import datetime
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
@@ -30,10 +30,6 @@ class NameCalling(commands.Cog):
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed = discord.Embed(description=f"{users[0].mention} is a scrub!", colour=c)
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()

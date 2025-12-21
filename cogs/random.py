@@ -7,7 +7,7 @@ import html
 import requests
 import requests_cache
 import psycopg2
-from datetime import datetime
+import datetime
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
@@ -120,12 +120,8 @@ class Random(commands.Cog):
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
-        now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-baki", response , now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-baki", response, now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -182,10 +178,6 @@ class Random(commands.Cog):
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
-        now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("flip", result, now, interaction.user.name, interaction.user.id))
         db_conn.commit()
@@ -199,10 +191,6 @@ class Random(commands.Cog):
     async def color(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
@@ -262,10 +250,6 @@ class Random(commands.Cog):
             await interaction.response.send_message("Looks like I couldn't get any trivia for you. Go ahead and try again shortly.")
             return
         
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()

@@ -6,7 +6,7 @@ import os.path
 import requests
 import requests_cache
 import psycopg2
-from datetime import datetime
+import datetime
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord import app_commands
@@ -228,12 +228,6 @@ class Pokemon(commands.Cog):
     @app_commands.command(name='random-pokemon', description="Pick a random Pokemon.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def randompokemon(self, interaction: discord.Interaction):
-
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.now()
-        day_of_week = datetime.strftime(now, "%A")
-    
         #Start pulling in the initial API information
         max_pokemon_count_url = pokemon_api_url + "pokemon?limit=100000&offset=0"
         max_pokemon_response = requests.get(max_pokemon_count_url)
