@@ -472,14 +472,15 @@ class mtg(commands.Cog):
                 await interaction.response.send_message("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
                 return
 
-        embed = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)      
-        await interaction.response.send_message(embed=embed)
+        embed1 = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)      
+        embed2 = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color) 
+        embed3 = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)
 
-        embed = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color) 
-        await interaction.response.send_message(embed=embed)
-
-        embed = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)    
-        await interaction.response.send_message(embed=embed)
+        embeds = []
+        embeds.append(embed1)
+        embeds.append(embed2)
+        embeds.append(embed3)
+        await interaction.response.send_message(embeds=embeds)
 
 
     @app_commands.command(name='post-mojhosto', description="Posts a description of the MoJhoSto format.")
