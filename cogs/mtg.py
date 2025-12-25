@@ -415,12 +415,12 @@ class mtg(commands.Cog):
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='momir')
+    @app_commands.command(name='momir', description="Pulls a random monster with the selected mana value from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
-    async def momir(self, interaction: discord.Interaction, value: str):
+    async def momir(self, interaction: discord.Interaction, Mana_Value: str):
 
         try:  
-                arg1 = str(value)
+                arg1 = str(Mana_Value)
                 momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
                 print ("Random Momir prompt for:" + arg1)
                 momir_card_response = requests.get(momir_card_url)
@@ -437,15 +437,19 @@ class mtg(commands.Cog):
                 
         await interaction.response.send_message(embed=embed)
 
-    @commands.command(name='jhoira')
-    @commands.cooldown(1.0,3.0)
-    async def jhoira(self, ctx, arg1):
+    @app_commands.command(name='jhoira', description="Pulls three random instant or sorcery cards from Scryfall. Requires you to type Sorcery or Instant")
+    @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.describe(Card_Type="Select your requested card type")
+    @app_commands.choices(
+        Card_Type=[
+            app_commands.Choice(name="Instant", value="Instant"),
+            app_commands.Choice(name="Sorcery", value="Sorcery")
+        ]
+    )
+    async def jhoira(self, interaction: discord.Interaction, Card_Type: str):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        arg1 = str(arg1)
-
-        if arg1 not in ("Instant", "instant", "sorcery", "Sorcery"):
-            await ctx.send("Jhoira of the Ghitu only works with instant or sorcery.")
+        arg1 = str(Card_Type)
 
         try:  
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
@@ -465,26 +469,17 @@ class mtg(commands.Cog):
                 card_type_2 = jhoira_card_json_2["type_line"]
                 card_type_3 = jhoira_card_json_3["type_line"]
         except:
-                await ctx.send("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
+                await interaction.response.send_message("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
                 return
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)
-                
-        await channel.send(embed=embed)
+        embed = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)      
+        await interaction.response.send_message(embed=embed)
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color)
-                
-        await channel.send(embed=embed)
+        embed = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color) 
+        await interaction.response.send_message(embed=embed)
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)
-                
-        await channel.send(embed=embed)
+        embed = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)    
+        await interaction.response.send_message(embed=embed)
 
 
     @app_commands.command(name='post-mojhosto', description="Posts a description of the MoJhoSto format.")
