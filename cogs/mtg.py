@@ -417,10 +417,10 @@ class mtg(commands.Cog):
 
     @app_commands.command(name='momir', description="Pulls a random monster with the selected mana value from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
-    async def momir(self, interaction: discord.Interaction, Mana_Value: str):
+    async def momir(self, interaction: discord.Interaction, manavalue: str):
 
         try:  
-                arg1 = str(Mana_Value)
+                arg1 = str(manavalue)
                 momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
                 print ("Random Momir prompt for:" + arg1)
                 momir_card_response = requests.get(momir_card_url)
@@ -439,17 +439,17 @@ class mtg(commands.Cog):
 
     @app_commands.command(name='jhoira', description="Pulls three random instant or sorcery cards from Scryfall. Requires you to type Sorcery or Instant")
     @app_commands.checks.cooldown(1.0,3.0)
-    @app_commands.describe(Card_Type="Select your requested card type")
+    @app_commands.describe(cardtype="Select your requested card type")
     @app_commands.choices(
-        Card_Type=[
+        cardtype=[
             app_commands.Choice(name="Instant", value="Instant"),
             app_commands.Choice(name="Sorcery", value="Sorcery")
         ]
     )
-    async def jhoira(self, interaction: discord.Interaction, Card_Type: str):
+    async def jhoira(self, interaction: discord.Interaction, cardtype: str):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        arg1 = str(Card_Type)
+        arg1 = str(cardtype)
 
         try:  
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
