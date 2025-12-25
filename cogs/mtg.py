@@ -457,9 +457,6 @@ class mtg(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         arg1 = str(cardtype)
 
-        if cardtype != "Instant" or cardtype != "Sorcery":
-            await interaction.response.send_message("Please select one of the drop down options. Jhoira only works with Instants or Sorceries")
-
         try:  
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
@@ -526,9 +523,9 @@ class mtg(commands.Cog):
         db_conn.close()
 
         explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
-        embed_momir = GenerateCardDetails(card_type, momir_card_json, random_color)
-        embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
-        embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
+        #embed_momir = GenerateCardDetails(card_type, momir_card_json, random_color)
+        #embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
+        #embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
 
         embeds = []
         embeds.append(explanation_string)
