@@ -522,16 +522,16 @@ class mtg(commands.Cog):
         db_cursor.close()
         db_conn.close()
 
-        explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
+        #explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
         embed_momir = GenerateCardDetails(card_type, momir_card_json, random_color)
-        embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
-        embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
+        #embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
+        #embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
 
         embeds = []
-        embeds.append(explanation_string)
+        #embeds.append(explanation_string)
         embeds.append(embed_momir)
-        embeds.append(embed_jhoira)
-        embeds.append(embed_stonehewer)
+        #embeds.append(embed_jhoira)
+        #embeds.append(embed_stonehewer)
 
         await interaction.response.send_message(embeds=embeds)
 
