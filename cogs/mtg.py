@@ -422,16 +422,22 @@ class mtg(commands.Cog):
         try:  
                 arg1 = str(manavalue)
                 momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
-                print ("Random Momir prompt for:" + arg1)
                 momir_card_response = requests.get(momir_card_url)
                 momir_card_json = momir_card_response.json()
-                print (momir_card_json["name"])
                 card_type = momir_card_json["type_line"]
         except:
                 await interaction.response.send_message("It looks like there wasn't any card with that mana value. Please try another one.")
                 return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("momir", momir_card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
 
         embed = GenerateCardDetails(card_type, momir_card_json, random_color)
                 
@@ -455,22 +461,26 @@ class mtg(commands.Cog):
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
-                print ("Random Jhoira prompt for:" + arg1)
                 jhoira_card_response_1 = requests.get(jhoira_card_url_1)
                 jhoira_card_response_2 = requests.get(jhoira_card_url_2)
                 jhoira_card_response_3 = requests.get(jhoira_card_url_3)
                 jhoira_card_json_1 = jhoira_card_response_1.json()
                 jhoira_card_json_2 = jhoira_card_response_2.json()
                 jhoira_card_json_3 = jhoira_card_response_3.json()
-                print (jhoira_card_json_1["name"])
-                print (jhoira_card_json_2["name"])
-                print (jhoira_card_json_3["name"])
                 card_type_1 = jhoira_card_json_1["type_line"]
                 card_type_2 = jhoira_card_json_2["type_line"]
                 card_type_3 = jhoira_card_json_3["type_line"]
         except:
                 await interaction.response.send_message("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
                 return
+        
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("jhoira", jhoira_card_json_1["name"] + " and" + jhoira_card_json_2["name"] + "and" + jhoira_card_json_3["name"], now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
 
         embed1 = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)      
         embed2 = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color) 
@@ -495,11 +505,20 @@ class mtg(commands.Cog):
         db_cursor.close()
         db_conn.close()
 
-        await interaction.response.send_message("MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards.")
-        await interaction.response.send_message("There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.")
-        await interaction.response.send_message("https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg")
-        await interaction.response.send_message("https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg")
-        await interaction.response.send_message("https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg")
+        explanation_string = "MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards."
+        explanation_string_2 = "There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical."
+        image_1 = "https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg"
+        image_2 = "https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg"
+        image_3 = "https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg"
+
+        embeds = []
+        embeds.append(explanation_string)
+        embeds.append(explanation_string_2)
+        embeds.append(image_1)
+        embeds.append(image_2)
+        embeds.appdn(image_3)
+
+        await interaction.response.send_message(embeds=embeds)
 
     @commands.command(name='stonehewer')
     @commands.cooldown(1.0,3.0)
