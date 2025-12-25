@@ -457,6 +457,9 @@ class mtg(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         arg1 = str(cardtype)
 
+        if cardtype != "Instant" or cardtype != "Sorcery":
+            await interaction.response.send_message("Please select one of the drop down options. Jhoira only works with Instants or Sorceries")
+
         try:  
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
@@ -529,9 +532,9 @@ class mtg(commands.Cog):
 
         embeds = []
         embeds.append(explanation_string)
-        embeds.append(embed_momir)
-        embeds.append(embed_jhoira)
-        embeds.append(embed_stonehewer)
+        #embeds.append(embed_momir)
+        #embeds.append(embed_jhoira)
+        #embeds.append(embed_stonehewer)
 
         await interaction.response.send_message(embeds=embeds)
 
