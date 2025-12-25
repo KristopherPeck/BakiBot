@@ -415,12 +415,12 @@ class mtg(commands.Cog):
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
         await interaction.response.send_message(embed=embed)
 
-    @commands.command(name='momir')
-    @commands.cooldown(1.0,3.0)
-    async def momir(self, ctx, arg1):
+    @app_commands.command(name='momir')
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def momir(self, interaction: discord.Interaction, value: str):
 
         try:  
-                arg1 = str(arg1)
+                arg1 = str(value)
                 momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
                 print ("Random Momir prompt for:" + arg1)
                 momir_card_response = requests.get(momir_card_url)
@@ -428,16 +428,14 @@ class mtg(commands.Cog):
                 print (momir_card_json["name"])
                 card_type = momir_card_json["type_line"]
         except:
-                await ctx.send("It looks like there wasn't any card with that mana value. Please try another one.")
+                await interaction.response.send_message("It looks like there wasn't any card with that mana value. Please try another one.")
                 return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type, momir_card_json, random_color)
+        embed = GenerateCardDetails(card_type, momir_card_json, random_color)
                 
-        await channel.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
     @commands.command(name='jhoira')
     @commands.cooldown(1.0,3.0)
