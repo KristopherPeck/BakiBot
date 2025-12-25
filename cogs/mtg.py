@@ -477,7 +477,7 @@ class mtg(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("jhoira", jhoira_card_json_1["name"] + " and" + jhoira_card_json_2["name"] + "and" + jhoira_card_json_3["name"], now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("jhoira", jhoira_card_json_1["name"] + " and " + jhoira_card_json_2["name"] + " and " + jhoira_card_json_3["name"], now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
@@ -497,6 +497,23 @@ class mtg(commands.Cog):
     @app_commands.checks.cooldown(1.0,3.0)
     async def postmojhosto(self, interaction: discord.Interaction):
 
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        momir_card_url = scryfall_url + "f5ed5ad3-b970-4720-b23b-308a25f42887"
+        jhoira_card_url = scryfall_url + "cd1c87eb-4974-4160-91bd-681e0a75a98e"
+        stonehewer_card_url = scryfall_url + "d5cdf535-56fb-4f92-abf0-237aa6e081b0"
+
+        momir_card_response = requests.get(momir_card_url)
+        momir_card_json = momir_card_response.json()
+
+        jhoira_card_response = requests.get(jhoira_card_url)
+        jhoira_card_json = jhoira_card_response.json()
+
+        stonehewer_card_response = requests.get(stonehewer_card_url)
+        stonehewer_card_json = stonehewer_card_response.json()
+
+        card_type = "Vanguard"
+
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
@@ -505,18 +522,16 @@ class mtg(commands.Cog):
         db_cursor.close()
         db_conn.close()
 
-        explanation_string = "MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards."
-        explanation_string_2 = "There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical."
-        image_1 = "https://cards.scryfall.io/large/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg"
-        image_2 = "https://cards.scryfall.io/large/front/c/d/cd1c87eb-4974-4160-91bd-681e0a75a98e.jpg"
-        image_3 = "https://cards.scryfall.io/large/front/d/5/d5cdf535-56fb-4f92-abf0-237aa6e081b0.jpg"
+        explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
+        embed_momir = GenerateCardDetails(card_type, momir_card_json, random_color)
+        embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
+        embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
 
         embeds = []
         embeds.append(explanation_string)
-        embeds.append(explanation_string_2)
-        embeds.append(image_1)
-        embeds.append(image_2)
-        embeds.appdn(image_3)
+        embeds.append(embed_momir)
+        embeds.append(embed_jhoira)
+        embeds.append(embed_stonehewer)
 
         await interaction.response.send_message(embeds=embeds)
 
