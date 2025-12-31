@@ -21,12 +21,10 @@ mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
 def GenerateCardDetails(card_type, random_card_json, random_color):
         card_name = random_card_json["name"]
-        print(card_name)
+
         #MTG cards have some different layouts that place information in different spots in the API
         #For the most part these are pretty similar but I still split them out to make things easier. 
         card_layout = random_card_json["layout"]
-        print(card_layout)
-        print(card_type)
         if card_layout == "transform":
             card_name = random_card_json["name"]
             card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
@@ -93,9 +91,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         card_layout = card_layout.lower()
         card_url = random_card_json["scryfall_uri"]
         card_set_name = random_card_json["set_name"]
-        print(card_set_name)
         card_set_code = random_card_json["set"].upper()
-        print(card_set_code)
         back_card_type = "Blank"
 
         #Flavor text as well as back oracle text aren't always on the cards.
@@ -117,7 +113,6 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         #Determine color of embed box based on the color identity of the card 
         
         color_identity = random_card_json["color_identity"]
-        print(color_identity)
         color_identity_length = len(color_identity)
 
         if color_identity_length >= 2:
@@ -317,8 +312,6 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         card_price_tix = random_card_json["prices"]["tix"]
         card_price_etched = random_card_json["prices"]["usd_etched"]
 
-        print(card_price_usd)
-
         if card_price_usd is None:
             card_price_usd = "N/A"
         
@@ -338,7 +331,6 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             embed.add_field(name="Price:", value="Nonfoil: $ " + f"{card_price_usd}" + " | Foil: $ " + f"{card_price_foil}" +  " | Etched: $ " + f"{card_price_etched}" + " | Tickets: " + f"{card_price_tix}")
 
         embed.set_thumbnail(url=card_image_url)
-        print("made it")
         embed.set_footer(text="Data provided by scryfall.com", icon_url="https://avatars.githubusercontent.com/u/22605579?s=200&v=4")
 
         return embed
@@ -510,26 +502,17 @@ class mtg(commands.Cog):
         momir_card_url = scryfall_url + "cards/f5ed5ad3-b970-4720-b23b-308a25f42887"
         jhoira_card_url = scryfall_url + "cards/cd1c87eb-4974-4160-91bd-681e0a75a98e"
         stonehewer_card_url = scryfall_url + "cards/d5cdf535-56fb-4f92-abf0-237aa6e081b0"
-        print(momir_card_url)
-        print(jhoira_card_url)
-        print(stonehewer_card_url)
 
         momir_card_response = requests.get(momir_card_url)
         momir_card_json = momir_card_response.json()
-        print("Got momir")
-        print(momir_card_response)
-        print(momir_card_json)
 
         jhoira_card_response = requests.get(jhoira_card_url)
         jhoira_card_json = jhoira_card_response.json()
-        print("got jhoira")
 
         stonehewer_card_response = requests.get(stonehewer_card_url)
         stonehewer_card_json = stonehewer_card_response.json()
-        print("got stonehewer")
 
         card_type = momir_card_json["type_line"]
-        print(card_type)
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
@@ -539,25 +522,25 @@ class mtg(commands.Cog):
         db_cursor.close()
         db_conn.close()
 
-        #explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
+        explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
         embed_momir = GenerateCardDetails(card_type, momir_card_json, random_color)
-        #embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
-        #embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
+        embed_jhoira = GenerateCardDetails(card_type, jhoira_card_json, random_color)
+        embed_stonehewer = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
 
         embeds = []
-        #embeds.append(explanation_string)
+        embeds.append(explanation_string)
         embeds.append(embed_momir)
-        #embeds.append(embed_jhoira)
-        #embeds.append(embed_stonehewer)
+        embeds.append(embed_jhoira)
+        embeds.append(embed_stonehewer)
 
         await interaction.response.send_message(embeds=embeds)
 
-    @commands.command(name='stonehewer')
-    @commands.cooldown(1.0,3.0)
-    async def stonehewer(self, ctx, arg1):
+    @app_commands.command(name='stonehewer', description="Pulls a random equipment with the selected mana value from Scryfall")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def stonehewer(self, interaction: discord.Interaction, manavalue: str):
 
         try:  
-                arg1 = str(arg1)
+                arg1 = str(manavalue)
                 stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
                 print ("Random Stonehewer prompt for:" + arg1)
                 stonehewer_card_response = requests.get(stonehewer_card_url)
@@ -565,21 +548,28 @@ class mtg(commands.Cog):
                 print (stonehewer_card_json["name"])
                 card_type = stonehewer_card_json["type_line"]
         except:
-                await ctx.send("It looks like there wasn't any card available for that mana value. Please try another one.")
+                await interaction.response.send_message("It looks like there wasn't any card available for that mana value. Please try another one.")
                 return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        channel = ctx.message.channel
-        async with channel.typing():
-            embed = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
-                
-        await channel.send(embed=embed)
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("stonehewer", stonehewer_card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
 
-    @commands.command(name="mtg")
-    @commands.cooldown(1.0,3.0)
-    async def mtg(selfe, ctx, *args):
-        card_name_string = ' '.join([str(elem) for elem in args])
+        embed = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
+                
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="mtg", description="Pulls the details of the named card from Scryfall")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def mtg(self, interaction: discord.Interaction, cardname: str):
+        print(cardname)
+        card_name_string = ' '.join([str(elem) for elem in cardname])
         mtg_card_url = scryfall_url + "cards/named?fuzzy=" + card_name_string
         print ("Named MTG Card Submitted String")
         print (card_name_string)
@@ -589,7 +579,7 @@ class mtg(commands.Cog):
             card_json = card_response.json()
             print ("API Response")
             print (card_json)
-            await ctx.send("Sorry, I don't recognize that card or I am finding multiple cards with that name. Please try something else.")
+            await interaction.response.send_message("Sorry, I don't recognize that card or I am finding multiple cards with that name. Please try something else.")
             return
         else:
             card_json = card_response.json()
@@ -598,11 +588,9 @@ class mtg(commands.Cog):
 
             random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-            channel = ctx.message.channel
-            async with channel.typing():
-                embed = GenerateCardDetails(card_type, card_json, random_color)
+            embed = GenerateCardDetails(card_type, card_json, random_color)
 
-            await channel.send(embed=embed)
+            await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(mtg(bot))
