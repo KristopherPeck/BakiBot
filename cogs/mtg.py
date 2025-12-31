@@ -417,6 +417,7 @@ class mtg(commands.Cog):
 
     @app_commands.command(name='momir', description="Pulls a random monster with the selected mana value from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.describe(manavalue="Input the manavalue you wish to query with")
     async def momir(self, interaction: discord.Interaction, manavalue: str):
 
         try:  
@@ -537,15 +538,14 @@ class mtg(commands.Cog):
 
     @app_commands.command(name='stonehewer', description="Pulls a random equipment with the selected mana value from Scryfall")
     @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.describe(manavalue="Input the manavalue you wish to query with")
     async def stonehewer(self, interaction: discord.Interaction, manavalue: str):
 
         try:  
                 arg1 = str(manavalue)
                 stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
-                print ("Random Stonehewer prompt for:" + arg1)
                 stonehewer_card_response = requests.get(stonehewer_card_url)
                 stonehewer_card_json = stonehewer_card_response.json()
-                print (stonehewer_card_json["name"])
                 card_type = stonehewer_card_json["type_line"]
         except:
                 await interaction.response.send_message("It looks like there wasn't any card available for that mana value. Please try another one.")
@@ -567,30 +567,33 @@ class mtg(commands.Cog):
 
     @app_commands.command(name="mtg", description="Pulls the details of the named card from Scryfall")
     @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.describe(cardname="Input the name you wish to query with")
     async def mtg(self, interaction: discord.Interaction, cardname: str):
-        print(cardname)
-        card_name_string = ' '.join([str(elem) for elem in cardname])
-        mtg_card_url = scryfall_url + "cards/named?fuzzy=" + card_name_string
-        print ("Named MTG Card Submitted String")
-        print (card_name_string)
+
+        mtg_card_url = scryfall_url + "cards/named?fuzzy=" + cardname
         card_response = mtg_session.get(mtg_card_url)
 
         if card_response.status_code == 404:
             card_json = card_response.json()
-            print ("API Response")
-            print (card_json)
             await interaction.response.send_message("Sorry, I don't recognize that card or I am finding multiple cards with that name. Please try something else.")
             return
         else:
             card_json = card_response.json()
-            print (card_json["name"])
             card_type = card_json["type_line"]
 
             random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-            embed = GenerateCardDetails(card_type, card_json, random_color)
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("mtg", card_json["name"], now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
 
-            await interaction.response.send_message(embed=embed)
+        embed = GenerateCardDetails(card_type, card_json, random_color)
+
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(mtg(bot))
