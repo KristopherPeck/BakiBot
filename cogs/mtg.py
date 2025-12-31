@@ -428,6 +428,13 @@ class mtg(commands.Cog):
                 card_type = momir_card_json["type_line"]
         except:
                 await interaction.response.send_message("It looks like there wasn't any card with that mana value. Please try another one.")
+                db_conn = psycopg2.connect(database_url, sslmode='require')
+                db_cursor = db_conn.cursor()
+                now = datetime.datetime.now()
+                db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("momir", "Invalid Input", now, interaction.user.name, interaction.user.id))
+                db_conn.commit()
+                db_cursor.close()
+                db_conn.close()
                 return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -473,6 +480,13 @@ class mtg(commands.Cog):
                 card_type_3 = jhoira_card_json_3["type_line"]
         except:
                 await interaction.response.send_message("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
+                db_conn = psycopg2.connect(database_url, sslmode='require')
+                db_cursor = db_conn.cursor()
+                now = datetime.datetime.now()
+                db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("jhoira", "Incorrect Input", now, interaction.user.name, interaction.user.id))
+                db_conn.commit()
+                db_cursor.close()
+                db_conn.close()
                 return
         
         db_conn = psycopg2.connect(database_url, sslmode='require')
@@ -541,18 +555,24 @@ class mtg(commands.Cog):
     @app_commands.describe(manavalue="Input the manavalue you wish to query with")
     async def stonehewer(self, interaction: discord.Interaction, manavalue: str):
 
+        arg1 = str(manavalue)
+
         try:  
-                arg1 = str(manavalue)
                 stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
                 stonehewer_card_response = requests.get(stonehewer_card_url)
                 stonehewer_card_json = stonehewer_card_response.json()
                 card_type = stonehewer_card_json["type_line"]
         except:
                 await interaction.response.send_message("It looks like there wasn't any card available for that mana value. Please try another one.")
+                db_conn = psycopg2.connect(database_url, sslmode='require')
+                db_cursor = db_conn.cursor()
+                now = datetime.datetime.now()
+                db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("stonehewer", "Invalid Input", now, interaction.user.name, interaction.user.id))
+                db_conn.commit()
+                db_cursor.close()
+                db_conn.close()
                 return
-
-        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
+        
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
@@ -560,6 +580,8 @@ class mtg(commands.Cog):
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
+
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
         embed = GenerateCardDetails(card_type, stonehewer_card_json, random_color)
                 
@@ -573,6 +595,14 @@ class mtg(commands.Cog):
         mtg_card_url = scryfall_url + "cards/named?fuzzy=" + cardname
         card_response = mtg_session.get(mtg_card_url)
 
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("mtg", cardname, now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
+
         if card_response.status_code == 404:
             card_json = card_response.json()
             await interaction.response.send_message("Sorry, I don't recognize that card or I am finding multiple cards with that name. Please try something else.")
@@ -582,14 +612,6 @@ class mtg(commands.Cog):
             card_type = card_json["type_line"]
 
             random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("mtg", card_json["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
 
         embed = GenerateCardDetails(card_type, card_json, random_color)
 
