@@ -21,10 +21,12 @@ mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
 def GenerateCardDetails(card_type, random_card_json, random_color):
         card_name = random_card_json["name"]
-
+        print(card_name)
         #MTG cards have some different layouts that place information in different spots in the API
         #For the most part these are pretty similar but I still split them out to make things easier. 
         card_layout = random_card_json["layout"]
+        print(card_layout)
+        print(card_type)
         if card_layout == "transform":
             card_name = random_card_json["name"]
             card_mana_cost = random_card_json["card_faces"][0]["mana_cost"]
@@ -91,7 +93,9 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         card_layout = card_layout.lower()
         card_url = random_card_json["scryfall_uri"]
         card_set_name = random_card_json["set_name"]
+        print(card_set_name)
         card_set_code = random_card_json["set"].upper()
+        print(card_set_code)
         back_card_type = "Blank"
 
         #Flavor text as well as back oracle text aren't always on the cards.
@@ -113,6 +117,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         #Determine color of embed box based on the color identity of the card 
         
         color_identity = random_card_json["color_identity"]
+        print(color_identity)
         color_identity_length = len(color_identity)
 
         if color_identity_length >= 2:
@@ -312,6 +317,8 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
         card_price_tix = random_card_json["prices"]["tix"]
         card_price_etched = random_card_json["prices"]["usd_etched"]
 
+        print(card_price_usd)
+
         if card_price_usd is None:
             card_price_usd = "N/A"
         
@@ -331,6 +338,7 @@ def GenerateCardDetails(card_type, random_card_json, random_color):
             embed.add_field(name="Price:", value="Nonfoil: $ " + f"{card_price_usd}" + " | Foil: $ " + f"{card_price_foil}" +  " | Etched: $ " + f"{card_price_etched}" + " | Tickets: " + f"{card_price_tix}")
 
         embed.set_thumbnail(url=card_image_url)
+        print("made it")
         embed.set_footer(text="Data provided by scryfall.com", icon_url="https://avatars.githubusercontent.com/u/22605579?s=200&v=4")
 
         return embed
