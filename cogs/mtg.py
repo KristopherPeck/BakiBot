@@ -517,6 +517,8 @@ class mtg(commands.Cog):
         momir_card_response = requests.get(momir_card_url)
         momir_card_json = momir_card_response.json()
         print("Got momir")
+        print(momir_card_response)
+        print(momir_card_json)
 
         jhoira_card_response = requests.get(jhoira_card_url)
         jhoira_card_json = jhoira_card_response.json()
