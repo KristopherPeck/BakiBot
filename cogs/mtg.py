@@ -527,6 +527,7 @@ class mtg(commands.Cog):
         print("got stonehewer")
 
         card_type = momir_card_json["type_line"]
+        print(card_type)
 
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
