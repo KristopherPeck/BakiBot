@@ -507,9 +507,9 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        momir_card_url = scryfall_url + "f5ed5ad3-b970-4720-b23b-308a25f42887"
-        jhoira_card_url = scryfall_url + "cd1c87eb-4974-4160-91bd-681e0a75a98e"
-        stonehewer_card_url = scryfall_url + "d5cdf535-56fb-4f92-abf0-237aa6e081b0"
+        momir_card_url = scryfall_url + "cards/f5ed5ad3-b970-4720-b23b-308a25f42887"
+        jhoira_card_url = scryfall_url + "cards/cd1c87eb-4974-4160-91bd-681e0a75a98e"
+        stonehewer_card_url = scryfall_url + "cards/d5cdf535-56fb-4f92-abf0-237aa6e081b0"
         print(momir_card_url)
         print(jhoira_card_url)
         print(stonehewer_card_url)
