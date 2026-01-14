@@ -21,6 +21,15 @@ pokemon_api_url = "https://pokeapi.co/api/v2/"
 database_url = os.environ['DATABASE_URL']
 poke_session = requests_cache.CachedSession('poke_cache', expire_after=1800)
 
+def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
+    db_conn = psycopg2.connect(database_url, sslmode='require')
+    db_cursor = db_conn.cursor()
+    now = datetime.datetime.now()
+    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id, guild))
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
+
 def GeneratePokemonDetails(random_color,ResponseJSON,pokemon_id):
             #Start pulling some basic information in that will always be simple to parse.
             #We remove the dashes and replace them with spaces so that alternate forms and some specific Paradox pokemon look nicer.
@@ -239,13 +248,7 @@ class Pokemon(commands.Cog):
         Response = poke_session.get(complete_api_url)
         ResponseJSON = Response.json()
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-pokemon", ResponseJSON["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("random-pokemon", ResponseJSON["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed = GeneratePokemonDetails(random_color,ResponseJSON, pokemon_id=random_pokemon_id)
@@ -253,12 +256,13 @@ class Pokemon(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
     #This command is built the same as the random one but it allows you to put in either a name or pokemon id. 
-    @commands.command(name='pokemon')
-    @commands.cooldown(1.0,3.0)
-    async def pokemon(self, ctx, *args):
+    @app_commands.command(name='pokemon', description="Pull the details of a specific Pokemon from PokeAPI")
+    @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.describe(cardname="Input the name or pokedex number you wish to query with")
+    async def pokemon(self, interaction: discord.Interaction, pokemonidentity: str):
         #Here we give the possibility for multiple entries. This is to allow for pokemon with spaces in their names like Iron Leaves or Urshifu Single Strike. 
         #We also set the pokemonid to lowercase because the api doesn't accept it with capital letters in it.
-        PokemonID = '-'.join(args)
+        PokemonID = '-'.join(pokemonidentity)
         PokemonID = str(PokemonID).lower()
         
         #We check if there is actually a response from the API since we are relying on user input. 
@@ -267,19 +271,16 @@ class Pokemon(commands.Cog):
             Response = poke_session.get(complete_api_url)
             ResponseJSON = Response.json()
         except:
-            await ctx.send("I don't know what Pokemon that is. Please try something else.")
+            await interaction.response.send_message("Sorry, I don't recognize that Pokemon. Please try something else.")
             return
         
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        pokemon_id_number = ResponseJSON["id"]
-        print ("Specified Pokemon")
-        print (pokemon_id_number)
-        channel = ctx.message.channel
-        
-        async with channel.typing():
-            embed = GeneratePokemonDetails(random_color,ResponseJSON, pokemon_id=pokemon_id_number,)
 
-        await channel.send(embed=embed)
+        DatabaseLogging("pokemon", ResponseJSON["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
+
+        embed = GeneratePokemonDetails(random_color,ResponseJSON, PokemonID)
+
+        await interaction.response.send_message(embed=embed)
   
 async def setup(bot):
     await bot.add_cog(Pokemon(bot))

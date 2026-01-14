@@ -20,7 +20,6 @@ database_url = os.environ['DATABASE_URL']
 mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
 def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
-    print(guild)
     db_conn = psycopg2.connect(database_url, sslmode='require')
     db_cursor = db_conn.cursor()
     now = datetime.datetime.now()
@@ -380,11 +379,7 @@ class mtg(commands.Cog):
             random_card_response = requests.get(check_mtg_card_url)
             random_card_json = random_card_response.json()
 
-        database_command_name_input = "random-mtg"
-        database_command_value_input = random_card_json["name"]
-        database_user_name = interaction.user.name
-        database_user_id = interaction.user.id
-        DatabaseLogging(database_command_name_input, database_command_value_input, database_user_name, database_user_id)
+        DatabaseLogging("random-mtg", random_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
         card_type = random_card_json["type_line"]
 
@@ -412,12 +407,7 @@ class mtg(commands.Cog):
             card_edh_legal = random_card_json["legalities"]["commander"]
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
-        database_command_name_input = "random-commander"
-        database_command_value_input = random_card_json["name"]
-        database_user_name = interaction.user.name
-        database_user_id = interaction.user.id
-        DatabaseLogging(database_command_name_input, database_command_value_input, database_user_name, database_user_id)
+        DatabaseLogging("random-commander", random_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
         await interaction.response.send_message(embed=embed)
@@ -435,13 +425,7 @@ class mtg(commands.Cog):
                 card_type = momir_card_json["type_line"]
         except:
                 await interaction.response.send_message("It looks like there wasn't any card with that mana value. Please try another one.")
-                db_conn = psycopg2.connect(database_url, sslmode='require')
-                db_cursor = db_conn.cursor()
-                now = datetime.datetime.now()
-                db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("momir", "Invalid Input", now, interaction.user.name, interaction.user.id))
-                db_conn.commit()
-                db_cursor.close()
-                db_conn.close()
+                DatabaseLogging("momir", "Invalid Input", interaction.user.name, interaction.user.id, interaction.guild_id)
                 return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -481,23 +465,10 @@ class mtg(commands.Cog):
                 card_type_3 = jhoira_card_json_3["type_line"]
         except:
                 await interaction.response.send_message("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
-                db_conn = psycopg2.connect(database_url, sslmode='require')
-                db_cursor = db_conn.cursor()
-                now = datetime.datetime.now()
-                db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("jhoira", "Incorrect Input", now, interaction.user.name, interaction.user.id))
-                db_conn.commit()
-                db_cursor.close()
-                db_conn.close()
+                DatabaseLogging("jhoira", "Incorrect Input", interaction.user.name, interaction.user.id, interaction.guild_id)
                 return
         
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("jhoira", jhoira_card_json_1["name"] + " and " + jhoira_card_json_2["name"] + " and " + jhoira_card_json_3["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
-
+        DatabaseLogging("jhoira", jhoira_card_json_1["name"] + " and " + jhoira_card_json_2["name"] + " and " + jhoira_card_json_3["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
         embed1 = GenerateCardDetails(card_type_1, jhoira_card_json_1, random_color)      
         embed2 = GenerateCardDetails(card_type_2, jhoira_card_json_2, random_color) 
         embed3 = GenerateCardDetails(card_type_3, jhoira_card_json_3, random_color)
@@ -530,13 +501,7 @@ class mtg(commands.Cog):
 
         card_type = momir_card_json["type_line"]
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("post-mojhosto", "posted mojhosto", now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("post-mojhosto", "Posted MoJhoSto", interaction.user.name, interaction.user.id, interaction.guild_id)
 
         explanation_string = discord.Embed(title="MoJhoSto Explanation", description="MoJhoSto is a format of Magic the Gathering that originated on Magic Online. Using the Vanguard cards for Momir Vig, Simic Visionary, Jhoira of the Ghitu, and Stonehewer Giant and a deck of 60 basic lands to play with 20 life for each player. The players play the game by utilizing the abilities of the Vanguard cards to create creatures, cast spells, and make equipment. You do not play with the life total/hand size changes listed on the cards. There is also the alternative and more well known format of Momir Basic which is played using only the Momir Vig Vanguard ability but is otherwise identical.", color=random_color)
         embed_momir = GenerateCardDetails(card_type, momir_card_json, random_color)
@@ -564,23 +529,10 @@ class mtg(commands.Cog):
                 stonehewer_card_json = stonehewer_card_response.json()
                 card_type = stonehewer_card_json["type_line"]
         except:
-                await interaction.response.send_message("It looks like there wasn't any card available for that mana value. Please try another one.")
-                db_conn = psycopg2.connect(database_url, sslmode='require')
-                db_cursor = db_conn.cursor()
-                now = datetime.datetime.now()
-                db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("stonehewer", "Invalid Input", now, interaction.user.name, interaction.user.id))
-                db_conn.commit()
-                db_cursor.close()
-                db_conn.close()
+                DatabaseLogging("stonehewer", "Invalid Input", interaction.user.name, interaction.user.id, interaction.guild_id)
                 return
         
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("stonehewer", stonehewer_card_json["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("stonehewer", stonehewer_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
@@ -596,13 +548,7 @@ class mtg(commands.Cog):
         mtg_card_url = scryfall_url + "cards/named?fuzzy=" + cardname
         card_response = mtg_session.get(mtg_card_url)
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("mtg", cardname, now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("mtg", cardname, interaction.user.name, interaction.user.id, interaction.guild_id)
 
         if card_response.status_code == 404:
             card_json = card_response.json()
