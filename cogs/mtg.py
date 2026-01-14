@@ -19,11 +19,12 @@ scryfall_url = "https://api.scryfall.com/"
 database_url = os.environ['DATABASE_URL']
 mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
-def DatabaseLogging(command_name, database_value, user_name, user_id):
+def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
+    print(guild)
     db_conn = psycopg2.connect(database_url, sslmode='require')
     db_cursor = db_conn.cursor()
     now = datetime.datetime.now()
-    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id))
+    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id, guild))
     db_conn.commit()
     db_cursor.close()
     db_conn.close()
@@ -445,7 +446,7 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        DatabaseLogging("momir", momir_card_json["name"], interaction.user.name, interaction.user.id)
+        DatabaseLogging("momir", momir_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
         embed = GenerateCardDetails(card_type, momir_card_json, random_color)
                 
