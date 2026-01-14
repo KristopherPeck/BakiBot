@@ -19,6 +19,15 @@ scryfall_url = "https://api.scryfall.com/"
 database_url = os.environ['DATABASE_URL']
 mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
 
+def DatabaseLogging(command_name, database_value, user_name, user_id):
+    db_conn = psycopg2.connect(database_url, sslmode='require')
+    db_cursor = db_conn.cursor()
+    now = datetime.datetime.now()
+    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id))
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
+
 def GenerateCardDetails(card_type, random_card_json, random_color):
         card_name = random_card_json["name"]
 
@@ -370,13 +379,12 @@ class mtg(commands.Cog):
             random_card_response = requests.get(check_mtg_card_url)
             random_card_json = random_card_response.json()
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-mtg", random_card_json["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        database_command_name_input = "random-mtg"
+        database_command_value_input = random_card_json["name"]
+        database_user_name = interaction.user.name
+        database_user_id = interaction.user.id
+        DatabaseLogging(database_command_name_input, database_command_value_input, database_user_name, database_user_id)
+
         card_type = random_card_json["type_line"]
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -404,13 +412,11 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-commander", random_card_json["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        database_command_name_input = "random-commander"
+        database_command_value_input = random_card_json["name"]
+        database_user_name = interaction.user.name
+        database_user_id = interaction.user.id
+        DatabaseLogging(database_command_name_input, database_command_value_input, database_user_name, database_user_id)
 
         embed = GenerateCardDetails(card_type, random_card_json, random_color)
         await interaction.response.send_message(embed=embed)
@@ -439,13 +445,7 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("momir", momir_card_json["name"], now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("momir", momir_card_json["name"], interaction.user.name, interaction.user.id)
 
         embed = GenerateCardDetails(card_type, momir_card_json, random_color)
                 
