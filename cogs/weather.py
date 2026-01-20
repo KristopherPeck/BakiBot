@@ -119,7 +119,7 @@ class Weather(commands.Cog):
             embed.set_footer(text="Data provided by openweathermap.org.", icon_url="https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
             await interaction.response.send_message(embed=embed)
         else:
-            DatabaseLogging("weather", "Invalid Input", interaction.user.name, interaction.user.id, interaction.guild_id)
+            DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
             await interaction.response.send_message("City not found.")
 
 async def setup(bot):
