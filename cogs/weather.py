@@ -116,11 +116,26 @@ class Weather(commands.Cog):
 
             embed.set_thumbnail(url=weather_icon)
             embed.set_footer(text="Data provided by openweathermap.org.", icon_url="https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
-            DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
+
+            db_conn = psycopg2.connect(database_url, sslmode='require')
+            db_cursor = db_conn.cursor()
+            now = datetime.datetime.now()
+            db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", ("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id))
+            db_conn.commit()
+            db_cursor.close()
+            db_conn.close()
+
             time.sleep(1)
             await interaction.response.send_message(embed=embed)
         else:
-            DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
+            db_conn = psycopg2.connect(database_url, sslmode='require')
+            db_cursor = db_conn.cursor()
+            now = datetime.datetime.now()
+            db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", ("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id))
+            db_conn.commit()
+            db_cursor.close()
+            db_conn.close()
+            
             time.sleep(1)
             await interaction.response.send_message("City not found.")
 
