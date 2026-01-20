@@ -260,21 +260,17 @@ class Pokemon(commands.Cog):
     @app_commands.checks.cooldown(1.0,3.0)
     @app_commands.describe(pokemonidentity="Input the name or pokedex number you wish to query with")
     async def pokemon(self, interaction: discord.Interaction, pokemonidentity: str):
-        #Here we give the possibility for multiple entries. This is to allow for pokemon with spaces in their names like Iron Leaves or Urshifu Single Strike. 
-        #We also set the pokemonid to lowercase because the api doesn't accept it with capital letters in it.
-        PokemonID = '-'.join(pokemonidentity)
-        print(PokemonID)
+        PokemonID = pokemonidentity.replace(" ","-")
         PokemonID = str(pokemonidentity).lower()
-        print(PokemonID)
         
         #We check if there is actually a response from the API since we are relying on user input. 
         try:
             complete_api_url = pokemon_api_url + "pokemon/" + str(PokemonID)
-            print(complete_api_url)
             Response = poke_session.get(complete_api_url)
             ResponseJSON = Response.json()
         except:
             await interaction.response.send_message("Sorry, I don't recognize that Pokemon. Please try something else.")
+            DatabaseLogging("pokemon", "Invalid Input", interaction.user.name, interaction.user.id, interaction.guild_id)
             return
         
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
