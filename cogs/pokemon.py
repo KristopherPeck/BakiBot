@@ -261,11 +261,14 @@ class Pokemon(commands.Cog):
     @app_commands.describe(pokemonidentity="Input the name or pokedex number you wish to query with")
     async def pokemon(self, interaction: discord.Interaction, pokemonidentity: str):
 
+        print(pokemonidentity)
         PokemonID = str(pokemonidentity).lower()
+        print(PokemonID)
         
         #We check if there is actually a response from the API since we are relying on user input. 
         try:
             complete_api_url = pokemon_api_url + "pokemon/" + str(PokemonID)
+            print(complete_api_url)
             Response = poke_session.get(complete_api_url)
             ResponseJSON = Response.json()
         except:
