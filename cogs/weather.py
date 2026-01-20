@@ -45,7 +45,6 @@ class Weather(commands.Cog):
         api_response = response.json()
         
         if api_response["cod"] != "404":
-            DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
             api_selector_main = api_response["main"]
             current_temperature = api_selector_main["temp"]
             current_temperature_fahrenheit = str(round(current_temperature * 1.8 - 459.67))
@@ -116,6 +115,7 @@ class Weather(commands.Cog):
 
             embed.set_thumbnail(url=weather_icon)
             embed.set_footer(text="Data provided by openweathermap.org.", icon_url="https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
+            DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
             await interaction.response.send_message(embed=embed)
         else:
             DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
