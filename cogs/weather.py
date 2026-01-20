@@ -39,8 +39,7 @@ class Weather(commands.Cog):
     @app_commands.describe(city="Input the city you wish to get the weather of")
     async def weather(self, interaction: discord.Interaction, city: str):
         #list_to_str = ' '.join([str(elem) for elem in args])
-        city_name = city.replace(" ","-")
-        city_name = city_name.title()
+        city_name = city.title()
         complete_url = weather_current_forcast_url + "appid=" + weather_api + "&q=" + city_name
         response = requests.get(complete_url)
         api_response = response.json()
