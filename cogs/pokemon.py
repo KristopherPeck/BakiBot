@@ -260,10 +260,8 @@ class Pokemon(commands.Cog):
     @app_commands.checks.cooldown(1.0,3.0)
     @app_commands.describe(cardname="Input the name or pokedex number you wish to query with")
     async def pokemon(self, interaction: discord.Interaction, pokemonidentity: str):
-        #Here we give the possibility for multiple entries. This is to allow for pokemon with spaces in their names like Iron Leaves or Urshifu Single Strike. 
-        #We also set the pokemonid to lowercase because the api doesn't accept it with capital letters in it.
-        PokemonID = '-'.join(pokemonidentity)
-        PokemonID = str(PokemonID).lower()
+
+        PokemonID = str(pokemonidentity).lower()
         
         #We check if there is actually a response from the API since we are relying on user input. 
         try:
