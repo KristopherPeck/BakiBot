@@ -258,7 +258,7 @@ class Pokemon(commands.Cog):
     #This command is built the same as the random one but it allows you to put in either a name or pokemon id. 
     @app_commands.command(name='pokemon', description="Pull the details of a specific Pokemon from PokeAPI")
     @app_commands.checks.cooldown(1.0,3.0)
-    @app_commands.describe(cardname="Input the name or pokedex number you wish to query with")
+    @app_commands.describe(pokemonidentity="Input the name or pokedex number you wish to query with")
     async def pokemon(self, interaction: discord.Interaction, pokemonidentity: str):
 
         PokemonID = str(pokemonidentity).lower()
