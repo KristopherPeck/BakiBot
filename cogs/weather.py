@@ -5,6 +5,7 @@ import requests
 import os
 import psycopg2
 import datetime
+import time
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord import app_commands
@@ -116,9 +117,11 @@ class Weather(commands.Cog):
             embed.set_thumbnail(url=weather_icon)
             embed.set_footer(text="Data provided by openweathermap.org.", icon_url="https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
             DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
+            time.sleep(1)
             await interaction.response.send_message(embed=embed)
         else:
             DatabaseLogging("weather", city_name, interaction.user.name, interaction.user.id, interaction.guild_id)
+            time.sleep(1)
             await interaction.response.send_message("City not found.")
 
 async def setup(bot):
