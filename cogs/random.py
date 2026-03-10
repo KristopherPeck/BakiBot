@@ -218,7 +218,7 @@ class Random(commands.Cog):
                 color=random_color,
             ))
         
-    @app_commands.command(name="8ball", description="classic 8ball", aliases=["eightball"])
+    @app_commands.command(name="8ball", description="classic 8ball. Ask it any question.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def eightball(self, interaction: discord.Interaction, question: str):
         eightball_responses = [
