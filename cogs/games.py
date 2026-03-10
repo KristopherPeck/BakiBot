@@ -3,100 +3,70 @@ import sys
 import random
 import os
 import os.path
+import psycopg2
+from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
 from discord.ext.commands import Context
 
-load_dotenv()
-game_list_id = os.getenv('DISCORD_IB_ID')
-game_list_id_2 = os.getenv('DISCORD_ZA_ID')
+database_url = os.environ['DATABASE_URL']
 
-gameList = [
-            'American Truck Simulator',
-            'Battlefield V',
-            'Command and Conquer: Red Alert 2',
-            'Command and Conquer: Generals - Zero Hour',
-            'Gauntlet'
-            'Green Hell',
-            'Halo Infinite',
-            'Halo: The Master Chief Collection',
-            'Helldivers 2',
-            'Left 4 Dead 2',
-            'Parkitect',
-            'Payday 2',
-            'PUBG',
-            'Pulsar: Lost Colony',
-            'Pummel Party',
-            'Raft',
-            'Stardew Valley',
-            'Stick Fight: The Game',
-            'theHunter: Call of the Wild',
-            'Thunder Tier One',
-            "Tom Clancy's Rainbox Six Siege",
-            "Tom Clancy's The Division 2",
-            'Zombie Army 4: Dead War',
-            'Zombie Army Trilogy'
-        ]
-        
-gameList2 = [
-            'Age of Empires II: HD Edition',
-            'Borderlands: The Pre-Sequel',
-            'Borderlands 2',
-            'Borderlands 3',
-            "Don't Starve Together",
-            'Halo Wars: Enhanced Edition',
-            'Halo Wars 2',
-            'Left 4 Dead 2',
-            'Rocket League',
-            "Sid Meier's Civilization VI",
-            'Sins of a Solar Empire: Rebellion',
-            'Sonic & All-Stars Racing Transformed',
-            'Star Wars Battlefront II (Classic)',
-            'Starbound',
-            'Stardew Valley',
-            'Supreme Commander 2',
-            'Terraria',
-            'Victor Vran',
-            'Wargame: Red Dragon'
-        ]
+def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
+    db_conn = psycopg2.connect(database_url, sslmode='require')
+    db_cursor = db_conn.cursor()
+    now = datetime.datetime.now()
+    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id, guild))
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
 
 class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    @commands.command(name='randomgame', help='Randomly picks a game from the server side game list')
-    @commands.cooldown(1.0,3.0)
-    async def randomgame(self, ctx):
-        guild = ctx.guild
-        c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        if (guild.id == int(game_list_id)):
-            response = random.choice(gameList)
-            await ctx.send(embed=discord.Embed(description="You should play: " + response, colour=c))
-        elif (guild.id == int(game_list_id_2)):
-            response = random.choice(gameList2)
-            await ctx.send(embed=discord.Embed(description="You should play: " + response, colour=c))
-        else:
-            await ctx.send(embed=discord.Embed(description="No list found for this server", colour=c))
-        
-    @commands.command(name="gamelist")
-    @commands.cooldown(1.0,3.0)
-    async def on_message(self, ctx):
-        newList = '**Current Game list**' + '\n'
-        c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        guild = ctx.guild
+    @app_commands.command(name='random-game', description='Randomly picks a game from the server side game list')
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def randomgame(self, interaction: discord.Interaction):
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        if (guild.id == int(game_list_id)):
-            for game in gameList:
-                newList = newList + '\n' + game
-            await ctx.send(embed=discord.Embed(description=newList, colour=c))
-        elif (guild.id == int(game_list_id_2)):
-            for game in gameList2:
-                newList = newList + '\n' + game
-            await ctx.send(embed=discord.Embed(description=newList, colour=c))
+        db_conn = psycopg2.connect(database_url, sslmode='require')
+        db_cursor = db_conn.cursor()
+        now = datetime.datetime.now()
+        guild_id = interaction.guild_id
+
+        select_query = """
+                        select game_name from bakibot.game_options
+                        where guild_id like %(guild_detail)%
+                        order by RANDOM()
+                        limit 1
+                       """
+        
+        query_data = {
+            'guild_detail': '%{}%'.format(guild_id)
+        }
+
+        db_cursor.execute(select_query, query_data)
+        temp_sql_results = db_cursor.fetall()
+        sql_results = map(list, list(temp_sql_results))
+        sql_results = sum(sql_results, [])
+
+        if (sql_results == ""):
+            sql_results = "No Entry in Database."
+            response_text = "No Games in the Database for this Server. Please add some and try again"
+            await interaction.response.send_message(embed=discord.Embed(description=response_text, colour=random_color))
+
         else:
-            await ctx.send(embed=discord.Embed(description="No list found for this server", colour=c)) 
+            response1 = str(sql_results[0])
+            response2 = str(sql_results[1])
+            response3 = str(sql_results[2])
+            await interaction.response.send_message(embed=discord.Embed(description="You should play " + response1 + "!", colour=random_color))
+
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-game", sql_results, now, interaction.user.name, interaction.user.id))
+        db_conn.commit()
+        db_cursor.close()
+        db_conn.close()
         
 async def setup(bot):
     await bot.add_cog(Games(bot))

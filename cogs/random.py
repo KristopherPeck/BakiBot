@@ -15,6 +15,15 @@ from discord.ext.commands import Context
 
 database_url = os.environ['DATABASE_URL']
 
+def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
+    db_conn = psycopg2.connect(database_url, sslmode='require')
+    db_cursor = db_conn.cursor()
+    now = datetime.datetime.now()
+    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id, guild))
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
+
 def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
     print (mode_selection)
@@ -136,25 +145,29 @@ class Random(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
         
-    @commands.command(name="dieroll")
-    @commands.cooldown(1.0,3.0)
-    async def dieroll(self, ctx, arg1):
-        arg1 = int(arg1)
+    @app_commands.command(name="dieroll", description="Roll a die of the specified size")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def dieroll(self, interaction: discord.Interaction, dicesize: str):
+        arg1 = int(dicesize)
         result = random.randint(1, arg1)
         result = str(result)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.Embed(description="Show me the money!: " + result, colour=random_color))
+        DatabaseLogging("dieroll", result, interaction.user.name, interaction.user.id, interaction.guild_id)
+        embed = discord.Embed(description="Show me the money!: " + result, colour=random_color)
 
-    @commands.command(name="roll")
-    @commands.cooldown(1.0,3.0)
-    async def roll(self, ctx, dice:str):
+        await interaction.response.send_message(embed=embed)
+    @app_commands.command(name="roll", description="Roll a dice in xdy format, x is number of dice and y is sides of dice")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def roll(self, interaction: discord.Interaction, dicecalc:str):
+
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
         try:
-            rolls, limit = map(int, dice.split('d'))
+            rolls, limit = map(int, dicecalc.split('d'))
         except Exception:
-            await ctx.send('Please use the proper format of NdT!')
+            await interaction.response.send_message(embed=discord.Embed(description="Please use the proper format of xDy", colour=random_color))
             return
         
-        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         roll_results = []
         for roll in range(rolls): 
             roll = random.randint(1, limit)
@@ -167,7 +180,7 @@ class Random(commands.Cog):
             all_rolls = all_rolls + str(item) + ", "
         all_rolls = all_rolls[:-2]
 
-        await ctx.send(embed=discord.Embed(description="Your individual rolls were " + all_rolls + "! The total is " + str(roll_total) + "!", colour=random_color))
+        await interaction.response.send_message(embed=discord.Embed(description="Your individual rolls were " + all_rolls + "! The total is " + str(roll_total) + "!", colour=random_color))
 
     @app_commands.command(name="flip", description="Flip a Coin")
     @app_commands.checks.cooldown(1, 3)
@@ -205,9 +218,9 @@ class Random(commands.Cog):
                 color=random_color,
             ))
         
-    @commands.command(name="8ball", description="classic 8ball", aliases=["eightball"])
-    @commands.cooldown(1.0,3.0)
-    async def eightball(self, ctx, question: str):
+    @app_commands.command(name="8ball", description="classic 8ball", aliases=["eightball"])
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def eightball(self, interaction: discord.Interaction, question: str):
         eightball_responses = [
             "It is certain.",
             "It is decidedly so.",
@@ -229,7 +242,7 @@ class Random(commands.Cog):
             "Very doubtful.",
         ]
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
+        await interaction.response.send_message(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
 
     @app_commands.command(name="trivia", description="Get a random trivia question.")
     @app_commands.checks.cooldown(1, 3)
