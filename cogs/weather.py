@@ -49,17 +49,14 @@ class Weather(commands.Cog):
             api_selector_main = api_response["main"]
             current_temperature = api_selector_main["temp"]
             current_temperature_fahrenheit = str(round(current_temperature * 1.8 - 459.67))
-            current_temperature_celcius = str(round(current_temperature))
             feels_like_temperature = api_selector_main["feels_like"]
             feels_like_temperature_fahrenheit = str(round(feels_like_temperature * 1.8 - 459.67))
-            feels_like_temperature_celcius = str(round(feels_like_temperature))
             current_humidity = api_selector_main["humidity"]
                 
             api_selector_weather = api_response["weather"]
             wind_info = api_response["wind"]
             wind_speed = wind_info["speed"]
             wind_speed = str(round(wind_speed * 2.2369))
-            wind_speed_kph = str(round(wind_speed))
 
             cloud_info = api_response["clouds"]
             cloud_cover = cloud_info["all"]
@@ -102,9 +99,9 @@ class Weather(commands.Cog):
             else:
                 embed.add_field(name="Visibility (ft)", value=f"**{visibility}ft**", inline=False)
 
-            embed.add_field(name="Temperature (F)|(C)", value=f"**{current_temperature_fahrenheit}°F** | **{current_temperature_celcius}°C**", inline=False)
-            embed.add_field(name="Feels Like (F)|(C)", value=f"**{feels_like_temperature_fahrenheit}°F** | **{feels_like_temperature_celcius}°C**", inline=False)
-            embed.add_field(name="Wind Speed (mph)|(kph)", value=f"**{wind_speed}mph** | **{wind_speed_kph}kph**", inline=False)
+            embed.add_field(name="Temperature (F)", value=f"**{current_temperature_fahrenheit}°F**", inline=False)
+            embed.add_field(name="Feels Like (F)", value=f"**{feels_like_temperature_fahrenheit}°F**", inline=False)
+            embed.add_field(name="Wind Speed (mph)", value=f"**{wind_speed}mph**", inline=False)
             embed.add_field(name="Humidity (%)", value=f"**{current_humidity}%**", inline=False)
                 
             if rain_info == 0:
