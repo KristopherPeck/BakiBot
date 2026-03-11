@@ -4,6 +4,7 @@ import random
 import os
 import os.path
 import psycopg2
+import datetime
 from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
