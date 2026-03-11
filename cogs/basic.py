@@ -65,10 +65,10 @@ def testHelp():
     embed=discord.Embed(
         title="BakiBot Command List",
         color=c)
-    embed.add_field(name="**General: Part One**", value=general_command_list_part_one, inline=False)
-    embed.add_field(name="**General: Part Two**", value=general_command_list_part_two, inline=False)
-    embed.add_field(name="**Magic the Gathering", value=mtg_command_list, inline=False)
-    embed.add_field(name="**Pokemon**", value =pokemon_command_list, inline=False)
+    embed.add_field(name="**General Commands: Part One**", value=general_command_list_part_one, inline=False)
+    embed.add_field(name="**General Commands: Part Two**", value=general_command_list_part_two, inline=False)
+    embed.add_field(name="**Magic the Gathering Commands**", value=mtg_command_list, inline=False)
+    embed.add_field(name="**Pokemon Commands**", value =pokemon_command_list, inline=False)
     return embed
 
 def AudioHelp_Heroku():
