@@ -63,6 +63,7 @@ def testHelp():
         title="Command List",
         color=c)
     embed.add_field(name="**color**", value="Pick a random color", inline=False)
+    embed.add_field(name="------------------------------", value="-", inline=False)
     return embed
 
 def AudioHelp_Heroku():
