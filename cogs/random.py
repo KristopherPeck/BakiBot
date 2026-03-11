@@ -110,13 +110,7 @@ class Random(commands.Cog):
         response = random.choice(baki_quotes)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-baki", response, now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("random-baki",  response, interaction.user.name, interaction.user.id, interaction.guild_id)
 
         await interaction.response.send_message(embed=discord.Embed(description=response, colour=random_color))
 
@@ -163,6 +157,8 @@ class Random(commands.Cog):
             all_rolls = all_rolls + str(item) + ", "
         all_rolls = all_rolls[:-2]
 
+        DatabaseLogging("dieroll",  all_rolls, interaction.user.name, interaction.user.id, interaction.guild_id)
+
         await interaction.response.send_message(embed=discord.Embed(description="Your individual rolls were " + all_rolls + "! The total is " + str(roll_total) + "!", colour=random_color))
 
     @app_commands.command(name="flip", description="Flip a Coin")
@@ -172,13 +168,7 @@ class Random(commands.Cog):
         result = random.choice(choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("flip", result, now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("flip",  result, interaction.user.name, interaction.user.id, interaction.guild_id)
 
         await interaction.response.send_message(embed=discord.Embed(description="You got  " + result + "!", colour=random_color))
         
@@ -187,13 +177,7 @@ class Random(commands.Cog):
     async def color(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("color", random_color.to_rgb(), now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("color",  random_color.to_rgb(), interaction.user.name, interaction.user.id, interaction.guild_id)
 
         await interaction.response.send_message(embed=discord.Embed(
                 title="Color Codes",
@@ -225,6 +209,7 @@ class Random(commands.Cog):
             "Very doubtful.",
         ]
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        DatabaseLogging("eightball",  question, interaction.user.name, interaction.user.id, interaction.guild_id)
         await interaction.response.send_message(embed=discord.Embed(description=":8ball: " + random.choice(eightball_responses), colour=c))
 
     @app_commands.command(name="trivia", description="Get a random trivia question.")
@@ -245,14 +230,8 @@ class Random(commands.Cog):
         except:
             await interaction.response.send_message("Looks like I couldn't get any trivia for you. Go ahead and try again shortly.")
             return
-        
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("trivia", trivia_difficulty, now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+
+        DatabaseLogging("trivia",  trivia_difficulty, interaction.user.name, interaction.user.id, interaction.guild_id)
 
         embed = GenerateTriviaDetails(mode_selection, random_color, trivia_db_json)
 

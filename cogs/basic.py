@@ -14,51 +14,47 @@ from discord.ext.commands import Context
 heroku_check = os.getenv('HEROKU_CHECK')
 database_url = os.environ['DATABASE_URL']
 
-def PokemonHelp():
-    c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    embed=discord.Embed(
-        title="Pokemon Command List",
-        color=c)
-    embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: !pokemon Mewtwo or !pokemon 150", inline=False)
-    embed.add_field(name="**randompokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
-    return embed  
+def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
+    db_conn = psycopg2.connect(database_url, sslmode='require')
+    db_cursor = db_conn.cursor()
+    now = datetime.datetime.now()
+    db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id, guild_id) VALUES (%s, %s, %s, %s, %s, %s)", (command_name, database_value, now, user_name, user_id, guild))
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
 
-def MTGHelp():
+def genHelp():
     c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     embed=discord.Embed(
-        title="Magic the Gathering Command List",
-        color=c)
-    embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: !jhoira instant or !jhoira sorcery", inline=False)
-    embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
-    embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic or MoJhoSto. Just like this: !momir 1 or !momir 13", inline=False)
-    embed.add_field(name="**mtg**", value="Search a specific Magic the Gathering card. Just like this: !mtg Jace Beleren", inline=False)
-    embed.add_field(name="**randomcommander**", value="Pick a random EDH legal Legendary Creature", inline=False)
-    embed.add_field(name="**randommtg**", value="Pick a random Magic the Gathering card", inline=False)
-    embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remember that Stonehewer is less than not equal to. Just like this: !stonehewer 3", inline=False)
-    return embed      
-
-def GenHelp():
-    c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    embed=discord.Embed(
-        title="General Command List",
+        title="Command List",
         color=c)
     embed.add_field(name="**choose**", value="Pick a random option from the items given. Put a space between each item like this: !choose Lead Salt Diesel", inline=False)
     embed.add_field(name="**color**", value="Pick a random color", inline=False)
-    embed.add_field(name="**dieroll**", value="Rolls a die of your choosing. Just like this: !diceroll 20", inline=False)
     embed.add_field(name="**dmhelp**", value="Baki will message you the current help commands", inline=False)
-    embed.add_field(name="**eightball or 8ball**", value="Ask the magic 8 Ball a question. Just like this: !eightball Am I going to die tomorrow?", inline=False)
+    embed.add_field(name="**eightball**", value="Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?", inline=False)
     embed.add_field(name="**findthem**", value="Bakibot will pick someone call mean names", inline=False)
     embed.add_field(name="**flip**", value="Flip a coin", inline=False)
-    embed.add_field(name="**gamelist**", value="Shows the current game list for this server. Contact the administrator about updating it.", inline=False)
     embed.add_field(name="**help**", value="Baki will post the current commands in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon", inline=False)
-    embed.add_field(name="**lunchtime**", value="Picks a random restaurant from a list for lunchtime. You could also add x2 or x3 to the end to get multiple options at once.", inline=False)
-    embed.add_field(name="**randombaki**", value="Posts a random quote from Baki", inline=False)
-    embed.add_field(name="**randomgame**", value="Pick a random game from the full list of games for this server", inline=False)
-    embed.add_field(name="**roll**", value="Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: !roll 2d4", inline=False)
+    embed.add_field(name="**lunchtime**", value="Picks 3 random restaurants from a list for lunchtime.", inline=False)
+    embed.add_field(name="**random-baki**", value="Posts a random quote from Baki", inline=False)
+    embed.add_field(name="**random-game**", value="Pick a random game from the full list of games for this server", inline=False)
+    embed.add_field(name="**rolldice**", value="Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: /rolldice 2d4", inline=False)
+    embed.add_field(name="**rolldie**", value="Rolls a die of your choosing. Just like this: /rolldie 20", inline=False)
     embed.add_field(name="**source**", value="Links BakiBots source code.", inline=False)
     embed.add_field(name="**trivia**", value="Posts a random trivia question", inline=False)
-    embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: !weather Portage", inline=False)
-    embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)  
+    embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: /weather Portage", inline=False)
+    embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)
+    embed.add_field(name="------------------------------", value="", inline=False)
+    embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: /jhoira instant or /jhoira sorcery", inline=False)
+    embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
+    embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic or MoJhoSto. Just like this: /momir 1 or /momir 13", inline=False)
+    embed.add_field(name="**mtg**", value="Search a specific Magic the Gathering card. Just like this: /mtg Jace Beleren", inline=False)
+    embed.add_field(name="**random-commander**", value="Pick a random EDH legal Legendary Creature", inline=False)
+    embed.add_field(name="**random-mtg**", value="Pick a random Magic the Gathering card", inline=False)
+    embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remember that Stonehewer is less than not equal to. Just like this: -stonehewer 3", inline=False)
+    embed.add_field(name="------------------------------", value="", inline=False)
+    embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: /pokemon Mewtwo or /pokemon 150", inline=False)
+    embed.add_field(name="**random-pokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
     return embed
 
 def AudioHelp_Heroku():
@@ -84,74 +80,21 @@ def AudioHelp_Other():
 class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
-    @commands.command(name="dmhelp")
-    @commands.cooldown(1.0,3.0)
-    async def DM(self, ctx):
-        if heroku_check == 'False':
-            embed = AudioHelp_Other()
-            await ctx.author.send(embed=embed)
 
-        else:
-            embed = AudioHelp_Heroku()
-            await ctx.author.send(embed=embed)
+    @app_commands.command(name="list-commands", description="Post the list of bot commands")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def listcommands(self, interaction: discord.Interaction):
+        embed = genHelp()
+        DatabaseLogging("list-command", "Listed Commands", interaction.user.name, interaction.user.id, interaction.guild_id)
+        await interaction.response.send_message(embed=embed)
 
-        embed = GenHelp()
-        await ctx.author.send(embed=embed)
+    @app_commands.command(name="whisper-commands", description="Baki wlll whisper the list of bot commands to you")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def whispercommands(self, interaction: discord.Interaction):
+        embed = genHelp()
+        DatabaseLogging("whisper-command", "Whispered Commands", interaction.user.name, interaction.user.id, interaction.guild_id)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        embed = MTGHelp()
-        await ctx.author.send(embed=embed)
-
-        embed = PokemonHelp()
-        await ctx.author.send(embed=embed)    
-        
-    @commands.command(name="help")
-    @commands.cooldown(1.0,3.0)
-    async def help(self, ctx):
-        if heroku_check == 'False':
-            embed = AudioHelp_Other()
-            await ctx.send(embed=embed)
-
-        else:
-            embed = AudioHelp_Heroku()
-            await ctx.send(embed=embed)
-
-        embed = GenHelp()
-        await ctx.send(embed=embed)
-
-        embed = MTGHelp()
-        await ctx.send(embed=embed)
-
-        embed = PokemonHelp()
-        await ctx.send(embed=embed)  
-    
-    @commands.command(name="mtghelp")
-    @commands.cooldown(1.0,3.0)
-    async def mtghelp(self, ctx):
-        embed = MTGHelp()
-        await ctx.send(embed=embed)
-
-    @commands.command(name="pokemonhelp")
-    @commands.cooldown(1.0,3.0)
-    async def pokemonhelp(self, ctx):
-        embed = PokemonHelp()
-        await ctx.send(embed=embed) 
-
-    @commands.command(name="audiohelp")
-    @commands.cooldown(1.0,3.0)
-    async def audiohelp(self, ctx):
-        if heroku_check == 'False':
-            embed = AudioHelp_Other()
-            await ctx.send(embed=embed)
-        else:
-            embed = AudioHelp_Heroku()
-            await ctx.send(embed=embed)
-
-    @commands.command(name="genhelp")
-    @commands.cooldown(1.0,3.0)
-    async def genhelp(self, ctx):
-        embed = GenHelp()
-        await ctx.send(embed=embed)
 
     @app_commands.command(name="source", description="Get a link to BakiBot's Github page.")
     @app_commands.checks.cooldown(1.0,3.0)
@@ -159,13 +102,7 @@ class Basic(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed = discord.Embed(title="Source Code", description="My source code is over at GitHub! Click the link above to look at it!", url=f"https://github.com/KristopherPeck/BakiBot", color=random_color)
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("source", "posted source", now, interaction.user.name, interaction.user.id))
-        db_conn.commit()
-        db_cursor.close()
-        db_conn.close()
+        DatabaseLogging("source", "Posted Source", interaction.user.name, interaction.user.id, interaction.guild_id)
 
         await interaction.response.send_message(embed=embed)
 

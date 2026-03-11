@@ -38,11 +38,8 @@ class Games(commands.Cog):
         db_cursor.execute("select game_name from bakibot.game_list where guild_id = '%s' order by RANDOM() limit 1", (guild_id, ))
 
         temp_sql_results = db_cursor.fetchall()
-        print(temp_sql_results)
         sql_results = map(list, list(temp_sql_results))
-        print(sql_results)
         sql_results = sum(sql_results, [])
-        print(sql_results)
 
         if (sql_results == ""):
             sql_results = "No Entry in Database."
@@ -53,7 +50,7 @@ class Games(commands.Cog):
             response1 = str(sql_results[0])
             await interaction.response.send_message(embed=discord.Embed(description="You should play " + response1 + "!", colour=random_color))
 
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-game", sql_results, now, interaction.user.name, interaction.user.id))
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-game", sql_results, now, interaction.user.name, interaction.user.id, guild_id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
