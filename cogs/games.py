@@ -3,6 +3,7 @@ import sys
 import random
 import os
 import os.path
+import html
 import psycopg2
 import datetime
 from datetime import datetime
@@ -34,8 +35,8 @@ class Games(commands.Cog):
 
         print("test")
 
-        db_conn = psycopg2.connect(database_url, sslmode='require')
-        db_cursor = db_conn.cursor()
+        #db_conn = psycopg2.connect(database_url, sslmode='require')
+        #db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
         #guild_id = interaction.guild_id
         guild_id = "potato"
