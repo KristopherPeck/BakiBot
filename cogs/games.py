@@ -31,6 +31,8 @@ class Games(commands.Cog):
     async def randomgame(self, interaction: discord.Interaction):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
+        print("test")
+
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
