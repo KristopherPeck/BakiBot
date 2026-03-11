@@ -37,7 +37,7 @@ class Games(commands.Cog):
 
         select_query = """
                         select game_name from bakibot.game_list
-                        where guild_id = %(guild_detail)%
+                        where guild_id = '%(guild_detail)%'
                         order by RANDOM()
                         limit 1
                        """
