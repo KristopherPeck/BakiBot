@@ -65,6 +65,9 @@ def testHelp():
     embed.add_field(name="**color**", value="Pick a random color", inline=False)
     embed.add_field(name="**color2**", value="Pick a random /color", inline=False)
     embed.add_field(name="------------------------------", value="", inline=False)
+    embed.add_field(name="General", value = 
+                    "**color**: Pick a random color\n " \
+                    "**eightball**: Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?\n")
     return embed
 
 def AudioHelp_Heroku():
