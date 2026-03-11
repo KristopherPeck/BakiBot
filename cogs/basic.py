@@ -31,7 +31,6 @@ def genHelp():
     embed.add_field(name="**choose**", value="Pick a random option from the items given. Put a space between each item like this: !choose Lead Salt Diesel", inline=False)
     embed.add_field(name="**color**", value="Pick a random color", inline=False)
     embed.add_field(name="**dmhelp**", value="Baki will message you the current help commands", inline=False)
-    print("Slash issue?")
     embed.add_field(name="**eightball**", value="Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?", inline=False)
     embed.add_field(name="**findthem**", value="Bakibot will pick someone call mean names", inline=False)
     embed.add_field(name="**flip**", value="Flip a coin", inline=False)
@@ -45,7 +44,7 @@ def genHelp():
     embed.add_field(name="**trivia**", value="Posts a random trivia question", inline=False)
     embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: /weather Portage", inline=False)
     embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)
-    embed.add_field(name="------------------------------", value="", inline=False)
+    embed.add_field(name="------------------------------", value="-", inline=False)
     embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: /jhoira instant or /jhoira sorcery", inline=False)
     embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
     embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic or MoJhoSto. Just like this: /momir 1 or /momir 13", inline=False)
@@ -53,10 +52,17 @@ def genHelp():
     embed.add_field(name="**random-commander**", value="Pick a random EDH legal Legendary Creature", inline=False)
     embed.add_field(name="**random-mtg**", value="Pick a random Magic the Gathering card", inline=False)
     embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remember that Stonehewer is less than not equal to. Just like this: -stonehewer 3", inline=False)
-    embed.add_field(name="------------------------------", value="", inline=False)
+    embed.add_field(name="------------------------------", value="-", inline=False)
     embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: /pokemon Mewtwo or /pokemon 150", inline=False)
     embed.add_field(name="**random-pokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
-    print("Made it to the end")
+    return embed
+
+def testHelp():
+    c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    embed=discord.Embed(
+        title="Command List",
+        color=c)
+    embed.add_field(name="**color**", value="Pick a random color", inline=False)
     return embed
 
 def AudioHelp_Heroku():
@@ -86,14 +92,14 @@ class Basic(commands.Cog):
     @app_commands.command(name="list-commands", description="Post the list of bot commands")
     @app_commands.checks.cooldown(1.0,3.0)
     async def listcommands(self, interaction: discord.Interaction):
-        embed = genHelp()
+        embed = testHelp()
         DatabaseLogging("list-command", "Listed Commands", interaction.user.name, interaction.user.id, interaction.guild_id)
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="whisper-commands", description="Baki wlll whisper the list of bot commands to you")
     @app_commands.checks.cooldown(1.0,3.0)
     async def whispercommands(self, interaction: discord.Interaction):
-        embed = genHelp()
+        embed = testHelp()
         DatabaseLogging("whisper-command", "Whispered Commands", interaction.user.name, interaction.user.id, interaction.guild_id)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
