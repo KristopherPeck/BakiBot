@@ -31,6 +31,7 @@ def genHelp():
     embed.add_field(name="**choose**", value="Pick a random option from the items given. Put a space between each item like this: !choose Lead Salt Diesel", inline=False)
     embed.add_field(name="**color**", value="Pick a random color", inline=False)
     embed.add_field(name="**dmhelp**", value="Baki will message you the current help commands", inline=False)
+    print("Slash issue?")
     embed.add_field(name="**eightball**", value="Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?", inline=False)
     embed.add_field(name="**findthem**", value="Bakibot will pick someone call mean names", inline=False)
     embed.add_field(name="**flip**", value="Flip a coin", inline=False)
@@ -55,6 +56,7 @@ def genHelp():
     embed.add_field(name="------------------------------", value="", inline=False)
     embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: /pokemon Mewtwo or /pokemon 150", inline=False)
     embed.add_field(name="**random-pokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
+    print("Made it to the end")
     return embed
 
 def AudioHelp_Heroku():
