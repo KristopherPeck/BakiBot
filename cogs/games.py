@@ -37,11 +37,10 @@ class Games(commands.Cog):
 
         #db_conn = psycopg2.connect(database_url, sslmode='require')
         #db_cursor = db_conn.cursor()
-        now = datetime.datetime.now()
+        #now = datetime.datetime.now()
         #guild_id = interaction.guild_id
         guild_id = "potato"
 
-        print(now)
         print(guild_id)
 
         select_query = """
