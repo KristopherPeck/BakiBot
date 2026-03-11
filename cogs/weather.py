@@ -102,9 +102,9 @@ class Weather(commands.Cog):
             else:
                 embed.add_field(name="Visibility (ft)", value=f"**{visibility}ft**", inline=False)
 
-            embed.add_field(name="Temperature (F)|(C)", value=f"**{current_temperature_fahrenheit}°F**"  + " | " + f"**{current_temperature_celcius}°C**", inline=False)
-            embed.add_field(name="Feels Like (F)|(C)", value=f"**{feels_like_temperature_fahrenheit}°F**"  + " | " + f"**{feels_like_temperature_celcius}°C**", inline=False)
-            embed.add_field(name="Wind Speed (mph)|(kph)", value=f"**{wind_speed}mph**" + " | " + f"**{wind_speed_kph}kph**", inline=False)
+            embed.add_field(name="Temperature (F)|(C)", value=f"**{current_temperature_fahrenheit}°F** | **{current_temperature_celcius}°C**", inline=False)
+            embed.add_field(name="Feels Like (F)|(C)", value=f"**{feels_like_temperature_fahrenheit}°F** | **{feels_like_temperature_celcius}°C**", inline=False)
+            embed.add_field(name="Wind Speed (mph)|(kph)", value=f"**{wind_speed}mph** | **{wind_speed_kph}kph**", inline=False)
             embed.add_field(name="Humidity (%)", value=f"**{current_humidity}%**", inline=False)
                 
             if rain_info == 0:
