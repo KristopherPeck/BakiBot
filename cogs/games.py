@@ -48,7 +48,7 @@ class Games(commands.Cog):
         }
 
         db_cursor.execute(select_query, query_data)
-        temp_sql_results = db_cursor.fetall()
+        temp_sql_results = db_cursor.fetchall()
         sql_results = map(list, list(temp_sql_results))
         sql_results = sum(sql_results, [])
 

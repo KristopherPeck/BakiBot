@@ -26,17 +26,11 @@ def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
 
 def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
-    print (mode_selection)
-
     trivia_difficulty = trivia_db_json["results"][0]["difficulty"]
     trivia_difficulty = trivia_difficulty.upper()
-    print ("Trivia Difficulty " + trivia_difficulty)
     trivia_category = html.unescape(trivia_db_json["results"][0]["category"])
-    print ("Trivia Category " + trivia_category)
     trivia_question = html.unescape(trivia_db_json["results"][0]["question"])
-    print ("Trivia Question " + trivia_question)
     trivia_answer = html.unescape(trivia_db_json["results"][0]["correct_answer"])
-    print ("Correct Answer " + trivia_answer)
 
     embed = discord.Embed(title=f"Trivia Time!", color=random_color)
     embed.add_field(name="Trivia Category: ", value=f"{trivia_category}", inline=False)
@@ -44,7 +38,6 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     embed.add_field(name="Question! ", value=f"{trivia_question}", inline=False)
 
     results_length = len(trivia_db_json["results"][0]["incorrect_answers"])
-    print (results_length)
 
     if results_length == 1:
         mode_selection = 1
@@ -54,11 +47,8 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
     if mode_selection == 0:
         random_increment = random.randint(0, 3)
         trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
-        print ("Incorrect Answer " + trivia_incorrect_question_one)
         trivia_incorrect_question_two = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][1])
-        print ("Incorrect Answer " + trivia_incorrect_question_two)
         trivia_incorrect_question_three = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][2])
-        print ("Incorrect Answer " + trivia_incorrect_question_three)
     
         if random_increment == 0:
             embed.add_field(name="A:", value=f"{trivia_answer}", inline=False)
@@ -85,7 +75,6 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
     elif mode_selection == 1:
         trivia_incorrect_question_one = html.unescape(trivia_db_json["results"][0]["incorrect_answers"][0])
-        print ("Incorrect Answer " + trivia_incorrect_question_one)
 
         if trivia_answer == False or trivia_answer == True or trivia_answer == "True" or trivia_answer == "False":
             embed.add_field(name="Possible Answers: ", value="True or False?", inline=False)
@@ -105,6 +94,8 @@ def GenerateTriviaDetails(mode_selection, random_color, trivia_db_json):
 
             
     embed.set_footer(text="Data provided by opentdb.com", icon_url="https://opentdb.com/images/logo.png")
+
+    print(embed)
 
     return embed
 
@@ -145,7 +136,7 @@ class Random(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await ctx.send(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
         
-    @app_commands.command(name="dieroll", description="Roll a die of the specified size")
+    @app_commands.command(name="rolldie", description="Roll a die of the specified size")
     @app_commands.checks.cooldown(1.0,3.0)
     async def dieroll(self, interaction: discord.Interaction, dicesize: str):
         arg1 = int(dicesize)
@@ -156,7 +147,7 @@ class Random(commands.Cog):
         embed = discord.Embed(description="Show me the money!: " + result, colour=random_color)
 
         await interaction.response.send_message(embed=embed)
-    @app_commands.command(name="roll", description="Roll a dice in xdy format, x is number of dice and y is sides of dice")
+    @app_commands.command(name="rolldice", description="Roll a dice in xdy format, x is number of dice and y is sides of dice")
     @app_commands.checks.cooldown(1.0,3.0)
     async def roll(self, interaction: discord.Interaction, dicecalc:str):
 
@@ -218,7 +209,7 @@ class Random(commands.Cog):
                 color=random_color,
             ))
         
-    @app_commands.command(name="8ball", description="classic 8ball. Ask it any question.")
+    @app_commands.command(name="eightball", description="classic 8ball. Ask it any question.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def eightball(self, interaction: discord.Interaction, question: str):
         eightball_responses = [
@@ -272,6 +263,8 @@ class Random(commands.Cog):
         db_conn.close()
 
         embed = GenerateTriviaDetails(mode_selection, random_color, trivia_db_json)
+
+        print(embed)
 
         await interaction.response.send_message(embed=embed)
 
