@@ -33,6 +33,7 @@ class Games(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
+        print (now)
         guild_id = interaction.guild_id
 
         select_query = """
@@ -45,6 +46,8 @@ class Games(commands.Cog):
         query_data = {
             'guild_detail': '{}'.format(guild_id)
         }
+
+        print (query_data)
 
         db_cursor.execute(select_query, query_data)
         temp_sql_results = db_cursor.fetchall()
