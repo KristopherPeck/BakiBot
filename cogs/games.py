@@ -46,6 +46,9 @@ class Games(commands.Cog):
             'guild_detail': '{}'.format(guild_id)
         }
 
+        print(select_query)
+        print(query_data)
+
         db_cursor.execute(select_query, query_data)
         temp_sql_results = db_cursor.fetchall()
         print(temp_sql_results)
