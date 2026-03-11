@@ -23,50 +23,49 @@ def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
     db_cursor.close()
     db_conn.close()
 
-def genHelp():
-    c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    embed=discord.Embed(
-        title="Command List",
-        color=c)
-    embed.add_field(name="**choose**", value="Pick a random option from the items given. Put a space between each item like this: !choose Lead Salt Diesel", inline=False)
-    embed.add_field(name="**color**", value="Pick a random color", inline=False)
-    embed.add_field(name="**dmhelp**", value="Baki will message you the current help commands", inline=False)
-    embed.add_field(name="**eightball**", value="Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?", inline=False)
-    embed.add_field(name="**findthem**", value="Bakibot will pick someone call mean names", inline=False)
-    embed.add_field(name="**flip**", value="Flip a coin", inline=False)
-    embed.add_field(name="**help**", value="Baki will post the current commands in the current channel. You can also use the following prefixes to get specific lists: audio, gen, mtg, pokemon", inline=False)
-    embed.add_field(name="**lunchtime**", value="Picks 3 random restaurants from a list for lunchtime.", inline=False)
-    embed.add_field(name="**random-baki**", value="Posts a random quote from Baki", inline=False)
-    embed.add_field(name="**random-game**", value="Pick a random game from the full list of games for this server", inline=False)
-    embed.add_field(name="**rolldice**", value="Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: /rolldice 2d4", inline=False)
-    embed.add_field(name="**rolldie**", value="Rolls a die of your choosing. Just like this: /rolldie 20", inline=False)
-    embed.add_field(name="**source**", value="Links BakiBots source code.", inline=False)
-    embed.add_field(name="**trivia**", value="Posts a random trivia question", inline=False)
-    embed.add_field(name="**weather**", value="Get the current weather for a city of your choosing. Just like this: /weather Portage", inline=False)
-    embed.add_field(name="**whoisit**", value="Determine who should be called mean names from a list of names", inline=False)
-    embed.add_field(name="------------------------------", value="-", inline=False)
-    embed.add_field(name="**jhoira**", value="Generate three random instants or sorceries for use in MoJhoSto. Just like this: /jhoira instant or /jhoira sorcery", inline=False)
-    embed.add_field(name="**mojhosto**", value="A short explanation of the MoJhoSto format", inline=False)
-    embed.add_field(name="**momir**", value="Generate a random Magic the Gathering creature for use in Momir Basic or MoJhoSto. Just like this: /momir 1 or /momir 13", inline=False)
-    embed.add_field(name="**mtg**", value="Search a specific Magic the Gathering card. Just like this: /mtg Jace Beleren", inline=False)
-    embed.add_field(name="**random-commander**", value="Pick a random EDH legal Legendary Creature", inline=False)
-    embed.add_field(name="**random-mtg**", value="Pick a random Magic the Gathering card", inline=False)
-    embed.add_field(name="**stonehewer**", value="Generate a random equipment for use in MoJhoSto. Remember that Stonehewer is less than not equal to. Just like this: -stonehewer 3", inline=False)
-    embed.add_field(name="------------------------------", value="-", inline=False)
-    embed.add_field(name="**pokemon**", value="Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: /pokemon Mewtwo or /pokemon 150", inline=False)
-    embed.add_field(name="**random-pokemon**", value="Showcase a random Pokemon. Can be from any generation", inline=False)
-    return embed
-
 def testHelp():
     c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    general_command_list_part_one = '''
+                   **color**: Pick a random color\n
+                   **eightball**: Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?\n
+                   **findthem**: Bakibot will pick someone call mean names\n
+                   **flip**: Flip a coin\n
+                   **lunchtime**: Picks 3 random restaurants from a list for lunchtime\n
+                   **random-baki**: Posts a random quote from Baki\n
+                   **random-game**: Pick a random game from the full list of games for this server\n
+                   '''
+    
+    general_command_list_part_two = '''
+                   **rolldice**: Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: /rolldice 2d4\n
+                   **rolldie**: Rolls a die of your choosing. Just like this: /rolldie 20\n
+                   **source**: Links BakiBots source code\n
+                   **trivia**: Posts a random trivia question\n
+                   **weather**: Get the current weather for a city of your choosing. Just like this: /weather Portage\n
+                   **whoisit**: Determine who should be called mean names from a list of names\n
+                   '''
+    
+    pokemon_command_list = '''
+                           **pokemon**: Highlight a specific Pokemon. This can be either the pokedex number or their name. Just like this: /pokemon Mewtwo or /pokemon 150\n
+                           **random-pokemon**: Showcase a random Pokemon. Can be from any generation\n
+                           '''
+    
+    mtg_command_list = '''
+                           **jhoira**: Generate three random instants or sorceries for use in MoJhoSto. Just like this: /jhoira instant or /jhoira sorcery\n
+                           **mojhosto**: A short explanation of the MoJhoSto format\n
+                           **momir**: Generate a random Magic the Gathering creature for use in Momir Basic or MoJhoSto. Just like this: /momir 1 or /momir 13\n
+                           **mtg**: Search a specific Magic the Gathering card. Just like this: /mtg Jace Beleren\n
+                           **random-commander**: Pick a random EDH legal Legendary Creature\n
+                           **random-mtg**: Pick a random Magic the Gathering card\n
+                           **stonehewer**: Generate a random equipment for use in MoJhoSto. Remember that Stonehewer is less than not equal to. Just like this: /stonehewer 3\n
+                           '''
+    
     embed=discord.Embed(
-        title="Command List",
+        title="BakiBot Command List",
         color=c)
-    embed.add_field(name="**color**", value="Pick a random color", inline=False)
-    embed.add_field(name="**color2**", value="Pick a random /color", inline=False)
-    embed.add_field(name="------------------------------", value="", inline=False)
-    embed.add_field(name="General", value = 
-                    "**color**: Pick a random color\n **eightball**: Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?\n")
+    embed.add_field(name="**General: Part One**", value=general_command_list_part_one, inline=False)
+    embed.add_field(name="**General: Part Two**", value=general_command_list_part_two, inline=False)
+    embed.add_field(name="**Magic the Gathering", value=mtg_command_list, inline=False)
+    embed.add_field(name="**Pokemon**", value =pokemon_command_list, inline=False)
     return embed
 
 def AudioHelp_Heroku():
