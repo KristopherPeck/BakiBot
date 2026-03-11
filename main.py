@@ -43,7 +43,7 @@ def ownercheck(ctx):
 # Events
 @client.event
 async def on_ready():
-    await client.change_presence(activity=discord.Game(name="!help or !dmhelp"))
+    await client.change_presence(activity=discord.Game(name="/whisper-commands"))
     print(f"✅ Logged in as {client.user} (ID: {client.user.id})")
 
 @client.event

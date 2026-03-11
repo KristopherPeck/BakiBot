@@ -26,10 +26,12 @@ def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
 def testHelp():
     c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     general_command_list_part_one = '''
+                   **choose**: Pick between a selection of items. Use it like this !choose potato potato potato\n
                    **color**: Pick a random color\n
                    **eightball**: Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?\n
                    **findthem**: Bakibot will pick someone call mean names\n
                    **flip**: Flip a coin\n
+                   **list-commands**: Posts the list of server commmands\n
                    **lunchtime**: Picks 3 random restaurants from a list for lunchtime\n
                    **random-baki**: Posts a random quote from Baki\n
                    **random-game**: Pick a random game from the full list of games for this server\n
@@ -41,6 +43,7 @@ def testHelp():
                    **source**: Links BakiBots source code\n
                    **trivia**: Posts a random trivia question\n
                    **weather**: Get the current weather for a city of your choosing. Just like this: /weather Portage\n
+                   **whisper-commands**: Whispers the list of server commmands to the user who requested them\n
                    **whoisit**: Determine who should be called mean names from a list of names\n
                    '''
     
