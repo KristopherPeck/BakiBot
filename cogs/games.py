@@ -36,9 +36,11 @@ class Games(commands.Cog):
         now = datetime.datetime.now()
         guild_id = interaction.guild_id
 
+        print(guild_id)
+
         select_query = """
                         select game_name from bakibot.game_options
-                        where guild_id like %(guild_detail)%
+                        where guild_id = %(guild_detail)%
                         order by RANDOM()
                         limit 1
                        """
@@ -46,6 +48,8 @@ class Games(commands.Cog):
         query_data = {
             'guild_detail': '%{}%'.format(guild_id)
         }
+
+        print(query_data)
 
         db_cursor.execute(select_query, query_data)
         temp_sql_results = db_cursor.fetchall()
