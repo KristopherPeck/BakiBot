@@ -35,7 +35,7 @@ class Games(commands.Cog):
         now = datetime.datetime.now()
         guild_id = interaction.guild_id
 
-        db_cursor.execute("select game_name from bakibot.game_list where guild_id = %s order by RANDOM() limit 1", (guild_id))
+        db_cursor.execute("select game_name from bakibot.game_list where guild_id = '%s' order by RANDOM() limit 1", (guild_id, ))
 
         temp_sql_results = db_cursor.fetchall()
         print(temp_sql_results)
