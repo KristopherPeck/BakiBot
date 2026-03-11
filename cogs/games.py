@@ -49,8 +49,11 @@ class Games(commands.Cog):
 
         db_cursor.execute(select_query, query_data)
         temp_sql_results = db_cursor.fetchall()
+        print(temp_sql_results)
         sql_results = map(list, list(temp_sql_results))
+        print(sql_results)
         sql_results = sum(sql_results, [])
+        print(sql_results)
 
         if (sql_results == ""):
             sql_results = "No Entry in Database."
@@ -59,8 +62,6 @@ class Games(commands.Cog):
 
         else:
             response1 = str(sql_results[0])
-            response2 = str(sql_results[1])
-            response3 = str(sql_results[2])
             await interaction.response.send_message(embed=discord.Embed(description="You should play " + response1 + "!", colour=random_color))
 
         db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("random-game", sql_results, now, interaction.user.name, interaction.user.id))
