@@ -115,12 +115,13 @@ class Random(commands.Cog):
         await interaction.response.send_message(embed=discord.Embed(description=response, colour=random_color))
 
 
-    @commands.command(name="choose", description="Choose from a list", usage="choose <item1 item2 item3 ... >")
-    @commands.cooldown(1,3.0)
-    async def choose(self, ctx, *args):
-        response = random.choice(args)
+    @app_commands.command(name="choose", description="Choose from a list separated by spaces")
+    @app_commands.checks.cooldown(1,3.0)
+    async def choose(self, interaction: discord.Interaction, items: str):
+        choices = items.split()
+        response = random.choice(choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await ctx.send(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
+        await interaction.response.send_message(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
         
     @app_commands.command(name="rolldie", description="Roll a die of the specified size")
     @app_commands.checks.cooldown(1.0,3.0)
