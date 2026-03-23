@@ -26,7 +26,7 @@ def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
 def testHelp():
     c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     general_command_list_part_one = '''
-                   **choose**: Pick between a selection of items. Use it like this !choose potato potato potato\n
+                   **choose**: Pick between a selection of items.\n
                    **color**: Pick a random color\n
                    **eightball**: Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?\n
                    **findthem**: Bakibot will pick someone call mean names\n

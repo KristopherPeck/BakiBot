@@ -11,7 +11,7 @@ There is a short cooldown implemented on commands. This can be removed from the 
 Current command prefix is set to !
 
 ### General Commands
-- choose: Randomly select an option from the provided options. e.g. !choose Lead Salt Diesel
+- choose: Randomly select an option from the provided options.
 - color: Post a random color and display the Hex and RGB values and an example of the color. 
 - dieroll: Roll a die of the size of your choosing. e.g. /diceroll 20
 - dmhelp: Sends you a message of the current commands available
