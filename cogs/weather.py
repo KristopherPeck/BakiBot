@@ -42,20 +42,38 @@ def validate_city_input(city: str) -> bool:
     """Validate city input for length and allowed characters."""
     if not city or len(city) > 100:
         return False
-    # Allow letters, spaces, hyphens, and apostrophes
-    if not all(c.isalpha() or c in " -'" for c in city):
+    # Allow letters, spaces, hyphens, apostrophes, and commas
+    if not all(c.isalpha() or c in " -'," for c in city):
         return False
     return True
 
-def get_city_coordinates(city_name: str) -> dict:
-    """Get latitude and longitude for a city using Open-Meteo Geocoding API."""
+def get_city_coordinates(city_input: str) -> dict:
+    """Get latitude and longitude for a city using Open-Meteo Geocoding API.
+    
+    Supports formats like:
+    - "Portland"
+    - "Portland, Oregon"
+    - "Portland, Oregon, USA"
+    """
     try:
+        # Parse input to separate city, state, country
+        parts = [p.strip() for p in city_input.split(',')]
+        
         params = {
-            'name': city_name,
-            'count': 1,
+            'name': parts[0],  # City name (required)
+            'count': 5,  # Get top 5 results to pick the best match
             'language': 'en',
             'format': 'json'
         }
+        
+        # Add state if provided
+        if len(parts) > 1:
+            params['state'] = parts[1]
+        
+        # Add country if provided
+        if len(parts) > 2:
+            params['country'] = parts[2]
+        
         response = requests.get(geocoding_url, params=params, timeout=request_timeout, verify=True)
         response.raise_for_status()
         data = response.json()
@@ -63,7 +81,15 @@ def get_city_coordinates(city_name: str) -> dict:
         if 'results' not in data or len(data['results']) == 0:
             return None
         
+        # If user specified state/country, try to find exact match
         result = data['results'][0]
+        if len(parts) > 1:
+            # Look for a result that matches the state
+            for r in data['results']:
+                if r.get('admin1') and parts[1].lower() in r.get('admin1', '').lower():
+                    result = r
+                    break
+        
         return {
             'latitude': result['latitude'],
             'longitude': result['longitude'],
@@ -72,12 +98,12 @@ def get_city_coordinates(city_name: str) -> dict:
             'admin1': result.get('admin1', '')
         }
     except requests.exceptions.Timeout:
-        logger.error(f"Geocoding API timeout for city: {city_name}")
+        logger.error(f"Geocoding API timeout for city: {city_input}")
         return None
     except requests.exceptions.RequestException as e:
         logger.error(f"Geocoding API error: {e}")
         return None
-    except (KeyError, ValueError) as e:
+    except (KeyError, ValueError, IndexError) as e:
         logger.error(f"Invalid geocoding response: {e}")
         return None
 
