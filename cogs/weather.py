@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 request_timeout = 10
 
 owner_id = os.getenv('DISCORD_OWNERID')
-weather_api = os.getenv('WEATHERAPI')
-geocoding_url = "https://api.openweathermap.org/geo/1.0/direct"
-weather_current_forecast_url= "https://api.openweathermap.org/data/2.5/weather"
-weather_icon_url = "https://openweathermap.org/img/wn/"
 database_url = os.environ['DATABASE_URL']
+
+# Open-Meteo API endpoints (no API key required)
+geocoding_url = "https://geocoding-api.open-meteo.com/v1/search"
+weather_url = "https://api.open-meteo.com/v1/forecast"
 
 def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
     try:
@@ -48,27 +48,28 @@ def validate_city_input(city: str) -> bool:
     return True
 
 def get_city_coordinates(city_name: str) -> dict:
-    """Get latitude and longitude for a city using OpenWeatherMap Geocoding API."""
+    """Get latitude and longitude for a city using Open-Meteo Geocoding API."""
     try:
         params = {
-            'q': city_name,
-            'limit': 1,
-            'appid': weather_api
+            'name': city_name,
+            'count': 1,
+            'language': 'en',
+            'format': 'json'
         }
         response = requests.get(geocoding_url, params=params, timeout=request_timeout, verify=True)
         response.raise_for_status()
         data = response.json()
         
-        if len(data) == 0:
+        if 'results' not in data or len(data['results']) == 0:
             return None
         
-        result = data[0]
+        result = data['results'][0]
         return {
-            'latitude': result['lat'],
-            'longitude': result['lon'],
+            'latitude': result['latitude'],
+            'longitude': result['longitude'],
             'name': result['name'],
             'country': result.get('country', ''),
-            'state': result.get('state', '')
+            'admin1': result.get('admin1', '')
         }
     except requests.exceptions.Timeout:
         logger.error(f"Geocoding API timeout for city: {city_name}")
@@ -81,14 +82,17 @@ def get_city_coordinates(city_name: str) -> dict:
         return None
 
 def get_weather(latitude: float, longitude: float) -> dict:
+    """Get current weather data using Open-Meteo Weather API."""
     try:
         params = {
-            'lat': latitude,
-            'lon': longitude,
-            'units': 'imperial',
-            'appid': weather_api
+            'latitude': latitude,
+            'longitude': longitude,
+            'current': 'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,cloud_cover',
+            'temperature_unit': 'fahrenheit',
+            'wind_speed_unit': 'mph',
+            'timezone': 'auto'
         }
-        response = requests.get(weather_current_forecast_url, params=params, timeout=request_timeout, verify=True)
+        response = requests.get(weather_url, params=params, timeout=request_timeout, verify=True)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.Timeout:
@@ -101,6 +105,36 @@ def get_weather(latitude: float, longitude: float) -> dict:
         logger.error(f"Invalid weather response: {e}")
         return None
 
+def get_weather_description(code: int) -> str:
+    """Convert WMO weather code to human-readable description."""
+    wmo_codes = {
+        0: "Clear sky",
+        1: "Mainly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Foggy",
+        48: "Depositing rime fog",
+        51: "Light drizzle",
+        53: "Moderate drizzle",
+        55: "Dense drizzle",
+        61: "Slight rain",
+        63: "Moderate rain",
+        65: "Heavy rain",
+        71: "Slight snow",
+        73: "Moderate snow",
+        75: "Heavy snow",
+        77: "Snow grains",
+        80: "Slight rain showers",
+        81: "Moderate rain showers",
+        82: "Violent rain showers",
+        85: "Slight snow showers",
+        86: "Heavy snow showers",
+        95: "Thunderstorm",
+        96: "Thunderstorm with slight hail",
+        99: "Thunderstorm with heavy hail",
+    }
+    return wmo_codes.get(code, "Unknown conditions")
+
 class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -109,116 +143,59 @@ class Weather(commands.Cog):
         return ctx.message.author.id == int(owner_id)
     
     @app_commands.command(name='weather', description="Find out the weather at a specified location")
-    @app_commands.checks.cooldown(1.0,3.0)
+    @app_commands.checks.cooldown(1.0, 3.0)
     @app_commands.describe(city="Input the city you wish to get the weather of")
     async def weather(self, interaction: discord.Interaction, city: str):
         if not validate_city_input(city):
             await interaction.response.send_message("Invalid city name. Please use only letters, spaces, hyphens, and apostrophes (max 100 characters).")
             return
         
-        try:
-            city_coords = get_city_coordinates(city)
-            if not city_coords:
-                await interaction.response.send_message("City not found. Please try another location.")
-                DatabaseLogging("weather", city, interaction.user.name, interaction.user.id, interaction.guild_id)
-                return
-        
-            weather_data = get_weather(city_coords['latitude'], city_coords['longitude'])
-            if not weather_data:
-                await interaction.response.send_message("Unable to fetch weather data. Please try again later.")
-                DatabaseLogging("weather", city, interaction.user.name, interaction.user.id, interaction.guild_id)
-                return
-            
-        except requests.exceptions.Timeout:
-            logger.error(f"Weather API timeout for city: {city}")
-            await interaction.response.send_message("Weather service timed out. Please try again.")
+        # Get coordinates for the city
+        city_coords = get_city_coordinates(city)
+        if not city_coords:
+            await interaction.response.send_message("City not found. Please try another location.")
+            DatabaseLogging("weather", city, interaction.user.name, interaction.user.id, interaction.guild_id)
             return
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Weather API error: {e}")
+        
+        # Get weather data
+        weather_data = get_weather(city_coords['latitude'], city_coords['longitude'])
+        if not weather_data:
             await interaction.response.send_message("Unable to fetch weather data. Please try again later.")
-            return
-        except ValueError as e:
-            logger.error(f"Invalid JSON response: {e}")
-            await interaction.response.send_message("Weather service returned invalid data.")
-            return
-        
-        if weather_data.get("cod") != "200":
             DatabaseLogging("weather", city, interaction.user.name, interaction.user.id, interaction.guild_id)
-            await interaction.response.send_message("City not found.")
             return
         
-        try: 
-            api_selector_main = weather_data["main"]
-            current_temperature = api_selector_main["temp"]
-            feels_like_temperature = api_selector_main["feels_like"]
-            current_humidity = api_selector_main["humidity"]
-                
-            api_selector_weather = weather_data["weather"]
-            wind_info = weather_data["wind"]
-            wind_speed = wind_info["speed"]
-
-            cloud_info = weather_data["clouds"]
-            cloud_cover = cloud_info["all"]
-
-            try:
-                rain_info = weather_data["rain"]
-                rain_volume = rain_info["1h"]
-            except (KeyError, TypeError):  
-                rain_info = 0
-
-            try:
-                snow_info = weather_data["snow"]
-                snow_volume = snow_info["1h"]
-            except (KeyError, TypeError):  
-                snow_info = 0
-
-            try:
-                visibility = weather_data["visibility"]
-            except (KeyError, TypeError): 
-                visibility = 0
-                
-            if visibility > 5280:
-                visibility = str(round(visibility * 0.0001893939))
-                visibility_mile_indicator = 1
-            else:
-                visibility = str(visibility)
-
-            weather_description = api_selector_weather[0]["description"]
-            weather_description = weather_description.title()
-            weather_icon = api_selector_weather[0]["icon"]
-            weather_icon = weather_icon_url + weather_icon + "@2x.png"
+        try:
+            current = weather_data['current']
+            temperature = current['temperature_2m']
+            humidity = current['relative_humidity_2m']
+            wind_speed = current['wind_speed_10m']
+            cloud_cover = current['cloud_cover']
+            weather_code = current['weather_code']
+            weather_description = get_weather_description(weather_code)
+            
+            # Build location string
+            location = city_coords['name']
+            if city_coords.get('admin1'):
+                location += f", {city_coords['admin1']}"
+            if city_coords.get('country'):
+                location += f", {city_coords['country']}"
+            
+            # Create embed
             c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-            embed = discord.Embed(title=f"Weather in {city}", color=c)
+            embed = discord.Embed(title=f"Weather in {location}", color=c)
             embed.add_field(name="Description", value=f"**{weather_description}**", inline=False)
-            embed.add_field(name="Cloud Cover", value=f"**{cloud_cover}%**", inline=False)
-                                
-            if visibility_mile_indicator == 1:
-                embed.add_field(name="Visibility (mi)", value=f"**{visibility}mi**", inline=False)
-            else:
-                embed.add_field(name="Visibility (ft)", value=f"**{visibility}ft**", inline=False)
-
-            embed.add_field(name="Temperature (F)", value=f"**{current_temperature}°F**", inline=False)
-            embed.add_field(name="Feels Like (F)", value=f"**{feels_like_temperature}°F**", inline=False)
-            embed.add_field(name="Wind Speed (mph)", value=f"**{wind_speed}mph**", inline=False)
-            embed.add_field(name="Humidity (%)", value=f"**{current_humidity}%**", inline=False)
-                
-            if rain_info != 0:
-                embed.add_field(name="Rain Volume (Past Hour - in)", value=f"**{rain_volume}in**", inline=False)
-
-            if snow_info != 0:
-                embed.add_field(name="Snow Volume (Past Hour - in)", value=f"**{snow_volume}in**", inline=False)
-
-            embed.set_thumbnail(url=weather_icon)
-            embed.set_footer(text="Data provided by openweathermap.org.", icon_url="https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
-
-            DatabaseLogging("weather", city, interaction.user.name, interaction.user.id, interaction.guild_id)
-
+            embed.add_field(name="Temperature (°F)", value=f"**{temperature}°F**", inline=False)
+            embed.add_field(name="Humidity (%)", value=f"**{humidity}%**", inline=False)
+            embed.add_field(name="Wind Speed (mph)", value=f"**{wind_speed} mph**", inline=False)
+            embed.add_field(name="Cloud Cover (%)", value=f"**{cloud_cover}%**", inline=False)
+            embed.set_footer(text="Data provided by Open-Meteo.com")
+            
+            DatabaseLogging("weather", location, interaction.user.name, interaction.user.id, interaction.guild_id)
             await interaction.response.send_message(embed=embed)
             
-        except (KeyError, IndexError, TypeError) as e:
+        except (KeyError, TypeError) as e:
             logger.error(f"Error parsing weather response: {e}")
             await interaction.response.send_message("Error processing weather data. Please try again.")
-
         except Exception as e:
             logger.error(f"Unexpected error in weather command: {e}")
             await interaction.response.send_message("An unexpected error occurred.")
