@@ -2,10 +2,10 @@
 The code for a personal discord bot built in Python. Originally developed because finding a bot that let you pick from a list was harder then it sounded. It's expanded from there to whatever ideas I have that I want to implement.
 
 ## Requirements
-Tested with [Python 3.8.3](https://www.python.org/downloads/release/python-383/). It should work with any recent version. 
+Deployed with Python 3.11. Heroku selects the latest available 3.11 security release from `.python-version`.
 
 ## Cooldown
-There is a short cooldown implemented on commands. This can be removed from the commands by removing the @commands.cooldown() from the commands code.
+There is a short cooldown implemented on commands. This can be removed from a command by removing its `@app_commands.checks.cooldown()` decorator.
 
 ## Commands
 All commands are implemented as slash commands ('/')
