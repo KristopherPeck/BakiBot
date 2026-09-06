@@ -14,7 +14,7 @@ Current command prefix is set to !
 - choose: Randomly select an option from the provided options.
 - color: Post a random color and display the Hex and RGB values and an example of the color. 
 - dieroll: Roll a die of the size of your choosing. e.g. /diceroll 20
-- dmhelp: Sends you a message of the current commands available
+- dm-commands: Sends you a message of the current commands available
 - eightball or 8ball: Ask the magic 8 Ball a question. 
 - findthem: Baki will call someone in the server mean names.
 - flip: Flip a coin

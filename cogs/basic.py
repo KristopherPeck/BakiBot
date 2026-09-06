@@ -89,6 +89,30 @@ class Basic(commands.Cog):
         DatabaseLogging("whisper-command", "Whispered Commands", interaction.user.name, interaction.user.id, interaction.guild_id)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+    @app_commands.command(name="dm-commands", description="Baki will DM the list of bot commands to you")
+    @app_commands.checks.cooldown(1.0,3.0)
+    async def dmcommands(self, interaction: discord.Interaction):
+        embed = testHelp()
+
+        try:
+            await interaction.user.send(embed=embed)
+        except discord.Forbidden:
+            await interaction.resposne.send_message(
+                "I couldn't send you a DM. Please allow direct messages "
+                "from members of this server and try again.",
+                ephemeral=True,
+            )
+            return
+        except discord.HTTPException:
+            await interaction.response.send_message(
+                "Discord couldn't deliver the DM. Please try again later,",
+                ephemeral=True
+            )
+            return
+
+        DatabaseLogging("dm-command", "DM Commands", interaction.user.name, interaction.user.id, interaction.guild_id)
+        await interaction.response.send_message("I sent the command list to your DMs!", ephemeral=True)
+
 
     @app_commands.command(name="source", description="Get a link to BakiBot's Github page.")
     @app_commands.checks.cooldown(1.0,3.0)
