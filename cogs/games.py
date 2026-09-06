@@ -33,7 +33,7 @@ class Games(commands.Cog):
         db_conn = psycopg2.connect(database_url, sslmode='require')
         db_cursor = db_conn.cursor()
         now = datetime.datetime.now()
-        guild_id = interaction.guild_id
+        guild_id = str(interaction.guild_id)
 
         db_cursor.execute("""select game_name from bakibot.game_list where guild_id = %s order by RANDOM() limit 1""", (guild_id, ))
 
