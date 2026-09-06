@@ -55,6 +55,24 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send(f"⚠️ {error}")
 
+@client.tree.error
+async def on_app_command_error(
+    interaction: discord.Interaction,
+    error: app_commands.AppCommandError,
+):
+    if isinstance(error, app_commands.CommandOnCooldown):
+        message = (
+            f"That command is on cooldown. "
+            f"Try again in {error.retry_after:.1f} seconds."
+        )
+
+        if interaction.response.is_done():
+            await interaction.followup.send(message, ephemeral=True)
+        else:
+            await interaction.response.send_message(message, ephemeral=True)
+    else:
+        raise error
+
 # Prefix admin commands for managing cogs
 @client.command()
 @commands.check(ownercheck)
