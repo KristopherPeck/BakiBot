@@ -5,7 +5,6 @@ import os
 import os.path
 import datetime
 import requests
-import requests_cache
 import psycopg2
 from dotenv import load_dotenv, find_dotenv
 from discord.ext import commands
@@ -25,9 +24,6 @@ scryfall_headers = {
 
 scryfall_session = requests.Session()
 scryfall_session.headers.update(scryfall_headers)
-
-mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
-mtg_session.headers.update(scryfall_headers)
 
 def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
     db_conn = psycopg2.connect(database_url, sslmode='require')
@@ -366,7 +362,7 @@ class mtg(commands.Cog):
     async def randommtg(self, interaction: discord.Interaction):
         random_card_url = scryfall_url + "cards/random"
 
-        random_card_response = requests.get(random_card_url, timeout=10)
+        random_card_response = scryfall_session.get(random_card_url, timeout=10)
         random_card_json = random_card_response.json()
 
         if not random_card_response.ok or random_card_json.get("object") != "card":
@@ -388,7 +384,7 @@ class mtg(commands.Cog):
             bad_type = True
             while bad_type == True:
                 random_card_url = scryfall_url + "cards/random"
-                random_card_response = requests.get(random_card_url, timeout=10)
+                random_card_response = scryfall_session.get(random_card_url, timeout=10)
                 random_card_json = random_card_response.json()
                 typeline_check = random_card_json["type_line"]
 
@@ -397,7 +393,7 @@ class mtg(commands.Cog):
 
         if card_layout_check == "art_series":
             check_mtg_card_url = scryfall_url + "cards/named?fuzzy=" + random_card_json["name"]
-            random_card_response = requests.get(check_mtg_card_url)
+            random_card_response = scryfall_session.get(check_mtg_card_url, timeout=10)
             random_card_json = random_card_response.json()
 
         DatabaseLogging("random-mtg", random_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
@@ -413,7 +409,7 @@ class mtg(commands.Cog):
     async def randomcommander(self, interaction: discord.Interaction):
 
         random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
-        random_card_response = requests.get(random_card_url)
+        random_card_response = scryfall_session.get(random_card_url, timeout=10)
         random_card_json = random_card_response.json()
         card_type = random_card_json["type_line"]
         card_edh_legal = random_card_json["legalities"]["commander"]
@@ -422,7 +418,7 @@ class mtg(commands.Cog):
         #However, I don't want them to show up in my iteration. So we filter out those as well as any cards that aren't legal in EDH.
         while ("Background" in card_type) and (card_edh_legal == "not_legal"):
             random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
-            random_card_response = requests.get(random_card_url)
+            random_card_response = scryfall_session.get(random_card_url, timeout=10)
             random_card_json = random_card_response.json()
             card_type = random_card_json["type_line"]
             card_edh_legal = random_card_json["legalities"]["commander"]
@@ -441,7 +437,7 @@ class mtg(commands.Cog):
         try:  
                 arg1 = str(manavalue)
                 momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
-                momir_card_response = requests.get(momir_card_url)
+                momir_card_response = scryfall_session.get(momir_card_url, timeout=10)
                 momir_card_json = momir_card_response.json()
                 card_type = momir_card_json["type_line"]
         except:
@@ -475,9 +471,9 @@ class mtg(commands.Cog):
                 jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
                 jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
-                jhoira_card_response_1 = requests.get(jhoira_card_url_1)
-                jhoira_card_response_2 = requests.get(jhoira_card_url_2)
-                jhoira_card_response_3 = requests.get(jhoira_card_url_3)
+                jhoira_card_response_1 = scryfall_session.get(jhoira_card_url_1, timeout=10)
+                jhoira_card_response_2 = scryfall_session.get(jhoira_card_url_2, timeout=10)
+                jhoira_card_response_3 = scryfall_session.get(jhoira_card_url_3, timeout=10)
                 jhoira_card_json_1 = jhoira_card_response_1.json()
                 jhoira_card_json_2 = jhoira_card_response_2.json()
                 jhoira_card_json_3 = jhoira_card_response_3.json()
@@ -511,13 +507,13 @@ class mtg(commands.Cog):
         jhoira_card_url = scryfall_url + "cards/cd1c87eb-4974-4160-91bd-681e0a75a98e"
         stonehewer_card_url = scryfall_url + "cards/d5cdf535-56fb-4f92-abf0-237aa6e081b0"
 
-        momir_card_response = requests.get(momir_card_url)
+        momir_card_response = scryfall_session.get(momir_card_url, timeout=10)
         momir_card_json = momir_card_response.json()
 
-        jhoira_card_response = requests.get(jhoira_card_url)
+        jhoira_card_response = scryfall_session.get(jhoira_card_url, timeout=10)
         jhoira_card_json = jhoira_card_response.json()
 
-        stonehewer_card_response = requests.get(stonehewer_card_url)
+        stonehewer_card_response = scryfall_session.get(stonehewer_card_url, timeout=10)
         stonehewer_card_json = stonehewer_card_response.json()
 
         card_type = momir_card_json["type_line"]
@@ -546,7 +542,7 @@ class mtg(commands.Cog):
 
         try:  
                 stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
-                stonehewer_card_response = requests.get(stonehewer_card_url)
+                stonehewer_card_response = scryfall_session.get(stonehewer_card_url, timeout=10)
                 stonehewer_card_json = stonehewer_card_response.json()
                 card_type = stonehewer_card_json["type_line"]
         except:
@@ -567,7 +563,7 @@ class mtg(commands.Cog):
     async def mtg(self, interaction: discord.Interaction, cardname: str):
 
         mtg_card_url = scryfall_url + "cards/named?fuzzy=" + cardname
-        card_response = mtg_session.get(mtg_card_url)
+        card_response = scryfall_session.get(mtg_card_url, timeout=10)
 
         DatabaseLogging("mtg", cardname, interaction.user.name, interaction.user.id, interaction.guild_id)
 
