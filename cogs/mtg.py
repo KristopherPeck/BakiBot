@@ -17,7 +17,17 @@ heroku_check = os.getenv('HEROKU_CHECK')
 owner_id = os.getenv('DISCORD_OWNERID')
 scryfall_url = "https://api.scryfall.com/"
 database_url = os.environ['DATABASE_URL']
+
+scryfall_headers = {
+    "User-Agent": "BakiBot/1.0 (+https://github.com/KristopherPeck/BakiBot)",
+    "Accept": "application/json;q=0.9,*/*;q=0.8",
+}
+
+scryfall_session = requests.Session()
+scryfall_session.headers.update(scryfall_headers)
+
 mtg_session = requests_cache.CachedSession('mtg_cache', expire_after=1800)
+mtg_session.headers.update(scryfall_headers)
 
 def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
     db_conn = psycopg2.connect(database_url, sslmode='require')
