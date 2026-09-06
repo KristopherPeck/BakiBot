@@ -28,16 +28,17 @@ def testHelp():
     general_command_list_part_one = '''
                    **choose**: Pick between a selection of items.\n
                    **color**: Pick a random color\n
+                   **dm-commands**: Baki wlll DM you the list of current commands\n
                    **eightball**: Ask the magic 8 Ball a question. Just like this: /eightball Am I going to die tomorrow?\n
                    **findthem**: Bakibot will pick someone call mean names\n
                    **flip**: Flip a coin\n
                    **list-commands**: Posts the list of server commmands\n
                    **lunchtime**: Picks 3 random restaurants from a list for lunchtime\n
                    **random-baki**: Posts a random quote from Baki\n
-                   **random-game**: Pick a random game from the full list of games for this server\n
                    '''
     
     general_command_list_part_two = '''
+                   **random-game**: Pick a random game from the full list of games for this server\n
                    **rolldice**: Roll a set of dice in NdT format with N being the number of dice and T being how many sides are on the dice. Just like this: /rolldice 2d4\n
                    **rolldie**: Rolls a die of your choosing. Just like this: /rolldie 20\n
                    **source**: Links BakiBots source code\n
