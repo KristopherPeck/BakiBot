@@ -356,8 +356,19 @@ class mtg(commands.Cog):
     async def randommtg(self, interaction: discord.Interaction):
         random_card_url = scryfall_url + "cards/random"
 
-        random_card_response = requests.get(random_card_url)
+        random_card_response = requests.get(random_card_url, timeout=10)
         random_card_json = random_card_response.json()
+
+        if not random_card_response.ok or random_card_json.get("object") != "card":
+            error_details = random_card_json.get(
+                "details",
+                f"Scryfall returned HTTP {random_card_response.status_code}",
+            )
+            await interaction.response.send_message(
+                f"Scryfall could not return a card: {error_details}",
+                ephemeral=True
+            )
+            return
 
         #If we get an art series or reversible fronts, search for the regular card version instead. 
         card_layout_check = random_card_json["layout"]
@@ -367,12 +378,12 @@ class mtg(commands.Cog):
             bad_type = True
             while bad_type == True:
                 random_card_url = scryfall_url + "cards/random"
-                random_card_response = requests.get(check_mtg_card_url)
+                random_card_response = requests.get(random_card_url, timeout=10)
                 random_card_json = random_card_response.json()
                 typeline_check = random_card_json["type_line"]
 
                 if "Card" not in typeline_check:
-                    bad_type == False
+                    bad_type = False
 
         if card_layout_check == "art_series":
             check_mtg_card_url = scryfall_url + "cards/named?fuzzy=" + random_card_json["name"]
