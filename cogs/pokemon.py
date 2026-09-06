@@ -251,7 +251,7 @@ class Pokemon(commands.Cog):
         DatabaseLogging("random-pokemon", ResponseJSON["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        embed = GeneratePokemonDetails(random_color,ResponseJSON, pokemon_id=random_pokemon_id)
+        embed = GeneratePokemonDetails(random_color, ResponseJSON, pokemon_id=ResponseJSON["id"])
         
         await interaction.response.send_message(embed=embed)
 

@@ -8,7 +8,7 @@ Tested with [Python 3.8.3](https://www.python.org/downloads/release/python-383/)
 There is a short cooldown implemented on commands. This can be removed from the commands by removing the @commands.cooldown() from the commands code.
 
 ## Commands
-Current command prefix is set to !
+All commands are implemented as slash commands ('/')
 
 ### General Commands
 - choose: Randomly select an option from the provided options.

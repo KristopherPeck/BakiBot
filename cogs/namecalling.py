@@ -39,7 +39,7 @@ class NameCalling(commands.Cog):
         users = [random.choice(interaction.guild.members)]       
         c = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         embed = discord.Embed(description=f"{users[0].mention} is a scrub!", colour=c)
-        DatabaseLogging("findthem", users[0], interaction.user.name, interaction.user.id, interaction.guild_id)
+        DatabaseLogging("findthem", str(users[0]), interaction.user.name, interaction.user.id, interaction.guild_id)
         await interaction.response.send_message(embed=embed)
     
 async def setup(bot):

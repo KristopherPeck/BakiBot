@@ -119,6 +119,14 @@ class Random(commands.Cog):
     @app_commands.checks.cooldown(1,3.0)
     async def choose(self, interaction: discord.Interaction, items: str):
         choices = items.split()
+
+        if not choices:
+            await interaction.response.send_message(
+                "Please provide at least one item to choose from.",
+                ephemeral=True,
+            )
+            return
+
         response = random.choice(choices)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         await interaction.response.send_message(embed=discord.Embed(description="Eeny, meeny, miny, moe. I choose: " + response, colour=random_color))
@@ -126,7 +134,22 @@ class Random(commands.Cog):
     @app_commands.command(name="rolldie", description="Roll a die of the specified size")
     @app_commands.checks.cooldown(1.0,3.0)
     async def dieroll(self, interaction: discord.Interaction, dicesize: str):
-        arg1 = int(dicesize)
+        try:
+            arg1 = int(dicesize)
+        except ValueError:
+            await interaction.response.send_message(
+                "Please provide a whole number for the die size.",
+                ephemeral=True,
+            )
+            return
+
+        if not 2 <= arg1 <= 10000:
+            await interaction.response.send_message(
+                "The die size must be between 2 and 10,000.",
+                ephemeral=True,
+            )
+            return
+
         result = random.randint(1, arg1)
         result = str(result)
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -141,9 +164,19 @@ class Random(commands.Cog):
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
         try:
-            rolls, limit = map(int, dicecalc.split('d'))
-        except Exception:
+            rolls, limit = map(int, dicecalc.lower().split('d'))
+        except ValueError:
             await interaction.response.send_message(embed=discord.Embed(description="Please use the proper format of xDy", colour=random_color))
+            return
+
+        if not 1 <= rolls <= 100 or not 2 <= limit <= 10000:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    description="Use 1-100 dice with 2-10,000 sides each.",
+                    colour=random_color,
+                ),
+                ephemeral=True,
+            )
             return
         
         roll_results = []

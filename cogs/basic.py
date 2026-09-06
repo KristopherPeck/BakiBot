@@ -98,7 +98,7 @@ class Basic(commands.Cog):
         try:
             await interaction.user.send(embed=embed)
         except discord.Forbidden:
-            await interaction.resposne.send_message(
+            await interaction.response.send_message(
                 "I couldn't send you a DM. Please allow direct messages "
                 "from members of this server and try again.",
                 ephemeral=True,

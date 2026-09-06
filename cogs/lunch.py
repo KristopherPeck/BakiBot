@@ -56,19 +56,35 @@ class lunch(commands.Cog):
 
         db_cursor.execute(select_query, query_data)
         temp_sql_results = db_cursor.fetchall()
-        sql_results = map(list, list(temp_sql_results))
-        sql_results = sum(sql_results, [])
-        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("lunchtime", sql_results, now, interaction.user.name, interaction.user.id))
+        restaurants = [row[0] for row in temp_sql_results]
+
+        db_cursor.execute("INSERT INTO bakibot.log (command, logged_text, timestamp, username, user_id) VALUES (%s, %s, %s, %s, %s)", ("lunchtime", restaurants, now, interaction.user.name, interaction.user.id))
         db_conn.commit()
         db_cursor.close()
         db_conn.close()
 
-        response1 = str(sql_results[0])
-        response2 = str(sql_results[1])
-        response3 = str(sql_results[2])
+        if not restaurants:
+            response_text = "I couldn't find any restaurants open today."
+
+        elif len(restaurants) == 1:
+            response_text = (
+                f"Your choice for lunch is {restaurants[0]}!"
+            )
+
+        elif len(restaurants) == 2:
+            response_text = (
+                f"Your choices for lunch are "
+                f"{restaurants[0]} or {restaurants[1]}!"
+            )
+
+        else:
+            response_text = (
+                f"Your choices for lunch are "
+                f"{restaurants[0]}, {restaurants[1]}, or {restaurants[2]}!"
+            )
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        await interaction.response.send_message(embed=discord.Embed(description="Your choices for lunch are " + response1 + ", " + response2 + " or " + response3 + "!", colour=random_color))
+        await interaction.response.send_message(embed=discord.Embed(description=response_text, colour=random_color))
 
 async def setup(bot):
     await bot.add_cog(lunch(bot))

@@ -25,6 +25,36 @@ scryfall_headers = {
 scryfall_session = requests.Session()
 scryfall_session.headers.update(scryfall_headers)
 
+class ScryfallAPIError(Exception):
+    """Raised when Scryfall does not return a card object."""
+
+
+def get_scryfall_card(endpoint, params=None):
+    try:
+        response = scryfall_session.get(
+            scryfall_url + endpoint,
+            params=params,
+            timeout=10,
+        )
+    except requests.exceptions.RequestException as error:
+        raise ScryfallAPIError("Scryfall could not be reached. Please try again.") from error
+
+    try:
+        card_json = response.json()
+    except requests.exceptions.JSONDecodeError as error:
+        raise ScryfallAPIError(
+            f"Scryfall returned HTTP {response.status_code} with an invalid response."
+        ) from error
+
+    if not response.ok or card_json.get("object") != "card":
+        details = card_json.get(
+            "details",
+            f"Scryfall returned HTTP {response.status_code}.",
+        )
+        raise ScryfallAPIError(details)
+
+    return card_json
+
 def DatabaseLogging(command_name, database_value, user_name, user_id, guild):
     db_conn = psycopg2.connect(database_url, sslmode='require')
     db_cursor = db_conn.cursor()
@@ -360,41 +390,27 @@ class mtg(commands.Cog):
     @app_commands.command(name='random-mtg', description="Pulls a random Magic the Gathering card from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def randommtg(self, interaction: discord.Interaction):
-        random_card_url = scryfall_url + "cards/random"
+        try:
+            for _ in range(10):
+                random_card_json = get_scryfall_card("cards/random")
 
-        random_card_response = scryfall_session.get(random_card_url, timeout=10)
-        random_card_json = random_card_response.json()
+                # Art cards and reversible card inserts point back to a regular card.
+                if random_card_json["layout"] in ("art_series", "reversible_card"):
+                    random_card_json = get_scryfall_card(
+                        "cards/named",
+                        params={"fuzzy": random_card_json["name"]},
+                    )
 
-        if not random_card_response.ok or random_card_json.get("object") != "card":
-            error_details = random_card_json.get(
-                "details",
-                f"Scryfall returned HTTP {random_card_response.status_code}",
-            )
+                if "Card" not in random_card_json["type_line"]:
+                    break
+            else:
+                raise ScryfallAPIError("Could not find a playable card after 10 attempts.")
+        except ScryfallAPIError as error:
             await interaction.response.send_message(
-                f"Scryfall could not return a card: {error_details}",
-                ephemeral=True
+                f"Scryfall could not return a card: {error}",
+                ephemeral=True,
             )
             return
-
-        #If we get an art series or reversible fronts, search for the regular card version instead. 
-        card_layout_check = random_card_json["layout"]
-        typeline_check = random_card_json["type_line"]
-
-        if "Card" in typeline_check:
-            bad_type = True
-            while bad_type == True:
-                random_card_url = scryfall_url + "cards/random"
-                random_card_response = scryfall_session.get(random_card_url, timeout=10)
-                random_card_json = random_card_response.json()
-                typeline_check = random_card_json["type_line"]
-
-                if "Card" not in typeline_check:
-                    bad_type = False
-
-        if card_layout_check == "art_series":
-            check_mtg_card_url = scryfall_url + "cards/named?fuzzy=" + random_card_json["name"]
-            random_card_response = scryfall_session.get(check_mtg_card_url, timeout=10)
-            random_card_json = random_card_response.json()
 
         DatabaseLogging("random-mtg", random_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
 
@@ -407,21 +423,25 @@ class mtg(commands.Cog):
     @app_commands.command(name='random-commander', description="Pulls a random legal Commander from Scryfall.")
     @app_commands.checks.cooldown(1.0,3.0)
     async def randomcommander(self, interaction: discord.Interaction):
+        try:
+            for _ in range(10):
+                random_card_json = get_scryfall_card(
+                    "cards/random",
+                    params={"q": "is:commander"},
+                )
+                card_type = random_card_json["type_line"]
+                card_edh_legal = random_card_json["legalities"]["commander"]
 
-        random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
-        random_card_response = scryfall_session.get(random_card_url, timeout=10)
-        random_card_json = random_card_response.json()
-        card_type = random_card_json["type_line"]
-        card_edh_legal = random_card_json["legalities"]["commander"]
-
-        #The Random Commander API command for some reason includes the Background cards from Baldur's Gate since they technically exist in the Command Zone.
-        #However, I don't want them to show up in my iteration. So we filter out those as well as any cards that aren't legal in EDH.
-        while ("Background" in card_type) and (card_edh_legal == "not_legal"):
-            random_card_url = scryfall_url + "cards/random?q=is%3Acommander"
-            random_card_response = scryfall_session.get(random_card_url, timeout=10)
-            random_card_json = random_card_response.json()
-            card_type = random_card_json["type_line"]
-            card_edh_legal = random_card_json["legalities"]["commander"]
+                if "Background" not in card_type and card_edh_legal == "legal":
+                    break
+            else:
+                raise ScryfallAPIError("Could not find a commander after 10 attempts.")
+        except ScryfallAPIError as error:
+            await interaction.response.send_message(
+                f"Scryfall could not return a card: {error}",
+                ephemeral=True,
+            )
+            return
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         DatabaseLogging("random-commander", random_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
@@ -436,12 +456,16 @@ class mtg(commands.Cog):
 
         try:  
                 arg1 = str(manavalue)
-                momir_card_url = scryfall_url + "cards/random?q=t%3Acreature+mv%3A" + arg1 + " not:funny"
-                momir_card_response = scryfall_session.get(momir_card_url, timeout=10)
-                momir_card_json = momir_card_response.json()
+                momir_card_json = get_scryfall_card(
+                    "cards/random",
+                    params={"q": f"t:creature mv:{arg1} not:funny"},
+                )
                 card_type = momir_card_json["type_line"]
-        except:
-                await interaction.response.send_message("It looks like there wasn't any card with that mana value. Please try another one.")
+        except ScryfallAPIError as error:
+                await interaction.response.send_message(
+                    f"Scryfall could not return a card: {error}",
+                    ephemeral=True,
+                )
                 DatabaseLogging("momir", "Invalid Input", interaction.user.name, interaction.user.id, interaction.guild_id)
                 return
 
@@ -468,20 +492,18 @@ class mtg(commands.Cog):
         arg1 = str(cardtype)
 
         try:  
-                jhoira_card_url_1 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
-                jhoira_card_url_2 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
-                jhoira_card_url_3 = scryfall_url + "cards/random?q=t%3A" + arg1 + " -t:enchantment -t:creature -t:artifact -t:planeswalker (game:paper) not:funny"
-                jhoira_card_response_1 = scryfall_session.get(jhoira_card_url_1, timeout=10)
-                jhoira_card_response_2 = scryfall_session.get(jhoira_card_url_2, timeout=10)
-                jhoira_card_response_3 = scryfall_session.get(jhoira_card_url_3, timeout=10)
-                jhoira_card_json_1 = jhoira_card_response_1.json()
-                jhoira_card_json_2 = jhoira_card_response_2.json()
-                jhoira_card_json_3 = jhoira_card_response_3.json()
+                query = f"t:{arg1} -t:enchantment -t:creature -t:artifact -t:planeswalker game:paper not:funny"
+                jhoira_card_json_1 = get_scryfall_card("cards/random", params={"q": query})
+                jhoira_card_json_2 = get_scryfall_card("cards/random", params={"q": query})
+                jhoira_card_json_3 = get_scryfall_card("cards/random", params={"q": query})
                 card_type_1 = jhoira_card_json_1["type_line"]
                 card_type_2 = jhoira_card_json_2["type_line"]
                 card_type_3 = jhoira_card_json_3["type_line"]
-        except:
-                await interaction.response.send_message("It looks like there was an issue. Please contact the administrator if you continue to have issues.")
+        except ScryfallAPIError as error:
+                await interaction.response.send_message(
+                    f"Scryfall could not return a card: {error}",
+                    ephemeral=True,
+                )
                 DatabaseLogging("jhoira", "Incorrect Input", interaction.user.name, interaction.user.id, interaction.guild_id)
                 return
         
@@ -503,18 +525,22 @@ class mtg(commands.Cog):
 
         random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        momir_card_url = scryfall_url + "cards/f5ed5ad3-b970-4720-b23b-308a25f42887"
-        jhoira_card_url = scryfall_url + "cards/cd1c87eb-4974-4160-91bd-681e0a75a98e"
-        stonehewer_card_url = scryfall_url + "cards/d5cdf535-56fb-4f92-abf0-237aa6e081b0"
-
-        momir_card_response = scryfall_session.get(momir_card_url, timeout=10)
-        momir_card_json = momir_card_response.json()
-
-        jhoira_card_response = scryfall_session.get(jhoira_card_url, timeout=10)
-        jhoira_card_json = jhoira_card_response.json()
-
-        stonehewer_card_response = scryfall_session.get(stonehewer_card_url, timeout=10)
-        stonehewer_card_json = stonehewer_card_response.json()
+        try:
+            momir_card_json = get_scryfall_card(
+                "cards/f5ed5ad3-b970-4720-b23b-308a25f42887"
+            )
+            jhoira_card_json = get_scryfall_card(
+                "cards/cd1c87eb-4974-4160-91bd-681e0a75a98e"
+            )
+            stonehewer_card_json = get_scryfall_card(
+                "cards/d5cdf535-56fb-4f92-abf0-237aa6e081b0"
+            )
+        except ScryfallAPIError as error:
+            await interaction.response.send_message(
+                f"Scryfall could not return the format cards: {error}",
+                ephemeral=True,
+            )
+            return
 
         card_type = momir_card_json["type_line"]
 
@@ -541,12 +567,17 @@ class mtg(commands.Cog):
         arg1 = str(manavalue)
 
         try:  
-                stonehewer_card_url = scryfall_url + "cards/random?q=t%3Aequipment+mv%3A<" + arg1 + " not:funny"
-                stonehewer_card_response = scryfall_session.get(stonehewer_card_url, timeout=10)
-                stonehewer_card_json = stonehewer_card_response.json()
+                stonehewer_card_json = get_scryfall_card(
+                    "cards/random",
+                    params={"q": f"t:equipment mv:<{arg1} not:funny"},
+                )
                 card_type = stonehewer_card_json["type_line"]
-        except:
+        except ScryfallAPIError as error:
                 DatabaseLogging("stonehewer", "Invalid Input", interaction.user.name, interaction.user.id, interaction.guild_id)
+                await interaction.response.send_message(
+                    f"Scryfall could not return a card: {error}",
+                    ephemeral=True,
+                )
                 return
         
         DatabaseLogging("stonehewer", stonehewer_card_json["name"], interaction.user.name, interaction.user.id, interaction.guild_id)
@@ -561,21 +592,22 @@ class mtg(commands.Cog):
     @app_commands.checks.cooldown(1.0,3.0)
     @app_commands.describe(cardname="Input the name you wish to query with")
     async def mtg(self, interaction: discord.Interaction, cardname: str):
-
-        mtg_card_url = scryfall_url + "cards/named?fuzzy=" + cardname
-        card_response = scryfall_session.get(mtg_card_url, timeout=10)
-
         DatabaseLogging("mtg", cardname, interaction.user.name, interaction.user.id, interaction.guild_id)
 
-        if card_response.status_code == 404:
-            card_json = card_response.json()
-            await interaction.response.send_message("Sorry, I don't recognize that card or I am finding multiple cards with that name. Please try something else.")
+        try:
+            card_json = get_scryfall_card(
+                "cards/named",
+                params={"fuzzy": cardname},
+            )
+        except ScryfallAPIError as error:
+            await interaction.response.send_message(
+                f"Scryfall could not return that card: {error}",
+                ephemeral=True,
+            )
             return
-        else:
-            card_json = card_response.json()
-            card_type = card_json["type_line"]
 
-            random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        card_type = card_json["type_line"]
+        random_color = discord.Color.from_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
         embed = GenerateCardDetails(card_type, card_json, random_color)
 
